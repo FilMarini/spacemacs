@@ -123,6 +123,7 @@
         "."   'LaTeX-mark-environment  ;; C-c .
         "ii"   'LaTeX-insert-item       ;; C-c C-j
         "s"   'LaTeX-section           ;; C-c C-s
+        "fb"  'LaTeX-fill-buffer
         "fe"  'LaTeX-fill-environment  ;; C-c C-q C-e
         "fp"  'LaTeX-fill-paragraph    ;; C-c C-q C-p
         "fr"  'LaTeX-fill-region       ;; C-c C-q C-r
