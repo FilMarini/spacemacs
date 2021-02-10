@@ -2,30 +2,12 @@
 ;;
 ;; Copyright (c) 2012-2020 Sylvain Benner & Contributors
 ;;
-;; Author: Filippo Marini <filippo.marini@pd.infn.it>
+;; Author: Filippo Marini <marinifil@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; License: GPLv3
-
-;;; Commentary:
-
-;; See the Spacemacs documentation and FAQs for instructions on how to implement
-;; a new layer:
-;;
-;;   SPC h SPC layers RET
-;;
-;;
-;; Briefly, each package to be installed or configured by this layer should be
-;; added to `vhdl-packages'. Then, for each package PACKAGE:
-;;
-;; - If PACKAGE is not referenced by any other Spacemacs layer, define a
-;;   function `vhdl/init-PACKAGE' to load and initialize the package.
-
-;; - Otherwise, PACKAGE is already referenced by another Spacemacs layer, so
-;;   define the functions `vhdl/pre-init-PACKAGE' and/or
-;;   `vhdl/post-init-PACKAGE' to customize the package as it is loaded.
 
 ;;; Code:
 
@@ -36,32 +18,9 @@
     (lsp-vhdl :requires lsp-mode
               :location built-in)
     )
-  "The list of Lisp packages required by the vhdl layer.
+  "The list of Lisp packages required by the vhdl layer."
 
-Each entry is either:
-
-1. A symbol, which is interpreted as a package to be installed, or
-
-2. A list of the form (PACKAGE KEYS...), where PACKAGE is the
-    name of the package to be installed or loaded, and KEYS are
-    any number of keyword-value-pairs.
-
-    The following keys are accepted:
-
-    - :excluded (t or nil): Prevent the package from being loaded
-      if value is non-nil
-
-    - :location: Specify a custom installation location.
-      The following values are legal:
-
-      - The symbol `elpa' (default) means PACKAGE will be
-        installed using the Emacs package manager.
-
-      - The symbol `local' directs Spacemacs to load the file at
-        `./local/PACKAGE/PACKAGE.el'
-
-      - A list beginning with the symbol `recipe' is a melpa
-        recipe.  See: https://github.com/milkypostman/melpa#recipe-format")
+)
 
 (defun vhdl/init-sr-speedbar ()
   (use-package sr-speedbar
@@ -70,15 +29,46 @@ Each entry is either:
 (defun vhdl/post-init-flycheck ()
   (spacemacs/enable-flycheck 'vhdl-mode))
 
-
 (defun vhdl/init-vhdl-mode ()
   (use-package vhdl-mode
     :defer t
     :hook (vhdl-mode . (lambda ()
                          (lsp t)
                          (flycheck-mode t)
-                         ))))
-
+                         ))
+    :config
+    (progn
+      (spacemacs/set-leader-keys-for-major-mode 'vhdl-mode
+        ;; beautify
+        "vv" 'vhdl-beautify-buffer ;; C-c C-b
+        "vr" 'vhdl-beautify-region ;; C-c M-b
+        ;; insert header/trailer
+        "th" 'vhdl-template-header
+        "tf" 'vhdl-template-footer
+        ;; libraries
+        "ls" 'vhdl-template-package-std-logic-1164
+        "ln" 'vhdl-template-package-numeric-std
+        "lm" 'vhdl-template-package-std-logic-misc
+        "li" 'vhdl-template-package-std-logic-textio
+        ;; port
+        "pw" 'vhdl-port-copy
+        "pi" 'vhdl-port-paste-instance
+        "pc" 'vhdl-port-paste-component
+        "pe" 'vhdl-port-paste-entity
+        "ps" 'vhdl-port-paste-signals
+        "pt" 'vhdl-port-paste-testbench
+        ;; sensitivity list
+        "u" 'vhdl-update-sensitivity-list-process
+        ;; speedbar
+        "so" 'sr-speedbar-open
+        "sc" 'sr-speedbar-close
+        )
+      (spacemacs/declare-prefix-for-mode 'vhdl-mode "mv" "vhdl-beautify")
+      (spacemacs/declare-prefix-for-mode 'vhdl-mode "mt" "vhdl-templates")
+      (spacemacs/declare-prefix-for-mode 'vhdl-mode "ml" "vhdl-libraries")
+      (spacemacs/declare-prefix-for-mode 'vhdl-mode "mp" "vhdl-ports")
+      (spacemacs/declare-prefix-for-mode 'vhdl-mode "ms" "speedbar")
+      )))
 
 (defun vhdl/init-lsp-vhdl ()
   (setq lsp-restart 'auto-restart)
@@ -88,11 +78,6 @@ Each entry is either:
      :init
      (setq lsp-vhdl-server 'ghdl-ls
            lsp-vhdl-server-path (executable-find "ghdl-ls")
-           lsp-vhdl--params nil)
-     )
-  )
-
-
-
+           lsp-vhdl--params nil)))
 
 ;;; packages.el ends here
