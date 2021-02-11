@@ -61,6 +61,10 @@
         "pt" 'vhdl-port-paste-testbench
         ;; sensitivity list
         "u" 'vhdl-update-sensitivity-list-process
+        ;; jump around
+        "ji" 'vhdl-tools-jump-into-module
+        "ju" 'vhdl-tools-jump-upper
+        "jd" 'vhdl-tools-goto-type-def
         ;; speedbar
         "so" 'sr-speedbar-open
         "sc" 'sr-speedbar-close
@@ -70,6 +74,7 @@
       (spacemacs/declare-prefix-for-mode 'vhdl-mode "ml" "vhdl-libraries")
       (spacemacs/declare-prefix-for-mode 'vhdl-mode "mp" "vhdl-ports")
       (spacemacs/declare-prefix-for-mode 'vhdl-mode "ms" "speedbar")
+      (spacemacs/declare-prefix-for-mode 'vhdl-mode "mj" "jump-around")
       )))
 
 (defun vhdl/init-lsp-vhdl ()
