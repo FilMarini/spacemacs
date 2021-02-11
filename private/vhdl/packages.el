@@ -17,6 +17,8 @@
     flycheck
     (lsp-vhdl :requires lsp-mode
               :location built-in)
+    ggtags
+    vhdl-tools
     )
   "The list of Lisp packages required by the vhdl layer."
 
@@ -79,5 +81,30 @@
      (setq lsp-vhdl-server 'ghdl-ls
            lsp-vhdl-server-path (executable-find "ghdl-ls")
            lsp-vhdl--params nil)))
+
+
+(defun vhdl/init-vhdl-tools ()
+    (use-package vhdl-tools
+      :ensure t
+      :defer t
+      :after vhdl-mode
+      :config
+      (setq vhdl-tools-manage-folding t
+            vhdl-tools-verbose t
+            vhdl-tools-use-outshine t
+            vhdl-tools-recenter-nb-lines '(4)
+            )
+      :hook
+      (vhdl-mode . (lambda ()
+                     (vhdl-tools-mode 1)))))
+
+
+(defun vhdl/init-ggtags ()
+  (use-package ggtags
+    :ensure t
+    :defer t)
+  (add-hook 'vhdl-mode-hook
+            (lambda ()
+              (ggtags-mode 1))))
 
 ;;; packages.el ends here
