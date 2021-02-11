@@ -85,7 +85,8 @@
      :init
      (setq lsp-vhdl-server 'ghdl-ls
            lsp-vhdl-server-path (executable-find "ghdl-ls")
-           lsp-vhdl--params nil)))
+           lsp-vhdl--params nil
+           lsp-enable-imenu nil)))
 
 
 (defun vhdl/init-vhdl-tools ()
