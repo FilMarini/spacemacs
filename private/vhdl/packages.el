@@ -60,10 +60,6 @@
         "pt" 'vhdl-port-paste-testbench
         ;; sensitivity list
         "u" 'vhdl-update-sensitivity-list-process
-        ;; jump around
-        "ji" 'vhdl-tools-jump-into-module
-        "ju" 'vhdl-tools-jump-upper
-        "jd" 'vhdl-tools-goto-type-def
         ;; speedbar
         "so" 'sr-speedbar-open
         "sc" 'sr-speedbar-close
@@ -73,7 +69,6 @@
       (spacemacs/declare-prefix-for-mode 'vhdl-mode "ml" "vhdl-libraries")
       (spacemacs/declare-prefix-for-mode 'vhdl-mode "mp" "vhdl-ports")
       (spacemacs/declare-prefix-for-mode 'vhdl-mode "ms" "speedbar")
-      (spacemacs/declare-prefix-for-mode 'vhdl-mode "mj" "jump-around")
       )))
 
 (defun vhdl/init-lsp-vhdl ()
@@ -96,9 +91,25 @@
       :config
       (setq vhdl-tools-manage-folding t
             vhdl-tools-verbose t
-            vhdl-tools-use-outshine t
             vhdl-tools-recenter-nb-lines '(4)
             )
+      (progn
+        (spacemacs/set-leader-keys-for-major-mode 'vhdl-mode
+          ;; jump around
+          "ji" 'vhdl-tools-jump-into-module
+          "ju" 'vhdl-tools-jump-upper
+          "jd" 'vhdl-tools-goto-type-def
+          ;; vhdl-imenu
+          "im" 'vhdl-tools-imenu
+          "ii" 'vhdl-tools-imenu-instance
+          "ic" 'vhdl-tools-imenu-component
+          "ip" 'vhdl-tools-imenu-processes
+          "ih" 'vhdl-tools-imenu-headers
+          "ia" 'vhdl-tools-imenu-all
+          )
+        (spacemacs/declare-prefix-for-mode 'vhdl-mode "mj" "jump-around")
+        (spacemacs/declare-prefix-for-mode 'vhdl-mode "mi" "vhdl-imenu")
+        )
       :hook
       (vhdl-mode . (lambda ()
                      (vhdl-tools-mode 1)))))
