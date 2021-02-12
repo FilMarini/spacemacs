@@ -17,7 +17,6 @@
     flycheck
     (lsp-vhdl :requires lsp-mode
               :location built-in)
-    ggtags
     vhdl-tools
     )
   "The list of Lisp packages required by the vhdl layer."
@@ -105,10 +104,7 @@
                      (vhdl-tools-mode 1)))))
 
 
-(defun vhdl/init-ggtags ()
-  (use-package ggtags
-    :ensure t
-    :defer t)
+(defun vhdl/post-init-ggtags ()
   (add-hook 'vhdl-mode-hook
             (lambda ()
               (ggtags-mode 1))))
