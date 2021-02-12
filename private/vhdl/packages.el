@@ -25,7 +25,8 @@
 
 (defun vhdl/init-sr-speedbar ()
   (use-package sr-speedbar
-    :defer t))
+    :defer t
+    ))
 
 (defun vhdl/post-init-flycheck ()
   (spacemacs/enable-flycheck 'vhdl-mode))
@@ -38,6 +39,8 @@
                          (flycheck-mode t)
                          ))
     :config
+    (setq vhdl-speedbar-display-mode 'project
+          vhdl-project-alist nil)
     (progn
       (spacemacs/set-leader-keys-for-major-mode 'vhdl-mode
         ;; beautify
