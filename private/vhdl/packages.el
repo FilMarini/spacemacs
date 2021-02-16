@@ -40,7 +40,8 @@
                          ))
     :config
     (setq vhdl-speedbar-display-mode 'project
-          vhdl-project-alist nil)
+          vhdl-project-alist nil
+          )
     (progn
       (spacemacs/set-leader-keys-for-major-mode 'vhdl-mode
         ;; beautify
@@ -66,6 +67,8 @@
         ;; speedbar
         "so" 'sr-speedbar-open
         "sc" 'sr-speedbar-close
+        ;; generate support files
+        "f" 'vhdl-generate-support-files
         )
       (spacemacs/declare-prefix-for-mode 'vhdl-mode "mv" "vhdl-beautify")
       (spacemacs/declare-prefix-for-mode 'vhdl-mode "mt" "vhdl-templates")
@@ -73,6 +76,11 @@
       (spacemacs/declare-prefix-for-mode 'vhdl-mode "mp" "vhdl-ports")
       (spacemacs/declare-prefix-for-mode 'vhdl-mode "ms" "speedbar")
       )))
+
+(defun vhdl/post-init-vhdl-mode ()
+  (add-hook 'lsp-mode-hook (lambda ()
+                             (vhdl-import-project (concat (lsp-workspace-root) "/VHDL-Project.prj"))))
+  )
 
 (defun vhdl/init-lsp-vhdl ()
   (setq lsp-restart 'auto-restart)
@@ -83,7 +91,13 @@
      (setq lsp-vhdl-server 'ghdl-ls
            lsp-vhdl-server-path (executable-find "ghdl-ls")
            lsp-vhdl--params nil
-           lsp-enable-imenu nil)))
+           lsp-enable-imenu nil)
+     :config
+     (progn
+       (spacemacs/set-leader-keys-for-major-mode 'vhdl-mode
+         "R" 'lsp-restart-workspace
+         ))
+     ))
 
 
 (defun vhdl/init-vhdl-tools ()
