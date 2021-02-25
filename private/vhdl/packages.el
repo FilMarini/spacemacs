@@ -77,11 +77,6 @@
       (spacemacs/declare-prefix-for-mode 'vhdl-mode "ms" "speedbar")
       )))
 
-(defun vhdl/post-init-vhdl-mode ()
-  (add-hook 'lsp-mode-hook (lambda ()
-                             (vhdl-import-project (concat (lsp-workspace-root) "/VHDL-Project.prj"))))
-  )
-
 (defun vhdl/init-lsp-vhdl ()
   (setq lsp-restart 'auto-restart)
   (use-package lsp-vhdl

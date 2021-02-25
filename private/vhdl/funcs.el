@@ -2,4 +2,5 @@
   (interactive)
   (shell-command (concat "vhdl-mode-prj-gen -r " (lsp-workspace-root)))
   (shell-command (concat "hdl-prj-gen -r " (lsp-workspace-root)))
+  (vhdl-import-project (concat (lsp-workspace-root) "/VHDL-Project.prj"))
   )
