@@ -85,6 +85,9 @@
         (global-set-key (kbd "M-x") 'spacemacs/helm-M-x-fuzzy-matching))
       (global-set-key (kbd "C-x C-f") 'spacemacs/helm-find-files)
       (global-set-key (kbd "C-x b") 'helm-buffers-list)
+      ;; use helm to switch last(/previous) visited buffers with C(-S)-tab
+      (evil-global-set-key 'motion (kbd "<C-tab>") 'helm-buffers-list)
+      (evil-global-set-key 'motion (kbd "<C-iso-lefttab>") 'helm-buffers-list)
       ;; use helm everywhere
       (spacemacs||set-helm-key "<f1>" helm-apropos)
       (spacemacs||set-helm-key "a'"   helm-available-repls)
@@ -153,7 +156,9 @@
                   ;; to overwrite any key binding
                   (unless (configuration-layer/layer-usedp 'smex)
                     (spacemacs/set-leader-keys
-                      dotspacemacs-emacs-command-key 'spacemacs/helm-M-x-fuzzy-matching)))))
+                      dotspacemacs-emacs-command-key 'spacemacs/helm-M-x-fuzzy-matching))))
+      ;; avoid duplicates in `helm-M-x' history.
+      (setq history-delete-duplicates t))
     :config
     (progn
       (helm-mode)
@@ -169,6 +174,9 @@
       (setq helm-white-buffer-regexp-list
             (append helm-white-buffer-regexp-list
                     spacemacs-useful-buffers-regexp))
+      ;; use helm to switch last(/previous) visited buffers with C(-S)-tab
+      (define-key helm-map (kbd "<C-tab>") 'helm-follow-action-forward)
+      (define-key helm-map (kbd "<C-iso-lefttab>") 'helm-follow-action-backward)
       ;; alter helm-bookmark key bindings to be simpler
       (defun simpler-helm-bookmark-keybindings ()
         (define-key helm-bookmark-map (kbd "C-d") 'helm-bookmark-run-delete)
@@ -398,7 +406,6 @@
     (progn
       (setq helm-swoop-split-with-multiple-windows t
             helm-swoop-split-direction 'split-window-vertically
-            helm-swoop-speed-or-color t
             helm-swoop-split-window-function 'spacemacs/helm-swoop-split-window-function
             helm-swoop-pre-input-function (lambda () ""))
 

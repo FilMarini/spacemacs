@@ -190,6 +190,7 @@ the [[file:CHANGELOG.org][CHANGELOG.org]] file.
   - Change jump back to last mark from ~SPC m g p~ to ~SPC m g b~
     to follow the keybindings convention (thanks to Magnus Therning)
   - Use ~lsp-ivy~ when ~ivy~ layer is present.
+  - added  ~lsp-use-lsp-ui~ variable to control whether ~lsp-ui~ is installed or not.
 ***** IPython notebook
 - Key bindings;
   - Change prefix from ~SPC a i~ to ~SPC a y~ (thanks to Swaroop C H)
@@ -334,6 +335,8 @@ In org-agenda-mode
   - Move major specific error key bindings to ~SPC m E~ prefix
     (thanks to Sylvain Benner)
   - Changed ~SPC e e~ to ~SPC e b~ for =flycheck-buffer=
+***** Tabs
+- Add auto hide tabs feature (thanks to Daniel Nicolai)
 ***** Vagrant
 - Key bindings:
   - Vagrant key bindings prefix is now ~SPC a V~.
@@ -342,6 +345,7 @@ In org-agenda-mode
 - Key bindings:
   - Changed ~SPC g h o~ to ~SPC g o~ for =browse-at-remote= (thanks to Codruț
     Constantin Gușoi)
+  - Changed ~SPC g f d~ to bind to ~magit-file-dispatch~ (thanks to Ag Ibragimov)
 ***** YAML
 - Added LSP support (thanks to Seong Yong-ju)
 ***** ycmd
@@ -395,6 +399,7 @@ In org-agenda-mode
 - prolog (thanks to Newres Al Haider)
 - reasonml (thanks to fredyr and Dave Aitken)
 - solidity (thanks to Brooklyn Zelenka and Seong Yong-ju)
+- tabs (thanks to Deepu Puthrote)
 - protobuf (thanks to Amol Mandhane)
 - restructuredtext (thanks to Wei-Wei Guo and Kalle Lindqvist)
 - semantic-web (thanks to Andreas Textor)
@@ -427,6 +432,7 @@ In org-agenda-mode
 - dap (thanks to Ivan Yonchovski)
 - debug (thanks to Hodge Shen, Troy Hinckley, and Sylvain Benner)
 - dotnet (thanks to Jordan Kaye)
+- eaf (thanks to Daniel Nicolai)
 - import-js (thanks to Thanh Vuong and Seong Yong-ju)
 - kubernetes with tramp support (thanks to Matt Bray and Maximilian Wolff)
 - languagetool (thanks to Robbert van der Helm)
@@ -1114,6 +1120,9 @@ Other:
     (thanks to John Stevenson)
   - Added ~SPC c b~ to switch to last compilation buffer
     (thanks to Ivan Yonchovski)
+  - Added ~SPC x n~ for multi-line transient state
+    (thanks to Tristan Harmer)
+  - Added ~s~ =hydra-dired-quick-sort/body= (thanks to duianto)
 - Improvements:
   - Rewrote window layout functions for ~SPC w 1~, ~SPC w 2~, ~SPC w 3~, and
     ~SPC w 4~ (thanks to Codruț Constantin Gușoi):
@@ -1982,6 +1991,8 @@ Other:
 - Support running graphical Factor listener instances from Spacemacs
 - Support reloading factor-mode/fuel-mode code when connecting to different
   Factor versions
+**** FASD
+- Add ~search from~ ivy action (thanks to Daniel Nicolai)
 **** Finance
 - Remove key-bindings pointing to removed commands (thanks to Alexander Baier)
 - Added =evil-ledger= package (thanks to Alexander Miller)
@@ -2246,6 +2257,7 @@ Other:
   - Add ~C-d~ to create a project perspective and open a project root dired
     buffer, from the ~SPC p l~ persp switch project prompt
     (thanks to Magnus Therning)
+  - Add =C(-S)-tab= keybindings for buffer switching (thanks to Daniel Nicolai)
 - Fixes:
   - Fixed signature of =spacemacs//display-helm-window= (thanks to Jack Kamm)
   - Fixed initialization by calling =helm-mode= when Helm is initialized=
@@ -2356,6 +2368,7 @@ Other:
   - Bound =SPC s l= to =ivy-resume= (thanks to Wieland Hoffmann)
   - Rebind =C-k= to =C-M-k= in =ivy-reverse-i-search= (=C-r= at a prompt)
     (thanks to duianto)
+  - Add =C-(S)-tab= keybindings for buffer switching (thanks to Daniel Nicolai)
 - Removed definitions for =spacemacs/swiper-region-or-symbol= and
   =spacemacs/swiper-all-region-or-symbol= and updated keybindings, because Ivy has
   more advanced implementation via =swiper-thing-at-point= and
@@ -2571,7 +2584,7 @@ files (thanks to Daniel Nicolai)
   compiled PDF is changed (thanks to Lucius Hu)
 **** Lua
 - Added support for auto-completion with =company= (thanks to halfcrazy)
-- Added support for =LSP= (EmmyLua-LS-all) (thanks to Lin.Sun)
+- Added support for =LSP= (EmmyLua-LS-all, lua-language-server, lua-lsp) (thanks to Lin.Sun)
 - Added =EmmyLua-LS-all.jar= to =.gitignore= (thanks to duianto)
 - Removed require lsp-clients (thanks to duianto)
 **** Language Server Protocol (LSP)
@@ -2675,6 +2688,7 @@ files (thanks to Daniel Nicolai)
   terminal users (thanks to AmaiKinono)
 - Made =*lsp-help*= buffer shown in a popup window using popwin
 - Add support for mdx files via markdown-mode (thanks to robbyoconnor)
+- Improve documentation about markdown preview options (thanks to Lin Sun)
 **** Major modes
 - Added SPARQL-mode (thanks to Dietrich Daroch)
 - Added android logcat (thanks to jiejingzhang)
@@ -2789,6 +2803,7 @@ files (thanks to Daniel Nicolai)
   - Added package =org-jira= (thanks to Kirill A. Korinsky)
   - Added package =org-rich-yank= (thanks to Keith Pinson)
   - Added package =org-roam= (thanks to Mariusz Klochowicz)
+  - Added package =org-contacts= (thanks to Daniel Nicolai)
 - Key bindings:
   - ~SPC m T i~ to toggle inline images
   - Move clock related key bindings to ~SPC a o C~
@@ -2898,8 +2913,12 @@ files (thanks to Daniel Nicolai)
     - ~SPC a o r d t~ (~SPC m r d t~) Open today's daily note
     - ~SPC a o r d T~ (~SPC m r d T~) Open tomorrow's daily note
     (thanks to Mariusz Klochowicz)
+    - ~SPC a o r d d~ (~SPC m r d d~) Open daily note via calendar view
+    (thanks to Ben Swift)
   - Added additional prefix (~SPC m m j~) for org-jira bindings
     (thanks to Mariusz Klochowicz)
+  - Added keybindings ~SPC a o C f~ and org/agenda local ~SPC m C f~ keybindings
+    and changed =clocks= prefixes to =clocks/contacts=
 - Made =org= layer depend on =spacemacs-org= (thanks to Eivind Fonn)
 - Remove =mu4e= and =notmuch= from =org= (thanks to Sylvain Benner)
 - Use evil-org from MELPA (thanks to Eivind Fonn)

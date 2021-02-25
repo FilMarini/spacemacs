@@ -210,6 +210,12 @@
         "rl" 'ivy-resume
         "sl" 'ivy-resume
         "bb" 'ivy-switch-buffer)
+      ;; Common Ctrl-TAB buffer switch behavior
+      (with-eval-after-load 'evil
+        (evil-global-set-key 'motion (kbd "<C-tab>") 'ivy-switch-buffer)
+        (evil-global-set-key 'motion (kbd "<C-iso-lefttab>") 'ivy-switch-buffer))
+      (define-key ivy-mode-map (kbd "<C-tab>") 'ivy-next-line-and-call)
+      (define-key ivy-mode-map (kbd "<C-iso-lefttab>") 'ivy-previous-line-and-call)
       ;; Moved C-k to C-M-k
       (define-key ivy-switch-buffer-map (kbd "C-M-k") 'ivy-switch-buffer-kill)
       (define-key ivy-reverse-i-search-map
@@ -248,6 +254,11 @@
       (spacemacs/set-leader-keys-for-major-mode 'ivy-occur-grep-mode
         "w" 'spacemacs/ivy-wgrep-change-to-wgrep-mode
         "s" 'wgrep-save-all-buffers)
+
+      ;; emacs 27 extend line for ivy highlight
+      (setf (alist-get 't ivy-format-functions-alist)
+            #'ivy-format-function-line)
+
       ;; Why do we do this ?
       (ido-mode -1)
 
@@ -275,7 +286,8 @@
             ivy-virtual-abbreviate 'full))
     :config
     (progn
-      (ivy-rich-mode))))
+      (ivy-rich-mode)
+      (ivy-rich-project-root-cache-mode))))
 
 (defun ivy/init-ivy-spacemacs-help ()
   (use-package ivy-spacemacs-help

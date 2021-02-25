@@ -239,7 +239,7 @@
   (use-package lsp-latex
     :defer t))
 
-(defun latex/init-math-symbol-lists()
+(defun latex/init-math-symbol-lists ()
   (use-package math-symbol-lists
     :defer t))
 

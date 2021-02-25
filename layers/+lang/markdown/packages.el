@@ -9,20 +9,19 @@
 ;;
 ;;; License: GPLv3
 
-(setq markdown-packages
-      '(
-        company
-        company-emoji
-        emoji-cheat-sheet-plus
-        gh-md
-        markdown-mode
-        markdown-toc
-        mmm-mode
-        org
-        smartparens
-        valign
-        (vmd-mode :toggle (eq 'vmd markdown-live-preview-engine))
-        ))
+(defconst markdown-packages
+  '(
+    company
+    company-emoji
+    emoji-cheat-sheet-plus
+    gh-md
+    markdown-mode
+    markdown-toc
+    mmm-mode
+    org
+    smartparens
+    valign
+    (vmd-mode :toggle (eq 'vmd markdown-live-preview-engine))))
 
 (defun markdown/post-init-company ()
   (dolist (mode markdown--key-bindings-modes)
@@ -65,6 +64,7 @@
       ;; Make markdown-mode behave a bit more like org w.r.t. code blocks i.e.
       ;; use proper syntax highlighting
       (setq markdown-fontify-code-blocks-natively t)
+
       ;; Declare prefixes and bind keys
       (dolist (prefix '(("mc" . "markdown/command")
                         ("mh" . "markdown/header")

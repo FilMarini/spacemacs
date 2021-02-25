@@ -31,6 +31,7 @@
         (evil-swap-keys :toggle dotspacemacs-swap-number-row)
         (spacemacs-whitespace-cleanup :location local)
         string-inflection
+        multi-line
         undo-tree
         (unkillable-scratch :toggle dotspacemacs-scratch-buffer-unkillable)
         uuidgen
@@ -76,7 +77,7 @@
         "xo" 'spacemacs/avy-open-url))
     :config
     (progn
-      (defun spacemacs/avy-goto-url()
+      (defun spacemacs/avy-goto-url ()
         "Use avy to go to an URL in the buffer."
         (interactive)
         (avy-jump "https?://"))
@@ -108,7 +109,9 @@
     (spacemacs|add-transient-hook dired-mode-hook
       (lambda ()
         (let ((dired-quick-sort-suppress-setup-warning 'message))
-          (dired-quick-sort-setup))))))
+          (dired-quick-sort-setup))))
+    :config
+    (evil-define-key 'normal dired-mode-map "s" 'hydra-dired-quick-sort/body)))
 
 (defun spacemacs-editing/init-editorconfig ()
   (use-package editorconfig
@@ -475,6 +478,18 @@
         "xi_" 'string-inflection-underscore
         "xiu" 'string-inflection-underscore
         "xiU" 'string-inflection-upcase))))
+
+(defun spacemacs-editing/init-multi-line ()
+  (use-package multi-line
+    :init
+    (progn
+      (spacemacs|define-transient-state multi-line
+        :title "Multi-line Transient State"
+        :doc "\n [_n_] cycle"
+        :bindings
+        ("n" multi-line))
+      (spacemacs/set-leader-keys
+        "xn" 'spacemacs/multi-line-transient-state/body))))
 
 (defun spacemacs-editing/init-undo-tree ()
   (use-package undo-tree
