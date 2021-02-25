@@ -1,0 +1,5 @@
+(defun vhdl-generate-support-files ()
+  (interactive)
+  (shell-command (concat "vhdl-mode-prj-gen -r " (lsp-workspace-root)))
+  (shell-command (concat "hdl-prj-gen -r " (lsp-workspace-root)))
+  )
