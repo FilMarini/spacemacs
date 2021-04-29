@@ -1,13 +1,25 @@
 ;;; funcs.el --- Emacs Lisp functions File
 ;;
-;; Copyright (c) 2012-2020 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2021 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
-;;; License: GPLv3
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 
 
@@ -65,13 +77,9 @@ Unlike `eval-defun', this does not go to topmost function."
                              hybrid-style-enable-evilified-state))))
     (if (not edebug-mode)
         ;; disable edebug-mode
-        (when evilified?
-          (remove-hook 'pre-command-hook 'evilified-state--pre-command-hook)
-          (define-key evil-normal-state-map [escape] 'evil-force-normal-state)
-          (evil-normal-state))
+        (when evilified? (evil-evilified-state-exit))
       ;; enable edebug-mode
       (when evilified? (evil-evilified-state))
-      (evil-normalize-keymaps)
       (when (and (fboundp 'golden-ratio-mode)
                  golden-ratio-mode)
         (golden-ratio)))))
@@ -86,7 +94,6 @@ An optional ARG can be used which is passed to `sp-up-sexp' to move out of more
 than one sexp.
 Requires smartparens because all movement is done using `sp-up-sexp'."
   (interactive "p")
-  (require 'smartparens)
   (let ((evil-move-beyond-eol t))
     ;; evil-move-beyond-eol disables the evil advices around eval-last-sexp
     (save-excursion
@@ -102,12 +109,29 @@ Requires smartparens because all movement is done using `sp-up-sexp'."
   "Call `eval-last-sexp' on the symbol around point.
 Requires smartparens because all movement is done using `sp-forward-symbol'."
   (interactive)
-  (require 'smartparens)
   (let ((evil-move-beyond-eol t))
     ;; evil-move-beyond-eol disables the evil advices around eval-last-sexp
     (save-excursion
       (sp-forward-symbol)
       (call-interactively 'eval-last-sexp))))
+
+(defun spacemacs/eval-current-form-to-comment-sp (&optional arg)
+  "Same as `spacemacs/eval-current-form-sp' but inserts output as a comment."
+  (interactive "p")
+  (let ((evil-move-beyond-eol t))
+    ;; evil-move-beyond-eol disables the evil advices around eval-last-sexp
+    (save-excursion
+      (let ((max 10))
+        (while (and (> max 0)
+                    (sp-point-in-string-or-comment))
+          (decf max)
+          (sp-up-sexp)))
+      (sp-up-sexp arg)
+      (let ((ret-val (format ";; %S" (call-interactively 'eval-last-sexp))))
+        (goto-char (point-at-eol))
+        (open-line 1)
+        (forward-line 1)
+        (insert ret-val)))))
 
 
 ;; elisp comment text-object definition

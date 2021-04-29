@@ -1,17 +1,29 @@
 ;;; funcs.el --- Language Server Protocol Layer functions file for Spacemacs
 ;;
-;; Copyright (c) 2012-2020 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2021 Sylvain Benner & Contributors
 ;;
 ;; Author: Fangrui Song <i@maskray.me>
 ;; URL: https://github.com/syl20bnr/spacemacs
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
-;;; License: GPLv3
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 (defun spacemacs//setup-lsp-jump-handler ()
   "Set jump handler for LSP with the given MODE."
-    (add-to-list 'spacemacs-jump-handlers '(lsp-ui-peek-find-definitions :async t)))
+  (add-to-list 'spacemacs-jump-handlers '(lsp-ui-peek-find-definitions :async t)))
 
 
 ;; Key bindings
@@ -68,12 +80,13 @@
     "rr" #'lsp-rename
     ;; toggles
     "T" "toggle"
-    "Td" #'lsp-ui-doc-mode
-    "Ts" #'lsp-ui-sideline-mode
-    "TF" #'spacemacs/lsp-ui-doc-func
-    "TS" #'spacemacs/lsp-ui-sideline-symb
-    "TI" #'spacemacs/lsp-ui-sideline-ignore-duplicate
-    "Tl" #'lsp-lens-mode
+    "Tl" "lsp"
+    "Tld" #'lsp-ui-doc-mode
+    "Tls" #'lsp-ui-sideline-mode
+    "TlF" #'spacemacs/lsp-ui-doc-func
+    "TlS" #'spacemacs/lsp-ui-sideline-symb
+    "TlI" #'spacemacs/lsp-ui-sideline-ignore-duplicate
+    "Tll" #'lsp-lens-mode
     ;; folders
     "F" "folder"
     "Fs" #'lsp-workspace-folders-switch
@@ -96,7 +109,8 @@
    ((configuration-layer/package-usedp 'helm)
     (spacemacs/set-leader-keys-for-minor-mode 'lsp-mode
       (concat prefix-char "s") #'helm-lsp-workspace-symbol
-      (concat prefix-char "S") #'helm-lsp-global-workspace-symbol))
+      (concat prefix-char "S") #'helm-lsp-global-workspace-symbol)
+    (spacemacs/set-leader-keys "pE" #'helm-lsp-diagnostics))
    ((configuration-layer/package-usedp 'ivy)
     (spacemacs/set-leader-keys-for-minor-mode 'lsp-mode
       (concat prefix-char "s") #'lsp-ivy-workspace-symbol
@@ -260,6 +274,10 @@ EXTRA is an additional parameter that's passed to the LSP function"
 (defun spacemacs//lsp-action-placeholder ()
   (interactive)
   (message "Not supported yet... (to be implemented in 'lsp-mode')"))
+
+(defun spacemacs//lsp-client-server-id ()
+  "Return the ID of the LSP server associated with current project."
+  (mapcar 'lsp--client-server-id (mapcar 'lsp--workspace-client (lsp-workspaces))))
 
 
 ;; ivy integration

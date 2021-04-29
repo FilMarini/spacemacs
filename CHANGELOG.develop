@@ -124,6 +124,8 @@ the [[file:CHANGELOG.org][CHANGELOG.org]] file.
     state (thanks to Sylvain Benner)
   - Restricted ~SPC b C-d~ to only kill other buffers in current perspective
     (thanks to Seong Yong-ju)
+  - Changed ~SPC t t m~ from ~timeclock-modeline-display~ which was deprecated 
+    in Emacs 24.3 to ~timeclock-mode-line-display~ (thanks to Zach Pearson)
 - Other:
   - Support for multiple cursors using =evil-mc= is now encapsulated in the
     =multiple-cursors= layer (thanks to Codruț Constantin Gușoi)
@@ -137,7 +139,7 @@ the [[file:CHANGELOG.org][CHANGELOG.org]] file.
 - Add ~J/K~ for scrolling down/up (thanks to Daniel Nicolai)
 ***** ESS
 - ESS key bindings were re-organised in the following list
-  (thanks to Guido Kraemer, Yi Liu, and Jack Kamm):
+  (thanks to Guido Kraemer, Yi Liu, Jack Kamm and Ben Swift):
   - ~SPC m ,~ for =ess-eval-region-or-function-or-paragraph-and-step=
   - ~SPC m d~ for =ess-dev-map=
   - ~SPC m h h~ for =ess-display-help-on-object=
@@ -155,6 +157,7 @@ the [[file:CHANGELOG.org][CHANGELOG.org]] file.
   - ~SPC m s f~ for =ess-eval-function=
   - ~SPC m s i~ for =spacemacs/ess-start-repl=
   - ~SPC m s l~ for =ess-eval-line=
+  - ~SPC m s Q~ for =ess-quit=
   - ~SPC m s r~ for =ess-eval-region=
   - ~SPC m s s~ for =ess-switch-to-inferior-or-script-buffer=
   - ~SPC m w~ for =ess-r-package-dev-map=
@@ -190,6 +193,7 @@ the [[file:CHANGELOG.org][CHANGELOG.org]] file.
   - Change jump back to last mark from ~SPC m g p~ to ~SPC m g b~
     to follow the keybindings convention (thanks to Magnus Therning)
   - Use ~lsp-ivy~ when ~ivy~ layer is present.
+  - added  ~lsp-use-lsp-ui~ variable to control whether ~lsp-ui~ is installed or not.
 ***** IPython notebook
 - Key bindings;
   - Change prefix from ~SPC a i~ to ~SPC a y~ (thanks to Swaroop C H)
@@ -321,6 +325,9 @@ In org-agenda-mode
   - Changed =projectile-rails= key binding prefix from ~SPC m r~ to ~SPC m f~
     to avoid conflicts with key bindings in the =web-mode= layer
     (thanks to Adam Sokolnicki)
+***** Search-engine
+  - Add Debian & Ubuntu package search engines (thanks to Alfonso Montero).
+  - Allow to configure a TLD other than =.com= for Amazon searches (thanks to Alfonso Montero).
 ***** Spacemacs-navigation
 - Key bindings:
   - Add ~J/K~ to scroll up/down (or next/previous node) in Info-mode
@@ -334,6 +341,8 @@ In org-agenda-mode
   - Move major specific error key bindings to ~SPC m E~ prefix
     (thanks to Sylvain Benner)
   - Changed ~SPC e e~ to ~SPC e b~ for =flycheck-buffer=
+***** Tabs
+- Add auto hide tabs feature (thanks to Daniel Nicolai)
 ***** Vagrant
 - Key bindings:
   - Vagrant key bindings prefix is now ~SPC a V~.
@@ -342,6 +351,7 @@ In org-agenda-mode
 - Key bindings:
   - Changed ~SPC g h o~ to ~SPC g o~ for =browse-at-remote= (thanks to Codruț
     Constantin Gușoi)
+  - Add ~SPC g f m~ for ~magit-file-dispatch~ (thanks to Ag Ibragimov and Ilya Grigoriev)
 ***** YAML
 - Added LSP support (thanks to Seong Yong-ju)
 ***** ycmd
@@ -395,6 +405,7 @@ In org-agenda-mode
 - prolog (thanks to Newres Al Haider)
 - reasonml (thanks to fredyr and Dave Aitken)
 - solidity (thanks to Brooklyn Zelenka and Seong Yong-ju)
+- tabs (thanks to Deepu Puthrote)
 - protobuf (thanks to Amol Mandhane)
 - restructuredtext (thanks to Wei-Wei Guo and Kalle Lindqvist)
 - semantic-web (thanks to Andreas Textor)
@@ -427,6 +438,7 @@ In org-agenda-mode
 - dap (thanks to Ivan Yonchovski)
 - debug (thanks to Hodge Shen, Troy Hinckley, and Sylvain Benner)
 - dotnet (thanks to Jordan Kaye)
+- eaf (thanks to Daniel Nicolai)
 - import-js (thanks to Thanh Vuong and Seong Yong-ju)
 - kubernetes with tramp support (thanks to Matt Bray and Maximilian Wolff)
 - languagetool (thanks to Robbert van der Helm)
@@ -455,6 +467,7 @@ In org-agenda-mode
 - flow-type (replaced by LSP in =javascript= layer)
 - ycmd (moved to =c-c++=)
 *** Dotfile changes
+- Added type bases validation for .spacemacs variables.
 - New Variables:
   - New dotvariable =dotspacemacs-auto-generate-layout-names= (thanks to bmag)
   - New dotvariables =dotspacemacs-emacs-pdumper-executable-file=,
@@ -491,6 +504,8 @@ In org-agenda-mode
   - New variable =dotspacemacs-read-process-output-max= to optimise lsp
     performance in emacs 27 (thanks to Maximilian Wolff)
   - New variable =dotspacemacs-show-trailing-whitespace= (thanks to duianto)
+  - New var =dotspacemacs-startup-buffer-multi-digit-delay= (thanks to duianto)
+  - New variable =dotspacemacs-scroll-bar-while-scrolling= (thanks to duianto)
 - Removed Variables:
   - Removed unused variable =dotspacemacs-verbose-loading= from
     =.spacemacs.template= (thanks to Ying Qu)
@@ -623,6 +638,7 @@ Other:
     after =spacemacs-scratch-mode= is applied to =*scratch*= buffer (thanks to rayw000)
   - Add toggles for persistent which-key keymaps, (full)-major/minor mode
     keymaps and top-level keymap, under prefix ~SPC t k~ (thanks to Daniel Nicolai)
+  - Add =describe-ex-command= on ~SPC h d x~ (thanks to Daniel Nicolai)
 - Fixes:
   - Avoid non-idempotent use of push in init code (thanks to Miciah Masters)
   - Moved Spacemacs startup progress bar to =core-progress-bar.el=, removed
@@ -795,6 +811,8 @@ Other:
     (thanks to kenkangxgwe)
   - Added =valign= package to =spacemacs-org= layer
     (thanks to rayw000)
+  - Added =string-edit= package to =spacemacs-editing= layer
+    (thanks to Ivan Yonchovski)
 - Key bindings:
   - Evilify =Custom-mode= (thanks to Keith Pinson)
   - Fixed ~M-x~ prefix visualization for ~dotspacemacs-emacs-command-key~
@@ -926,6 +944,8 @@ Other:
     - ~SPC F O~ (=dired-other-frame=)
     (thanks to Miciah Masters)
   - New key binding ~SPC f i~ for =insert-file=.
+  - New key binidng ~SPC f e I~ to open =early-init.el= file
+    (thanks to Sylvain Benner)
   - New ~SPC f e U~ to update packages (thanks to Codruț Constantin Gușoi)
   - New frame manipulation key bindings:
     - Added ~SPC F f~ for =find-file-other-frame=
@@ -1114,6 +1134,9 @@ Other:
     (thanks to John Stevenson)
   - Added ~SPC c b~ to switch to last compilation buffer
     (thanks to Ivan Yonchovski)
+  - Added ~SPC x n~ for multi-line transient state
+    (thanks to Tristan Harmer)
+  - Added ~s~ =hydra-dired-quick-sort/body= (thanks to duianto)
 - Improvements:
   - Rewrote window layout functions for ~SPC w 1~, ~SPC w 2~, ~SPC w 3~, and
     ~SPC w 4~ (thanks to Codruț Constantin Gușoi):
@@ -1475,7 +1498,7 @@ Other:
     (thanks to Alexander Dalshov)
 - New packages:
   - =cpp-auto-include= Insert and delete C++ header files automatically:
-    - Added variable: =++-enable-organize-includes-on-save=
+    - Added variable: =c-c++-enable-organize-includes-on-save=
     - Added key binding: ~SPC m r i~ organize includes
     (thanks to Seong Yong-ju)
 - Improvements:
@@ -1890,6 +1913,14 @@ Other:
   - Make ~SPC m h h~ and jump handlers work in =ielm= (thanks to Keith Pinson)
   - Added ~c~ to continue in edebug mode (thanks to hodge)
   - Added ~SPC m g b~ to jump back to previous point (thanks to Magnus Therning)
+  - Added Edebug Eval List key bindings
+    - ~SPC m g w~ for =edebug-where=
+    - ~SPC m a~ for =edebug-delete-eval-item=
+    - ~SPC m k~ for =edebug-delete-eval-item=
+    - ~SPC m ,~ for =edebug-update-eval-list=
+    - ~SPC m c~ for =edebug-update-eval-list=
+    - ~SPC m e e~ for =edebug-eval-last-sexp=
+    - ~SPC m e E~ for =edebug-eval-print-last-sexp=
 - Identify Cask files as emacs lisp ones (thanks to Adrien Becchis)
 - Added =overseer= ert test runner (thanks to Adrien Becchis)
   - Key bindings:
@@ -1982,6 +2013,8 @@ Other:
 - Support running graphical Factor listener instances from Spacemacs
 - Support reloading factor-mode/fuel-mode code when connecting to different
   Factor versions
+**** FASD
+- Add ~search from~ ivy action (thanks to Daniel Nicolai)
 **** Finance
 - Remove key-bindings pointing to removed commands (thanks to Alexander Baier)
 - Added =evil-ledger= package (thanks to Alexander Miller)
@@ -2073,6 +2106,8 @@ Other:
   - Allowed multichar major mode leader key for exiting magit commit edits
     (thanks to tuh8888)
   - Restore magit transient args between sessions (thanks to duianto)
+- Improvements:
+  - Added orgit-forge (thanks to Ag Ibragimov)
 **** Gnus
 - Key bindings:
   - Added ~g r~ for =gnus-group-get-new-news= (thanks to Matthew Leach)
@@ -2246,6 +2281,7 @@ Other:
   - Add ~C-d~ to create a project perspective and open a project root dired
     buffer, from the ~SPC p l~ persp switch project prompt
     (thanks to Magnus Therning)
+  - Add =C(-S)-tab= keybindings for buffer switching (thanks to Daniel Nicolai)
 - Fixes:
   - Fixed signature of =spacemacs//display-helm-window= (thanks to Jack Kamm)
   - Fixed initialization by calling =helm-mode= when Helm is initialized=
@@ -2356,6 +2392,7 @@ Other:
   - Bound =SPC s l= to =ivy-resume= (thanks to Wieland Hoffmann)
   - Rebind =C-k= to =C-M-k= in =ivy-reverse-i-search= (=C-r= at a prompt)
     (thanks to duianto)
+  - Add =C-(S)-tab= keybindings for buffer switching (thanks to Daniel Nicolai)
 - Removed definitions for =spacemacs/swiper-region-or-symbol= and
   =spacemacs/swiper-all-region-or-symbol= and updated keybindings, because Ivy has
   more advanced implementation via =swiper-thing-at-point= and
@@ -2447,6 +2484,9 @@ files (thanks to Daniel Nicolai)
     - ~SPC m c p~ create spring boot project
       (thanks to Ivan Yonchovski)
   - Fixed ~SPC m m t C-a~ it was bound to ~SPC m m t C - a~ (thanks to duianto)
+  - New =lsp= backend keybindings
+    - ~SPC m r a l~ assign statement to local
+    - ~SPC m r a F~ assign statement to field
 - Improvements:
   - Added support for multiple backends. Supported backends are: =meghanada=,
     =eclim=. The default backend is =meghanada=. (thanks to Ivan Yonchovski)
@@ -2571,7 +2611,7 @@ files (thanks to Daniel Nicolai)
   compiled PDF is changed (thanks to Lucius Hu)
 **** Lua
 - Added support for auto-completion with =company= (thanks to halfcrazy)
-- Added support for =LSP= (EmmyLua-LS-all) (thanks to Lin.Sun)
+- Added support for =LSP= (EmmyLua-LS-all, lua-language-server, lua-lsp) (thanks to Lin.Sun)
 - Added =EmmyLua-LS-all.jar= to =.gitignore= (thanks to duianto)
 - Removed require lsp-clients (thanks to duianto)
 **** Language Server Protocol (LSP)
@@ -2592,6 +2632,7 @@ files (thanks to Daniel Nicolai)
 - Added package =helm-lsp=
   - ~SPC m g s~ to find symbol in current project
   - ~SPC m g S~ to find symbol in all projects
+  - ~SPC p E~ to show error list
 - Disabled =helm-lsp= keybindings when =ivy= layer enabled (Cormac Cannon)
 - Deleted =fix-lsp-company-prefix= since =company-lsp= is doing that handling.
 - Fixed a delay when declaring prefixes for mode (thanks to Thanh Vuong)
@@ -2675,6 +2716,7 @@ files (thanks to Daniel Nicolai)
   terminal users (thanks to AmaiKinono)
 - Made =*lsp-help*= buffer shown in a popup window using popwin
 - Add support for mdx files via markdown-mode (thanks to robbyoconnor)
+- Improve documentation about markdown preview options (thanks to Lin Sun)
 **** Major modes
 - Added SPARQL-mode (thanks to Dietrich Daroch)
 - Added android logcat (thanks to jiejingzhang)
@@ -2763,6 +2805,7 @@ files (thanks to Daniel Nicolai)
   (thanks to jupl)
 - Disabled add-node-modules-path by default (thanks to Eivind Fonn)
 **** Notmuch
+- Fixed a bug in notmuch-tree which was preventing ~d~/~D~ bindings to work (thanks to Daniel Nicolai, alexey0308, inwit)
 - Try harder to find GitHub patch URL (thanks to Miciah Masters)
 - Open GitHub patches fullscreen
 - Add next and previous message bindings to notmuch-tree mode
@@ -2789,7 +2832,11 @@ files (thanks to Daniel Nicolai)
   - Added package =org-jira= (thanks to Kirill A. Korinsky)
   - Added package =org-rich-yank= (thanks to Keith Pinson)
   - Added package =org-roam= (thanks to Mariusz Klochowicz)
+  - Added package =org-contacts= (thanks to Daniel Nicolai)
+  - Added package =org-appear= (thanks to winsphinX)
+  - Added package =org-wild-notifier= (thanks to Daniel Nicolai)
 - Key bindings:
+  - ~SPC m s y~ for =org-copy-subtree= (thanks to Keith Pinson)
   - ~SPC m T i~ to toggle inline images
   - Move clock related key bindings to ~SPC a o C~
   - Key bindings (thanks to darkfeline and Langston Barrett):
@@ -2898,8 +2945,15 @@ files (thanks to Daniel Nicolai)
     - ~SPC a o r d t~ (~SPC m r d t~) Open today's daily note
     - ~SPC a o r d T~ (~SPC m r d T~) Open tomorrow's daily note
     (thanks to Mariusz Klochowicz)
+    - ~SPC a o r d d~ (~SPC m r d d~) Open daily note via calendar view
+    (thanks to Ben Swift)
+    - ~SPC a o r a~ (~SPC m r a~) Add org-roam alias to file
+      (thanks to KjartanOli)
   - Added additional prefix (~SPC m m j~) for org-jira bindings
     (thanks to Mariusz Klochowicz)
+  - Added keybindings ~SPC a o C f~ and org/agenda local ~SPC m C f~ keybindings
+    and changed =clocks= prefixes to =clocks/contacts=
+  - Add =org-brain= buffer, ~SPC~ menu (vim or hybrid style) (thanks to duianto)
 - Made =org= layer depend on =spacemacs-org= (thanks to Eivind Fonn)
 - Remove =mu4e= and =notmuch= from =org= (thanks to Sylvain Benner)
 - Use evil-org from MELPA (thanks to Eivind Fonn)
@@ -2953,6 +3007,7 @@ files (thanks to Daniel Nicolai)
 - Implemented automatic activation of evil insert state after
   =org-insert-drawer=, =org-insert-heading=, =org-insert-item= and
   =org-insert-structure-template= commands (thanks to Andriy Kmit')
+- Added =ox-asciidoc= as org export backend (thanks to Christian "West" Westrom)
 **** Osx
 - Key bindings:
   - Added key bindings to use ~command-1..9~ for selecting window
@@ -2991,6 +3046,7 @@ files (thanks to Daniel Nicolai)
     - ~[~ history-backward (previous view)
     - ~]~ history-forward (next view)
     - ~?~ toggle transient sate documentation hint (shown by default)
+- Add pdf-view-restore (thanks to Daniel Nicolai)
 **** Perl5
 - Fixed =spacemacs/perltidy-format-buffer= and
   =spacemacs/perltidy-format-function= to move the point and window to their
@@ -3011,6 +3067,7 @@ files (thanks to Daniel Nicolai)
   - Added LSP support, which can be used by enabling the =lsp= layer and setting
     the =php= layer's =php-backend= variable to =lsp=
     (thanks to Daniel Richtmann)
+  - Fix packages missed in Melpa (thanks to zebradil)
 **** PlantUML
 - Added a missing prefix: =compile= (thanks to Seong Yong-ju)
 - Added instructions for compiling the image locally by setting
@@ -3121,6 +3178,7 @@ files (thanks to Daniel Nicolai)
 - Added --last-failed support for pytest (thanks to Jaakko Luttinen)
 - Added =spacemacs/python-shell-send-statement= support (thanks to Lin Sun)
 - Added =sphinx-doc= support (thanks to Stefan Ruschke)
+- Fix ipython version parsing for dev branches (thanks to Corentin Risselin)
 **** Racket
 - Restore smart closing paren behavior in racket-mode (thanks to Don March)
 - Updated racket logo (thanks to Vityou)
@@ -3274,6 +3332,7 @@ files (thanks to Daniel Nicolai)
   - Modified ~SPC m c X~ for =cargo run --bin= command, instead of
     =cargo run --example= (thanks to Lucius Hu)
   - Added ~SPC m c E~ for =cargo run --example= (thanks to Lucius Hu)
+  - Added ~SPC m b R~ to reload Rust-Analyzer workspace
 - Added rust lsp completion with company and bindings (thanks to Justin)
 - Added debugger integration via =dap= layer
 - Fixed rust dap integration (thanks to Tommi Komulainen)
@@ -3284,6 +3343,7 @@ files (thanks to Daniel Nicolai)
 - Added/Updated instructions on external dependencies, =cargo-edit=,
   =cargo-audit=, =rustfmt=, and =clippy= (thanks to Lucius Hu)
 - Added support for Rusty Object Notation (RON) (thanks to Daniel Hutzley)
+- Improved LSP Rust server switch functionality (thanks to Lucius Hu)
 **** Sailfish-Developer
 - Key bindings:
   - Added =sailfish-scratchbox= key bindings (thanks to Victor Polevoy):
@@ -3677,6 +3737,7 @@ files (thanks to Daniel Nicolai)
   (thanks to Alexander Dalshov)
 **** Zig
 - Added syntax highlighting (thanks to Michael Hauser-Raspe)
+- Added support for lsp server (thanks to rbino)
 *** Various improvements
 - Lots of improvement with CI and documentation exporting
   (thanks to Eugene Yaremenko)

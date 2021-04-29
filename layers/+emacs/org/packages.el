@@ -1,54 +1,77 @@
 ;;; packages.el --- Org Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2020 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2021 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
-;;; License: GPLv3
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-(setq org-packages
-      '(
-        company
-        company-emoji
-        emoji-cheat-sheet-plus
-        evil-org
-        evil-surround
-        gnuplot
-        (helm-org-rifle :toggle (configuration-layer/layer-used-p 'helm))
-        htmlize
-        ;; ob, org and org-agenda are installed by `org-plus-contrib'
-        (ob :location built-in)
-        (org :location built-in)
-        (org-agenda :location built-in)
-        (org-brain :toggle (version<= "25" emacs-version))
-        (org-expiry :location built-in)
-        (org-journal :toggle org-enable-org-journal-support)
-        org-download
-        (org-jira :toggle org-enable-jira-support)
-        org-mime
-        org-pomodoro
-        org-present
-        org-cliplink
-        org-rich-yank
-        (org-projectile :requires projectile)
-        (ox-epub :toggle org-enable-epub-support)
-        (ox-twbs :toggle org-enable-bootstrap-support)
-        ;; use a for of ox-gfm to fix index generation
-        (ox-gfm :location (recipe :fetcher github :repo "syl20bnr/ox-gfm")
-                :toggle org-enable-github-support)
-        (org-re-reveal :toggle org-enable-reveal-js-support)
-        persp-mode
-        (ox-hugo :toggle org-enable-hugo-support)
-        (ox-jira :toggle org-enable-jira-support)
-        (org-trello :toggle org-enable-trello-support)
-        (org-sticky-header :toggle org-enable-sticky-header)
-        (verb :toggle org-enable-verb-support)
-        (org-roam :toggle org-enable-roam-support)
-        (valign :toggle org-enable-valign)
-        ))
+
+(defconst org-packages
+  '(
+    company
+    company-emoji
+    emoji-cheat-sheet-plus
+    evil-org
+    evil-surround
+    gnuplot
+    (helm-org-rifle :toggle (configuration-layer/layer-used-p 'helm))
+    htmlize
+    ;; ob, org, org-agenda and org-contacts are installed by `org-plus-contrib'
+    (ob :location built-in)
+    (org :location built-in)
+    (org-agenda :location built-in)
+    (org-wild-notifier
+                :toggle org-enable-notifications)
+    (org-contacts :location built-in
+                  :toggle org-enable-org-contacts-support)
+    (org-vcard :toggle org-enable-org-contacts-support)
+    org-brain
+    (org-expiry :location built-in)
+    ; temporarily point org-journal to dalanicolai fork until dalanicolai's
+    ; PR's https://github.com/bastibe/org-journal/pulls get merged
+    (org-journal
+     :location (recipe :fetcher github :repo "dalanicolai/org-journal")
+     :toggle org-enable-org-journal-support)
+    org-download
+    (org-jira :toggle org-enable-jira-support)
+    org-mime
+    org-pomodoro
+    org-present
+    org-cliplink
+    org-rich-yank
+    (org-projectile :requires projectile)
+    (ox-epub :toggle org-enable-epub-support)
+    (ox-twbs :toggle org-enable-bootstrap-support)
+    ;; use a for of ox-gfm to fix index generation
+    (ox-gfm :location (recipe :fetcher github :repo "syl20bnr/ox-gfm")
+            :toggle org-enable-github-support)
+    (org-re-reveal :toggle org-enable-reveal-js-support)
+    persp-mode
+    (ox-hugo :toggle org-enable-hugo-support)
+    (ox-jira :toggle org-enable-jira-support)
+    (org-trello :toggle org-enable-trello-support)
+    (org-sticky-header :toggle org-enable-sticky-header)
+    (verb :toggle org-enable-verb-support)
+    (org-roam :toggle org-enable-roam-support)
+    (valign :toggle org-enable-valign)
+    (org-appear :toggle org-enable-appear-support)
+    (org-roam-server :require org-roam :toggle org-enable-roam-server)
+    (ox-asciidoc :toggle org-enable-asciidoc-support)))
 
 (defun org/post-init-company ()
   (spacemacs|add-company-backends :backends company-capf :modes org-mode))
@@ -183,9 +206,9 @@ Will work on both org-mode and any mode that accepts plain html."
             (insert (format tag ""))
             (forward-char -8))))
 
-      (dolist (prefix '(
+      (dolist (prefix `(
                         ("mb" . "babel")
-                        ("mC" . "clocks")
+                        ("mC" . ,(org-clocks-prefix))
                         ("md" . "dates")
                         ("me" . "export")
                         ("mf" . "feeds")
@@ -198,8 +221,8 @@ Will work on both org-mode and any mode that accepts plain html."
                         ("mtd" . "delete")
                         ("mti" . "insert")
                         ("mtt" . "toggle")
-                        ("mx" . "text")
-                        ))
+                        ("mx" . "text")))
+
         (spacemacs/declare-prefix-for-mode 'org-mode (car prefix) (cdr prefix)))
       (spacemacs/set-leader-keys-for-major-mode 'org-mode
         "'" 'org-edit-special
@@ -257,6 +280,7 @@ Will work on both org-mode and any mode that accepts plain html."
         "sA" 'org-archive-subtree-default
         "sb" 'org-tree-to-indirect-buffer
         "sd" 'org-cut-subtree
+        "sy" 'org-copy-subtree
         "sh" 'org-promote-subtree
         "sj" 'org-move-subtree-down
         "sk" 'org-move-subtree-up
@@ -358,7 +382,7 @@ Will work on both org-mode and any mode that accepts plain html."
       ;; functionalities – and a few others commands – from any other mode.
       (spacemacs/declare-prefix "ao" "org")
       (spacemacs/declare-prefix "aof" "feeds")
-      (spacemacs/declare-prefix "aoC" "clock")
+      (spacemacs/declare-prefix "aoC" (org-clocks-prefix))
       ;; org-agenda
       (when (configuration-layer/layer-used-p 'ivy)
         (spacemacs/set-leader-keys "ao/" 'org-occur-in-agenda-files))
@@ -456,7 +480,7 @@ Will work on both org-mode and any mode that accepts plain html."
     :init
     (progn
       (setq org-agenda-restore-windows-after-quit t)
-      (dolist (prefix '(("mC" . "clocks")
+      (dolist (prefix `(("mC" . ,(org-clocks-prefix))
                         ("md" . "dates")
                         ("mi" . "insert")
                         ("ms" . "trees/subtrees")))
@@ -564,6 +588,8 @@ Headline^^            Visit entry^^               Filter^^                    Da
         ("." org-agenda-goto-today)
         ("gd" org-agenda-goto-date)))
     :config
+    (when org-enable-org-contacts-support
+      (use-package org-contacts))
     (evilified-state-evilify-map org-agenda-mode-map
       :mode org-agenda-mode
       :bindings
@@ -583,6 +609,13 @@ Headline^^            Visit entry^^               Filter^^                    Da
       (kbd "M-RET") 'org-agenda-show-and-scroll-up
       (kbd "M-SPC") 'spacemacs/org-agenda-transient-state/body
       (kbd "s-M-SPC") 'spacemacs/org-agenda-transient-state/body)))
+
+(defun org/init-org-wild-notifier ()
+  (use-package org-wild-notifier
+    :defer t
+    :init
+    (when org-start-notification-daemon-on-startup
+      (org-wild-notifier-mode))))
 
 (defun org/init-org-brain ()
   (use-package org-brain
@@ -609,7 +642,10 @@ Headline^^            Visit entry^^               Filter^^                    Da
         "Bgf" 'org-brain-goto-friend
         "BR"  'org-brain-refile
         "Bx"  'org-brain-delete-entry)
-      (evil-set-initial-state 'org-brain-visualize-mode 'emacs))))
+      (evil-set-initial-state 'org-brain-visualize-mode 'emacs)
+      (when (memq dotspacemacs-editing-style '(vim hybrid))
+        (with-eval-after-load 'org-brain
+          (define-key org-brain-visualize-mode-map (kbd "SPC") 'spacemacs-cmds))))))
 
 (defun org/init-org-expiry ()
   (use-package org-expiry
@@ -796,9 +832,25 @@ Headline^^            Visit entry^^               Filter^^                    Da
     (let ((agenda-files (org-agenda-files)))
       (if agenda-files
           (progn (find-file (if org-persp-startup-org-file org-persp-startup-org-file (first agenda-files)))
-                 (if org-persp-startup-with-agenda (org-agenda nil org-persp-startup-with-agenda)
-                 ))
+                 (if org-persp-startup-with-agenda (org-agenda nil org-persp-startup-with-agenda)))
+
         (user-error "Error: No agenda files configured, nothing to display.")))))
+
+(defun org/init-org-contacts ()
+  (use-package org-contacts
+    :defer t
+    :init
+    (progn
+      (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode
+        "Cf" 'org-contacts-find-file)
+      (spacemacs/set-leader-keys-for-major-mode 'org-mode
+        "Cf" 'org-contacts-find-file)
+      (spacemacs/set-leader-keys
+        "aoCf" 'org-contacts-find-file))))
+
+(defun org/init-org-vcard ()
+  (use-package org-vcard
+    :defer t))
 
 (defun org/init-org-journal ()
   (use-package org-journal
@@ -861,12 +913,7 @@ Headline^^            Visit entry^^               Filter^^                    Da
 (defun org/init-org-roam ()
   (use-package org-roam
     :defer t
-    :commands (org-roam-buffer-toggle-display
-               org-roam-dailies-find-yesterday
-               org-roam-dailies-find-today
-               org-roam-dailies-find-tomorrow
-               org-roam-tag-add
-               org-roam-tag-delete)
+    :hook (after-init . org-roam-mode)
     :init
     (progn
       (spacemacs/declare-prefix "aor" "org-roam")
@@ -876,13 +923,15 @@ Headline^^            Visit entry^^               Filter^^                    Da
         "aordy" 'org-roam-dailies-find-yesterday
         "aordt" 'org-roam-dailies-find-today
         "aordT" 'org-roam-dailies-find-tomorrow
+        "aordd" 'org-roam-dailies-find-date
         "aorf" 'org-roam-find-file
         "aorg" 'org-roam-graph
         "aori" 'org-roam-insert
         "aorI" 'org-roam-insert-immediate
         "aorl" 'org-roam-buffer-toggle-display
         "aorta" 'org-roam-tag-add
-        "aortd" 'org-roam-tag-delete)
+        "aortd" 'org-roam-tag-delete
+        "aora" 'org-roam-alias-add)
 
       (spacemacs/declare-prefix-for-mode 'org-mode "mr" "org-roam")
       (spacemacs/declare-prefix-for-mode 'org-mode "mrd" "org-roam-dailies")
@@ -892,16 +941,21 @@ Headline^^            Visit entry^^               Filter^^                    Da
         "rdy" 'org-roam-dailies-find-yesterday
         "rdt" 'org-roam-dailies-find-today
         "rdT" 'org-roam-dailies-find-tomorrow
+        "rdd" 'org-roam-dailies-find-date
         "rf" 'org-roam-find-file
         "rg" 'org-roam-graph
         "ri" 'org-roam-insert
         "rI" 'org-roam-insert-immediate
         "rl" 'org-roam-buffer-toggle-display
         "rta" 'org-roam-tag-add
-        "rtd" 'org-roam-tag-delete))
+        "rtd" 'org-roam-tag-delete
+        "ra" 'org-roam-alias-add))
     :config
     (progn
-      (spacemacs|hide-lighter org-roam-mode))))
+      (spacemacs|hide-lighter org-roam-mode)
+      (when org-enable-roam-protocol
+          (add-hook 'org-roam-mode-hook (lambda ()
+                                          (require 'org-roam-protocol)))))))
 
 (defun org/init-org-sticky-header ()
   (use-package org-sticky-header
@@ -945,4 +999,28 @@ Headline^^            Visit entry^^               Filter^^                    Da
     (progn
       (add-hook 'org-mode-hook 'valign-mode)
       (add-hook 'valign-mode-hook (lambda () (unless valign-mode
-                                               (valign-remove-advice)))))))
+                                               (valign-remove-advice)))))
+    :config
+    (spacemacs|diminish valign-mode " ㊣" " E")))
+
+(defun org/init-org-appear()
+  (use-package org-appear
+    :defer t
+    :init
+    (progn
+      (add-hook 'org-mode-hook 'org-appear-mode)
+      (setq org-appear-autolinks t
+            org-appear-autoemphasis t
+            org-appear-autosubmarkers t))))
+
+(defun org/init-org-roam-server()
+  (use-package org-roam-server
+    :defer t
+    :init
+    (progn
+      (spacemacs/set-leader-keys "aors" 'org-roam-server-mode)
+      (spacemacs/set-leader-keys-for-major-mode 'org-mode "rs" 'org-roam-server-mode))))
+
+(defun org/init-ox-asciidoc ()
+  (use-package ox-asciidoc
+    :after ox))
