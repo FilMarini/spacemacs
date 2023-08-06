@@ -67,7 +67,7 @@
         "bo" 'sr-speedbar-open
         "bc" 'sr-speedbar-close
         ;; generate support files
-        "f" 'vhdl-generate-support-files
+        "f" 'vhdl-set-prj-file
         )
       (spacemacs/declare-prefix-for-mode 'vhdl-mode "mv" "vhdl-beautify")
       (spacemacs/declare-prefix-for-mode 'vhdl-mode "mt" "vhdl-templates")
