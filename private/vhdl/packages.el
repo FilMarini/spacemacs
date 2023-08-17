@@ -28,14 +28,18 @@
     ))
 
 (defun vhdl/post-init-flycheck ()
-  (spacemacs/enable-flycheck 'vhdl-mode))
+  (with-eval-after-load 'lsp-vhdl
+     (if (file-exists-p (concat (lsp-workspace-root) "/hdl-prj.json"))
+         (spacemacs/enable-flycheck 'vhdl-mode)
+    )
+  )
+)
 
 (defun vhdl/init-vhdl-mode ()
   (use-package vhdl-mode
     :defer t
     :hook (vhdl-mode . (lambda ()
                          (lsp t)
-                         (flycheck-mode t)
                          ))
     :config
     (setq vhdl-speedbar-display-mode 'project
@@ -82,16 +86,24 @@
      :defer t
      :after lsp-mode
      :init
-     (setq lsp-vhdl-server 'ghdl-ls
-           lsp-vhdl-server-path (executable-find "ghdl-ls")
-           lsp-vhdl--params nil
-           lsp-enable-imenu nil)
+     (if (file-exists-p (concat (lsp-workspace-root) "/hdl-prj.json"))
+         (setq lsp-vhdl-server 'ghdl-ls
+               lsp-vhdl-server-path (executable-find "ghdl-ls")
+               lsp-vhdl--params nil
+               lsp-enable-imenu nil)
+     )
+     ;;(setq lsp-vhdl-server nil
+     ;;      lsp-vhdl-server-path nil
+     ;;      )
      :config
      (progn
        (spacemacs/set-leader-keys-for-major-mode 'vhdl-mode
          "R" 'lsp-restart-workspace
          ))
+     ;; (if (not (file-exists-p (concat (lsp-workspace-root) "/ghdl-prj.json")))
+     ;;     (flycheck-mode -1))
      ))
+
 
 
 
