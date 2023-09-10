@@ -17,6 +17,7 @@
     flycheck
     (lsp-vhdl :requires lsp-mode
               :location built-in)
+    vhdl-ext
     )
   "The list of Lisp packages required by the vhdl layer."
 
@@ -81,29 +82,36 @@
       )))
 
 (defun vhdl/init-lsp-vhdl ()
-  (setq lsp-restart 'auto-restart)
   (use-package lsp-vhdl
      :defer t
      :after lsp-mode
-     :init
-     (if (file-exists-p (concat (lsp-workspace-root) "/hdl-prj.json"))
-         (setq lsp-vhdl-server 'ghdl-ls
-               lsp-vhdl-server-path (executable-find "ghdl-ls")
-               lsp-vhdl--params nil
-               lsp-enable-imenu nil)
      )
-     ;;(setq lsp-vhdl-server nil
-     ;;      lsp-vhdl-server-path nil
-     ;;      )
-     :config
-     (progn
-       (spacemacs/set-leader-keys-for-major-mode 'vhdl-mode
-         "R" 'lsp-restart-workspace
-         ))
-     ;; (if (not (file-exists-p (concat (lsp-workspace-root) "/ghdl-prj.json")))
-     ;;     (flycheck-mode -1))
-     ))
+  )
 
+(defun vhdl/init-vhdl-ext ()
+  (use-package vhdl-ext
+    :after vhdl-mode
+    :demand
+    :hook ((vhdl-mode . vhdl-ext-mode))
+    :init
+    ;; Can also be set through `M-x RET customize-group RET vhdl-ext':
+    ;;  - Vhdl Ext Feature List (provides info of different features)
+    ;; Comment out/remove the ones you do not need
+    (setq vhdl-ext-feature-list
+          '(
+            lsp
+            flycheck
+            navigation
+            hierarchy
+            beautify
+            ports))
+    :config
+    (vhdl-ext-mode-setup)
+    (vhdl-ext-lsp-set-server 've-ghdl-ls)
+    (setq vhdl-ext-hierarchy-backend 'builtin)
+    ;; (remove-hook 'ag-search-finished-hook #'vhdl-ext-navigation-ag-rg-hook)
+    )
+  )
 
 
 
