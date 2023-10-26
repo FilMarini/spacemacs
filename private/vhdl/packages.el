@@ -44,7 +44,7 @@
     (progn
       (spacemacs/set-leader-keys-for-major-mode 'vhdl-mode
         ;; beautify
-        "vv" 'vhdl-beautify-buffer ;; C-c C-b
+        "vv" 'vhdl-lsp-beautify ;; C-c C-b
         "vr" 'vhdl-beautify-region ;; C-c M-b
         ;; insert header/trailer
         "th" 'vhdl-template-header
