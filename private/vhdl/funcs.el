@@ -9,3 +9,10 @@
       )
     )
   )
+
+(defun vhdl-lsp-beautify ()
+  (interactive)
+  (lsp-disconnect)
+  (vhdl-beautify-buffer)
+  (lsp-mode 1)
+    )
