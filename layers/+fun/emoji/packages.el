@@ -1,6 +1,6 @@
-;;; packages.el --- emoji Layer Packages File for Spacemacs
+;;; packages.el --- emoji Layer Packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -55,7 +55,7 @@
     (spacemacs//set-emoji-font nil)
     ;; Hook for when a frame is created with emacsclient
     (spacemacs|do-after-display-system-init
-     (spacemacs//set-emoji-font-for-current-frame))
+      (spacemacs//set-emoji-font-for-current-frame))
     (spacemacs|add-company-backends
      :backends company-emoji
      :modes text-mode)

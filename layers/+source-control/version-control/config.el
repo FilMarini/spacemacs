@@ -1,6 +1,6 @@
-;;; config.el --- Version Control configuration File for Spacemacs
+;;; config.el --- Version Control configuration File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -24,36 +24,30 @@
 (defvar spacemacs--smerge-ts-full-hint-toggle nil
   "Display smerge transient-state documentation.")
 
-(defvar version-control-global-margin t
-  "If non-nil, will show diff margins globally.")
+(spacemacs|defc version-control-margin 'auto
+  "Options to apply the margin for diff-tool.
 
-(defvar version-control-diff-tool 'diff-hl
-  "Options are `git-gutter', `git-gutter+', and `diff-hl' to show
-version-control markers.")
+For git-gutter it only checkes the option as nil or non-nil to
+activate/diactivate the margin feature.
 
-(defvar version-control-diff-side 'right
+For diff-hl it supports:
+`auto'/t: Activate the margin feature for TTY frames,
+          and activate the fringe feature for graphic frame.
+`global': Activate the margin globally.
+`nil': do not activate the margin feature."
+  '(choice (const auto) (const global) boolean))
+
+(spacemacs|defc version-control-diff-tool 'diff-hl
+  "Options are `diff-hl' (the preferred choice) or `git-gutter' to show
+version-control markers, `nil' to disable this feature."
+  '(choice (const diff-hl) (const git-gutter) nil))
+
+(spacemacs|defc version-control-diff-side 'right
   "Side on which to show version-control markers.
-Options are `left' and `right'.")
-
-;; unchanged face
-(defface git-gutter+-unchanged
-  '((t (:background "yellow")))
-  "face for unchanged lines"
-  :group 'git-gutter+)
-(defface git-gutter:unchanged
-  '((t (:background "yellow")))
-  "face for unchanged lines"
-  :group 'git-gutter+)
+Options are `left' and `right'."
+  '(choice (const left) (const right)))
 
 ;; change face
-(defface git-gutter+-modified
-  '((t (:foreground "magenta" :weight bold)))
-  "face for modified lines"
-  :group 'git-gutter+)
-(defface git-gutter:modified
-  '((t (:foreground "magenta" :weight bold)))
-  "face for modified lines"
-  :group 'git-gutter+)
 (defface diff-hl-change
   '((default :foreground "blue3")
     (((class color) (min-colors 88) (background light))
@@ -64,14 +58,6 @@ Options are `left' and `right'.")
   :group 'diff-hl)
 
 ;; added face
-(defface git-gutter+-added
-  '((t (:foreground "green" :weight bold)))
-  "face for added lines"
-  :group 'git-gutter+)
-(defface git-gutter:added
-  '((t (:foreground "green" :weight bold)))
-  "face for added lines"
-  :group 'git-gutter+)
 (defface diff-hl-insert
   '((default :inherit diff-added)
     (((class color)) :foreground "green4"))
@@ -79,14 +65,6 @@ Options are `left' and `right'.")
   :group 'diff-hl)
 
 ;; deleted face
-(defface git-gutter+-deleted
-  '((t (:foreground "red" :weight bold)))
-  "face for deleted lines"
-  :group 'git-gutter+)
-(defface git-gutter:deleted
-  '((t (:foreground "red" :weight bold)))
-  "face for deleted lines"
-  :group 'git-gutter+)
 (defface diff-hl-delete
   '((default :inherit diff-removed)
     (((class color)) :foreground "red3"))

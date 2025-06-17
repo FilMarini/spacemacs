@@ -1,6 +1,6 @@
-;;; packages.el --- ocaml Layer packages File for Spacemacs
+;;; packages.el --- ocaml Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -23,16 +23,14 @@
 
 (defconst ocaml-packages
   '(
-    company
     dune
     evil-matchit
     flycheck
     (flycheck-ocaml :toggle (configuration-layer/layer-used-p 'syntax-checking))
     ggtags
-    counsel-gtags
     imenu
     merlin
-    merlin-company
+    (merlin-company :requires (company merlin))
     merlin-eldoc
     merlin-iedit
     ocamlformat
@@ -40,14 +38,6 @@
     smartparens
     tuareg
     utop))
-
-(defun ocaml/post-init-company ()
-  (when (and (configuration-layer/package-used-p 'merlin)
-             (configuration-layer/package-used-p 'merlin-company))
-    (spacemacs|add-company-backends
-      :backends merlin-company-backend
-      :modes merlin-mode
-      :variables merlin-completion-with-doc t)))
 
 (defun ocaml/init-dune ()
   (use-package dune
@@ -95,9 +85,6 @@
 (defun ocaml/post-init-ggtags ()
   (add-hook 'ocaml-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
 
-(defun ocaml/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'ocaml-mode))
-
 (defun ocaml/init-merlin ()
   (use-package merlin
     :defer t
@@ -131,7 +118,11 @@
 
 (defun ocaml/init-merlin-company ()
   (use-package merlin-company
-    :defer t))
+    :defer t)
+  (spacemacs|add-company-backends
+    :backends merlin-company-backend
+    :modes merlin-mode
+    :variables merlin-completion-with-doc t))
 
 (defun ocaml/init-merlin-iedit ()
   (use-package merlin-iedit
@@ -190,37 +181,8 @@
   (use-package utop
     :defer t
     :init
-    (add-hook 'tuareg-mode-hook 'utop-minor-mode)
+    (add-hook 'tuareg-mode-hook #'utop-minor-mode)
     (spacemacs/register-repl 'utop 'utop "ocaml")
-    :config
-    (if (executable-find "opam")
-        (setq utop-command "opam config exec -- utop -emacs")
-      (spacemacs-buffer/warning "Cannot find \"opam\" executable."))
-
-    (defun spacemacs/utop-eval-phrase-and-go ()
-      "Send phrase to REPL and evaluate it and switch to the REPL in
-`insert state'"
-      (interactive)
-      (utop-eval-phrase)
-      (utop)
-      (evil-insert-state))
-
-    (defun spacemacs/utop-eval-buffer-and-go ()
-      "Send buffer to REPL and evaluate it and switch to the REPL in
-`insert state'"
-      (interactive)
-      (utop-eval-buffer)
-      (utop)
-      (evil-insert-state))
-
-    (defun spacemacs/utop-eval-region-and-go (start end)
-      "Send region to REPL and evaluate it and switch to the REPL in
-`insert state'"
-      (interactive "r")
-      (utop-eval-region start end)
-      (utop)
-      (evil-insert-state))
-
     (spacemacs/set-leader-keys-for-major-mode 'tuareg-mode
       "'"  'utop
       "sb" 'utop-eval-buffer
@@ -231,5 +193,9 @@
       "sr" 'utop-eval-region
       "sR" 'spacemacs/utop-eval-region-and-go)
     (spacemacs/declare-prefix-for-mode 'tuareg-mode "ms" "send")
+    :config
+    (if (executable-find "opam")
+        (setq utop-command "opam config exec -- utop -emacs")
+      (spacemacs-buffer/warning "Cannot find \"opam\" executable."))
     (define-key utop-mode-map (kbd "C-j") 'utop-history-goto-next)
     (define-key utop-mode-map (kbd "C-k") 'utop-history-goto-prev)))

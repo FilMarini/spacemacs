@@ -1,6 +1,6 @@
-;;; config.el --- Org configuration File for Spacemacs
+;;; config.el --- Org configuration File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -21,11 +21,6 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-;; Dumper
-
-(defun org/pre-dump ()
-  (spacemacs/dump-modes '(org-mode)))
-
 ;; Variables
 
 (defvar org-want-todo-bindings nil
@@ -40,7 +35,7 @@
 (defvar org-enable-reveal-js-support nil
   "If non-nil, enable export to reveal.js.")
 
-(defvar org-projectile-file "TODOs.org"
+(defvar org-project-capture-projects-file "TODOs.org"
   "The file to store project TODOs in. If this is a relative
 path, one file per project is used (and the path is relative to
 the project root). If it an absolute path, one global file is

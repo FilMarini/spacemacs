@@ -1,6 +1,6 @@
-;;; packages.el --- HTML Layer packages File for Spacemacs
+;;; packages.el --- HTML Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -67,14 +67,14 @@
     :defer t
     :init
     (spacemacs|add-company-backends
-     :backends (company-web-html company-css)
-     :modes web-mode)
+      :backends (company-web-html company-css)
+      :modes web-mode)
     (spacemacs|add-company-backends
-     :backends company-web-jade
-     :modes pug-mode)
+      :backends company-web-jade
+      :modes pug-mode)
     (spacemacs|add-company-backends
-     :backends company-web-slim
-     :modes slim-mode)))
+      :backends company-web-slim
+      :modes slim-mode)))
 
 (defun html/init-css-mode ()
   (use-package css-mode
@@ -104,7 +104,7 @@
                                                 scss-mode-hook
                                                 web-mode-hook))
     :config
-    (define-key emmet-mode-keymap (kbd "<C-return>") 'spacemacs/emmet-expand)
+    (define-key emmet-mode-keymap (kbd "C-<return>") 'spacemacs/emmet-expand)
     (spacemacs|hide-lighter emmet-mode)))
 
 (defun html/post-init-evil-matchit ()
@@ -228,9 +228,8 @@
     ;; TODO element close would be nice but broken with evil.
     :mode
     (("\\.phtml\\'"      . web-mode)
-     ("\\.tpl\\.php\\'"  . web-mode)
+     ("\\.tpl\\'"        . web-mode)
      ("\\.twig\\'"       . web-mode)
-     ("\\.xml\\'"        . web-mode)
      ("\\.html\\'"       . web-mode)
      ("\\.htm\\'"        . web-mode)
      ("\\.[gj]sp\\'"     . web-mode)
@@ -242,7 +241,6 @@
      ("\\.hbs\\'"        . web-mode)
      ("\\.eco\\'"        . web-mode)
      ("\\.ejs\\'"        . web-mode)
-     ("\\.svelte\\'"     . web-mode)
      ("\\.ctp\\'"        . web-mode)
      ("\\.djhtml\\'"     . web-mode))))
 

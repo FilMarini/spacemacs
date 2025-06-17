@@ -1,6 +1,6 @@
-;;; funcs.el --- Helm Layer functions File for Spacemacs
+;;; funcs.el --- Helm Layer functions File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -540,16 +540,17 @@ Removes the automatic guessing of the initial value based on thing at point. "
 (defmacro spacemacs||set-helm-key (keys func)
   "Define a key bindings for FUNC using KEYS.
 Ensure that helm is required before calling FUNC."
-  (let ((func-name (intern (format "lazy-helm/%s" (symbol-name func)))))
+  (let* ((actual-func (if (consp func) (cdr func) func))
+         (func-name (intern (format "lazy-helm/%s" (symbol-name actual-func))))
+         (func-param (if (consp func) `(,(car func) . ,func-name) func-name)))
     `(progn
        (defun ,func-name ()
          ,(format "Wrapper to ensure that `helm' is loaded before calling %s."
-                  (symbol-name func))
+                  (symbol-name actual-func))
          (interactive)
          (require 'helm)
-         (call-interactively ',func))
-       (spacemacs/set-leader-keys ,keys ',func-name))))
-
+         (command-execute ',actual-func))
+       (spacemacs/set-leader-keys ,keys ',func-param))))
  ;; Find files tweaks
 
 (defun spacemacs//helm-find-files-edit (candidate)

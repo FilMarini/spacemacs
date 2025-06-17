@@ -1,6 +1,6 @@
-;;; funcs.el --- rust Layer functions File for Spacemacs
+;;; funcs.el --- rust Layer functions File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: NJBS <DoNotTrackMeUsingThis@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -23,7 +23,8 @@
 
 (defun spacemacs//rust-setup-backend ()
   "Conditionally setup rust backend."
-  (spacemacs//rust-setup-lsp))
+  (when (eq rust-backend 'lsp)
+    (spacemacs//rust-setup-lsp)))
 
 (defun spacemacs//rust-setup-dap ()
   "Conditionally setup rust DAP integration."

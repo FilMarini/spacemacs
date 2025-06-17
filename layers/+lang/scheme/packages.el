@@ -1,6 +1,6 @@
-;;; packages.el --- Scheme Layer packages File for Spacemacs
+;;; packages.el --- Scheme Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -26,7 +26,6 @@
     evil-cleverparens
     geiser
     ggtags
-    counsel-gtags
     org
     (geiser-chez    :toggle (memq 'chez    scheme-implementations))
     (geiser-chibi   :toggle (memq 'chibi   scheme-implementations))
@@ -143,9 +142,6 @@
 
 (defun scheme/post-init-ggtags ()
   (add-hook 'scheme-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
-
-(defun scheme/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'scheme-mode))
 
 (defun scheme/pre-init-org ()
   (spacemacs|use-package-add-hook org

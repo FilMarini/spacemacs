@@ -1,4 +1,4 @@
-;;; packages.el --- fasd Layer packages File for Spacemacs
+;;; packages.el --- fasd Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
 ;; URL: https://github.com/syl20bnr/spacemacs
 ;;
@@ -52,7 +52,7 @@
          ("s" ivy-search-from-action "search-from"))))
 
     ;; we will fall back to using the default completing-read function, which is helm once helm is loaded.
-    (setq fasd-completing-read-function 'nil)
+    (setq fasd-completing-read-function nil)
     :config
     (with-eval-after-load 'marginalia
       (add-to-list 'marginalia-prompt-categories '("\\<fasd\\>" . file)))))

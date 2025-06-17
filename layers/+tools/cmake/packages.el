@@ -1,6 +1,6 @@
-;;; packages.el --- CMake layer packages file for Spacemacs.
+;;; packages.el --- CMake layer packages file for Spacemacs.  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Alexander Dalshov <dalshov@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -29,7 +29,6 @@
 
 (defun cmake/init-cmake-ide ()
   (use-package cmake-ide
-    :if cmake-enable-cmake-ide-support
     :commands (cmake-ide-delete-file cide--mode-hook)
     :init
     (dolist (hook '(c-mode-hook c++-mode-hook))

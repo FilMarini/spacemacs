@@ -1,6 +1,6 @@
-;;; packages.el --- Lua Layer packages File for Spacemacs
+;;; packages.el --- Lua Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -24,10 +24,9 @@
 (defconst lua-packages
   '(
     company
-    (company-lua :requires company)
+    (company-lua :requires company :toggle (eq lua-backend 'lua-mode))
     flycheck
     ggtags
-    counsel-gtags
     lua-mode))
 
 (defun lua/post-init-flycheck ()
@@ -66,11 +65,7 @@
 
 (defun lua/init-company-lua ()
   (use-package company-lua
-    :if (eq lua-backend 'lua-mode)
     :defer t))
 
 (defun lua/post-init-ggtags ()
   (add-hook 'lua-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
-
-(defun lua/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'lua-mode))

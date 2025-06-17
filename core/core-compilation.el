@@ -1,6 +1,6 @@
 ;;; core-compilation.el --- Spacemacs Core File -*- lexical-binding: t; no-byte-compile: t -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Eugene "JAremko" Yaremenko <w3techplayground@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -62,7 +62,7 @@ When the UPDATE is t, it will force update the state."
           (unless paths
             (setq paths (list nil nil nil nil))
             (push (cons name paths) afiles))
-          (if-let ((idx (cl-loop for i from 0
+          (if-let* ((idx (cl-loop for i from 0
                                  for s in slist
                                  until (string-suffix-p s file)
                                  finally return i)))

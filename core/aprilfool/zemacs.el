@@ -1,6 +1,6 @@
-;;; zemacs.el --- Spacemacs 2016 April Fools File
+;;; zemacs.el --- Spacemacs 2016 April Fools File  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -110,7 +110,7 @@
          'help-args (cdr l))))))
 
 (define-advice configuration-layer/initialize (:before (&rest _) zemacs/initialize)
-  (setq dotspacemacs-startup-banner "~/.emacs.d/core/banners/img/zemacs.png"))
+  (setq dotspacemacs-startup-banner (concat spacemacs-banner-directory "img/zemacs.png")))
 
 (define-advice spacemacs-buffer//inject-version
     (:around (f &rest args) zemacs/inject-version)

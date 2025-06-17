@@ -1,6 +1,6 @@
-;;; packages.el --- Nim Layer packages File for Spacemacs
+;;; packages.el --- Nim Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Max Gonzih
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -26,7 +26,8 @@
     company
     flycheck
     (flycheck-nim :location (recipe :fetcher github
-                                    :repo "smile13241324/flycheck-nim"))
+                                    :repo "smile13241324/flycheck-nim")
+                  :requires flycheck)
     nim-mode))
 
 (defun nim/post-init-company ()
@@ -37,8 +38,7 @@
   (spacemacs/enable-flycheck 'nimscript-mode))
 
 (defun nim/init-flycheck-nim ()
-  (use-package flycheck-nim
-    :if (configuration-layer/package-used-p 'flycheck)))
+  (use-package flycheck-nim))
 
 (defun nim/init-nim-mode ()
   (use-package nim-mode

@@ -1,6 +1,6 @@
-;;; packages.el --- Agda2 Layer packages File for Spacemacs
+;;; packages.el --- Agda2 Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Oliver Charles <ollie@ocharles.org.uk>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -87,7 +87,7 @@
         ","   'agda2-goal-and-context
         "="   'agda2-show-constraints
         "SPC" 'agda2-give
-        "a"   agda2-auto
+        "a"   'agda2-mimer-maybe-all
         "c"   'agda2-make-case
         "d"   'agda2-infer-type-maybe-toplevel
         "e"   'agda2-show-context

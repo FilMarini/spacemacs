@@ -1,6 +1,6 @@
-;;; packages.el --- gnus Layer packages File for Spacemacs
+;;; packages.el --- gnus Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -69,7 +69,7 @@
      gnus-sum-thread-tree-vertical "│"
      gnus-article-browse-delete-temp t
      gnus-treat-strip-trailing-blank-lines 'last
-     gnus-keep-backlog 'nil
+     gnus-keep-backlog nil
      gnus-summary-display-arrow nil ; Don't show that annoying arrow:
      gnus-mime-display-multipart-related-as-mixed t ; Show more MIME-stuff:
      gnus-auto-select-first nil ; Don't get the first article automatically:

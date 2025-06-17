@@ -1,6 +1,6 @@
-;;; packages.el --- xclipboard layer packages file for Spacemacs.
+;;; packages.el --- xclipboard layer packages file for Spacemacs.  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Authors: Charles Weill <weill@google.com>
 ;;          Google LLC.
@@ -22,13 +22,9 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 (defconst xclipboard-packages
-  '(
-    (spacemacs-xclipboard :location local)
-    (cliphist :requires ivy
-              :toggle xclipboard-enable-cliphist)
-    ))
+  '((spacemacs-xclipboard :location local)
+    (cliphist :toggle xclipboard-enable-cliphist)))
 
 (defun xclipboard/init-cliphist ()
   (use-package cliphist

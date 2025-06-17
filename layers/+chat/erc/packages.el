@@ -1,6 +1,6 @@
-;;; packages.el --- erc Layer packages File for Spacemacs
+;;; packages.el --- erc Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -27,13 +27,13 @@
     company-emoji
     emoji-cheat-sheet-plus
     erc
+    erc-tweet
     (erc-gitter :location (recipe
                            :fetcher github
                            :repo "jleechpe/erc-gitter")
                 :excluded t)
     erc-hl-nicks
     erc-image
-    (erc-sasl :location local)
     erc-social-graph
     (erc-terminal-notifier :toggle (spacemacs/system-is-mac))
     (erc-tex :location local)
@@ -89,6 +89,8 @@
     (setq erc-prompt (lambda () (concat "[" (buffer-name) "]")))
     (erc-spelling-mode 1)
     (setq erc-interpret-mirc-color t)
+    (when erc-enable-sasl-auth
+      (add-to-list 'erc-modules 'sasl))
 
     ;; Notifications are enabled if erc-enable-notifications is non-nil, and
     ;; D-BUS is available (i.e. Linux/BSD).
@@ -125,48 +127,12 @@
     (use-package erc-hl-nicks)))
 (defun erc/init-erc-hl-nicks ())
 
-(defun erc/pre-init-erc-sasl ()
-  (spacemacs|use-package-add-hook erc
-    :post-config
-    (use-package erc-sasl
-      :defer t
-      :if erc-enable-sasl-auth
-      ;; Following http://www.emacswiki.org/emacs/ErcSASL
-      ;; Maybe an advice would be better?
-      :config
-      ;; Add any server like this
-      ;; (add-to-list 'erc-sasl-server-regexp-list "host\\.server\\.com")
-      (add-to-list 'erc-sasl-server-regexp-list "irc\\.freenode\\.net")
-      (defun erc-login ()
-        "Perform user authentication at the IRC server."
-        (erc-log (format "login: nick: %s, user: %s %s %s :%s"
-                         (erc-current-nick)
-                         (user-login-name)
-                         (or erc-system-name (system-name))
-                         erc-session-server
-                         erc-session-user-full-name))
-        (if erc-session-password
-            (erc-server-send (format "PASS %s" erc-session-password))
-          (message "Logging in without password"))
-        (when (and (featurep 'erc-sasl) (erc-sasl-use-sasl-p))
-          (erc-server-send "CAP REQ :sasl"))
-        (erc-server-send (format "NICK %s" (erc-current-nick)))
-        (erc-server-send
-         (format "USER %s %s %s :%s"
-                 ;; hacked - S.B.
-                 (if erc-anonymous-login erc-email-userid (user-login-name))
-                 "0" "*"
-                 erc-session-user-full-name))
-        (erc-update-mode-line)))))
-(defun erc/init-erc-sasl ())
-
 (defun erc/pre-init-erc-social-graph ()
   (spacemacs|use-package-add-hook erc
     :post-config
     (use-package erc-social-graph
-      :init
-      ;; does not exist ?
-      ;; (erc-social-graph-enable)
+      :config
+      (erc-social-graph-enable)
       (setq erc-social-graph-dynamic-graph t)
       (spacemacs/set-leader-keys-for-major-mode 'erc-mode
         "D" 'erc-social-graph-draw))))
@@ -186,6 +152,14 @@
               (add-to-list 'erc-modules 'youtube)))))
 (defun erc/init-erc-yt ())
 
+(defun erc/pre-init-erc-tweet ()
+  (spacemacs|use-package-add-hook erc
+    :post-config
+    (use-package erc-tweet
+      :init (with-eval-after-load 'erc
+              (add-to-list 'erc-modules 'tweet)))))
+(defun erc/init-erc-tweet ())
+
 (defun erc/pre-init-erc-yank ()
   (spacemacs|use-package-add-hook erc
     :post-config
@@ -197,6 +171,7 @@
 (defun erc/init-erc-view-log ()
   (use-package erc-view-log
     :defer t
+    :commands (spacemacs/erc-find-channel-log)
     :init
     (setq erc-log-channels-directory
           (expand-file-name

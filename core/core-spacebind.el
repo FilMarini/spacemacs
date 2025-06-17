@@ -1,6 +1,6 @@
 ;;; core-spacebind.el --- Spacemacs Core File -*- lexical-binding: t -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Eugene "JAremko" Yaremenko <w3techplayground@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -451,7 +451,7 @@ NOTE: You can override key labels and displayed key sequences with :label <TEXT>
                                   (plist-get key))))
        (seq-reduce
         (lambda (acc pair)
-          (if-let ((stack (get-stack (car pair)))
+          (if-let* ((stack (get-stack (car pair)))
                    (stack-var (cadr pair)))
               ;; We do it this way because `nconc' should have
               ;; the shortest list as the first argument.

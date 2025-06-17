@@ -73,6 +73,7 @@
     - [[#default-theme][Default theme]]
     - [[#choosing-themes][Choosing themes]]
       - [[#themes-transient-state][Themes Transient State]]
+    - [[#external-theme][External theme]]
     - [[#browsing-themes][Browsing themes]]
     - [[#notes][Notes]]
   - [[#font][Font]]
@@ -271,14 +272,12 @@ and bugs are fixed quickly.
 - *Minimalistic and nice graphical UI* keeps your available screen space for
   what matters: your text files.
 - *Fast boot time*: packages and configuration are lazy-loaded as much as
-  possible. For even faster boot time, Spacemacs now provides full support for
-  the new portable dumper available in Emacs 27 and later.
+  possible.
 - *Lower the risk of RSI* by heavily using the space bar instead of modifiers.
   If you have issues with your thumbs you can still use Spacemacs using
   modifiers.
 - Contribute easily with your improvements and new configuration layers.
-- *Very active and helpful community* on =Gitter= and =IRC=
-  (via Gitter IRC bridge)
+- *Very active and helpful community* on =Gitter=
 
 * Screenshots
 [[file:img/spacemacs-python.png]]
@@ -290,7 +289,7 @@ project.
 
 * Who can benefit from this?
 - Spacemacs was initially intended to be used by *Vim users* who want to go to
-  the next level by using Emacs (see [[https://github.com/syl20bnr/spacemacs/blob/master/doc/VIMUSERS.org][guide]] for Vimmers). But it is now
+  the next level by using Emacs (see [[https://github.com/syl20bnr/spacemacs/blob/develop/doc/VIMUSERS.org][guide]] for Vimmers). But it is now
   perfectly *usable by non Vim users* by choosing the =emacs= editing style.
 - It is also a good fit for people wanting to *lower the [[https://en.wikipedia.org/wiki/Repetitive_strain_injury][risk of RSI]]* induced by
   the default Emacs key bindings. (This is an assumption, there are no official
@@ -356,7 +355,7 @@ and choosing a rollback slot (sorted by date). This button uses the command
 
 * Configuration layers
 This section is an overview of layers. A more extensive introduction to writing
-configuration layers can be found [[https://github.com/syl20bnr/spacemacs/blob/master/doc/LAYERS.org][here]] (recommended reading!).
+configuration layers can be found [[https://github.com/syl20bnr/spacemacs/blob/develop/doc/LAYERS.org][here]] (recommended reading!).
 
 ** Purpose
 Layers help collect related packages together to provide features. For example,
@@ -420,7 +419,7 @@ properly. For instance, if package =A= depends on =B= then you can configure
   (with-eval-after-load 'B ...)
 #+END_SRC
 
-For details on installing packages using quelpa or local packages see [[https://github.com/syl20bnr/spacemacs/blob/master/doc/LAYERS.org#packagesel][LAYERS]].
+For details on installing packages using quelpa or local packages see [[https://github.com/syl20bnr/spacemacs/blob/develop/doc/LAYERS.org#packagesel][LAYERS]].
 
 **** Initialization
 To initialize a package =xxx=, define a function with this format in
@@ -447,7 +446,7 @@ Example:
 #+END_SRC
 
 **** Overriding a layer package
-See [[https://develop.spacemacs.org/doc/FAQ.html#how-to-override-a-layer-package][this answer in the FAQ's]].
+See [[https://spacemacs.org/doc/FAQ.html#how-to-override-a-layer-package][this answer in the FAQ's]].
 
 *** Without a layer
 Sometimes a layer can be an unnecessary overhead, this is the case if you just
@@ -895,7 +894,8 @@ behave more like Vim in a consistent manner, they use a special state called
 =C-d=, =C-e=, =C-o=, =C-i=, =C-u=, =C-y= and =C-z=. All other keys work as
 intended by the underlying mode.
 
-Shadowed keys are moved according to the pattern: =a= → =A= → =C-a= → =C-A=
+Shadowed keys are moved according to the pattern: =a= → =A= → =C-a= → =C-A=.
+Some other keys are also moved: =SPC= -> ='=, =/= -> =\=, and =:= -> =|=.
 
 For example, if the mode binds a function to =n=, that is found under =C-n= in
 evilified state, since both =n= and =N= are reserved, but =C-n= is not. On the
@@ -1075,12 +1075,12 @@ will go to the function =dotspacemacs/user-env= instead of opening the file
 ** Note about the function dotspacemacs/user-env
 It's possible that you don't have this function defined if you have an older
 dotfile. It is recommended to update your dotfile by adding this function,
-see the file =~/.emacs.d/core/template/.spacemacs.template= to copy it.
+see the file =~/.emacs.d/core/template/dotspacemacs-template.el= to copy it.
 If you don't create such function then Spacemacs assumes you are using the
 default behavior described above.
 
 * Binding keys
-To be compatible with all Spacemacs bindings, please refer to [[https://github.com/syl20bnr/spacemacs/blob/master/doc/CONVENTIONS.org#key-bindings-conventions][Conventions]].
+To be compatible with all Spacemacs bindings, please refer to [[https://github.com/syl20bnr/spacemacs/blob/develop/doc/CONVENTIONS.org#key-bindings-conventions][Conventions]].
 In brief, ~SPC o~ is reserved for user custom bindings in =global-map=,
 and ~SPC m o~ in major modes.
 
@@ -1204,6 +1204,17 @@ You can cycle between the themes declared in =dotspacemacs-themes= with
 | ~p~ or ~<left>~  | change to the previous theme                  |
 | ~t~ or ~<up>~    | open helm-themes to select an installed theme |
 
+*** External theme
+For an external theme from a package, please add the theme and its package into
+the =dotspacemacs-themes=, then the Spacemacs will install the package and apply
+the theme. Here is an example:
+
+#+BEGIN_SRC emacs-lisp
+  (setq-default dotspacemacs-themes
+                '((humanoid-light :package humanoid-themes)
+                  spacemacs-dark))
+#+END_SRC
+
 *** Browsing themes
 You can see samples of all themes included in the =themes-megapack= layer
 in this [[http://themegallery.robdor.com][theme gallery]] from [[https://twitter.com/robmerrell][Rob Merrell]].
@@ -1225,7 +1236,8 @@ The default font used by Spacemacs is [[https://github.com/adobe-fonts/source-co
 recommended to install it on your system if you wish to use it.
 
 To change the default font set the variable =dotspacemacs-default-font= in your
-=.spacemacs= file. By default its value is:
+=.spacemacs= file, this setting will be used for the =default= and =fixed-pitch= faces.
+By default its value is:
 
 #+BEGIN_SRC emacs-lisp
   (setq-default dotspacemacs-default-font '("Source Code Pro"
@@ -1602,9 +1614,9 @@ squared symbols like =🅿=.
 | =none=        | =ⓔ=     | e     | [[https://github.com/Somelauw/evil-org-mode][evil-org]] mode                                                        |
 | ~SPC t E e~   | =Ⓔe=    | Ee    | emacs editing style (holy mode)                                      |
 | ~SPC t E h~   | =Ⓔh=    | Eh    | hybrid editing style (hybrid mode)                                   |
-| ~SPC t f~     | =ⓕ=     | f     | fill-column-indicator mode                                           |
+| ~SPC t f~     | =ⓕ=     | f     | display-fill-column-indicator mode                                   |
 | ~SPC t F~     | =Ⓕ=     | F     | auto-fill mode                                                       |
-| ~SPC t G~     | =Ⓖ=     | G     | [[https://develop.spacemacs.org/layers/+tags/gtags/README.html][ggtags]] mode                                                          |
+| ~SPC t G~     | =Ⓖ=     | G     | [[https://spacemacs.org/layers/+tags/gtags/README.html][ggtags]] mode                                                          |
 | ~SPC t g~     | =ⓖ=     | g     | [[https://github.com/roman/golden-ratio.el][golden-ratio]] mode                                                    |
 | ~SPC t h i~   | =ⓗi=    | hi    | toggle highlight indentation levels                                  |
 | ~SPC t h c~   | =ⓗc=    | hc    | toggle highlight indentation current column                          |
@@ -1824,30 +1836,36 @@ your used layer list with layer variables:
 
 *** Restrict a given function to the current layout
 You can make any function "layout aware" by adding it to the list
-=spacemacs-layouts-restricted-functions=. It is not possible to change this
-variable when Emacs is running. You have to define it using layer variables.
-If you change this variable then Emacs must be restarted for the change to
-take effect.
+=spacemacs-layouts-restricted-functions=. This needs to be done by
+redefining the complete list either as a layer variable or using
+=setopt= or =customize-set-variable=.
 
-Default value for this variable is:
+The default value for this variable is:
 
 #+BEGIN_EXAMPLE
-  '(spacemacs/window-split-double-columns
+  '(switch-to-next-buffer
+    switch-to-prev-buffer
+    spacemacs/window-split-double-columns
     spacemacs/window-split-triple-columns
     spacemacs/window-split-grid)
 #+END_EXAMPLE
 
 If you want to add the function =my-func= to this list you need to redefine
-the complete list using layer variables:
+the complete list, for example using layer variables:
 
 #+BEGIN_EXAMPLE
   (spacemacs-layouts :variables
                      spacemacs-layouts-restricted-functions
-                     '(spacemacs/window-split-double-columns
+                     '(switch-to-next-buffer
+                       switch-to-prev-buffer
+                       spacemacs/window-split-double-columns
                        spacemacs/window-split-triple-columns
                        spacemacs/window-split-grid
                        my-func))
 #+END_EXAMPLE
+
+The changes apply after reloading your configuration with ~SPC f e R~
+or after restarting Spacemacs.
 
 ** Workspaces
 Workspaces are sub-layouts, they allow to define multiple layouts into a given
@@ -2005,7 +2023,7 @@ and more...
 
 Mastering your choice of completion system will make you a Spacemacs power user.
 
-For more information go to the layers documentation for [[https://github.com/syl20bnr/spacemacs/blob/master/layers/+completion/helm/README.org][Helm]] and [[https://github.com/syl20bnr/spacemacs/blob/master/layers/+completion/ivy/README.org][Ivy]].
+For more information go to the layers documentation for [[https://github.com/syl20bnr/spacemacs/blob/develop/layers/+completion/helm/README.org][Helm]] and [[https://github.com/syl20bnr/spacemacs/blob/develop/layers/+completion/ivy/README.org][Ivy]].
 
 *Note*: To open the Spacemacs documentation for Helm of Ivy in Emacs, open the
 =spacemacs-help= menu with ~SPC h SPC~ and type ~helm~ or ~ivy~ then ~return~.
@@ -2327,51 +2345,55 @@ number 0, =SPC 0= attempts to select window number 10.
 
 Windows manipulation commands (start with ~w~):
 
-| Key binding            | Description                                                                 |
-|------------------------+-----------------------------------------------------------------------------|
-| ~SPC w TAB~            | switch to alternate window in the current frame (switch back and forth)     |
-| ~SPC w =~              | balance split windows                                                       |
-| ~SPC w _~              | maximize window horizontally                                                |
-| ~SPC w \vert~          | maximize window vertically                                                  |
-| ~SPC w b~              | force the focus back to the minibuffer                                      |
-| ~SPC w c c~            | toggle visual centering of the current buffer                               |
-| ~SPC w c C~            | toggle visual distraction free mode                                         |
-| ~SPC w c .~            | center buffer and enable centering transient state                          |
-| ~SPC w d~              | delete a window                                                             |
-| ~SPC u SPC w d~        | delete a window and its current buffer (does not delete the file)           |
-| ~SPC w D~              | delete another window using [[https://github.com/abo-abo/ace-window][ace-window]]                                      |
-| ~SPC u SPC w D~        | delete another window and its current buffer using [[https://github.com/abo-abo/ace-window][ace-window]]               |
-| ~SPC w t~              | toggle window dedication (dedicated window cannot be reused by a mode)      |
-| ~SPC w f~              | toggle follow mode                                                          |
-| ~SPC w F~              | create new frame                                                            |
-| ~SPC w h~              | move to window on the left                                                  |
-| ~SPC w H~              | move window to the left                                                     |
-| ~SPC w j~              | move to window below                                                        |
-| ~SPC w J~              | move window to the bottom                                                   |
-| ~SPC w k~              | move to window above                                                        |
-| ~SPC w K~              | move window to the top                                                      |
-| ~SPC w l~              | move to window on the right                                                 |
-| ~SPC w L~              | move window to the right                                                    |
-| ~SPC w m~              | maximize/minimize a window (maximize is equivalent to delete other windows) |
-| ~SPC w M~              | swap windows using [[https://github.com/abo-abo/ace-window][ace-window]]                                               |
-| ~SPC w o~              | cycle and focus between frames                                              |
-| ~SPC w p m~            | open messages buffer in a popup window                                      |
-| ~SPC w p p~            | close the current sticky popup window                                       |
-| ~SPC w r~              | rotate windows forward                                                      |
-| ~SPC w R~              | rotate windows backward                                                     |
-| ~SPC w s~ or ~SPC w -~ | horizontal split                                                            |
-| ~SPC w S~              | horizontal split and focus new window                                       |
-| ~SPC w u~              | undo window layout (used to effectively undo a closed window)               |
-| ~SPC w U~              | redo window layout                                                          |
-| ~SPC w v~ or ~SPC w /~ | vertical split                                                              |
-| ~SPC w V~              | vertical split and focus new window                                         |
-| ~SPC w w~              | cycle and focus between windows                                             |
-| ~SPC w W~              | select window using [[https://github.com/abo-abo/ace-window][ace-window]]                                              |
-| ~SPC w x~              | delete a window and its current buffer (does not delete the file)           |
-| ~SPC w [~              | shrink window horizontally (enter transient state)                          |
-| ~SPC w ]~              | enlarge window horizontally (enter transient state)                         |
-| ~SPC w {~              | shrink window vertically (enter transient state)                            |
-| ~SPC w }~              | enlarge window vertically (enter transient state)                           |
+| Key binding            | Description                                                              |
+|------------------------+--------------------------------------------------------------------------|
+| ~SPC w TAB~            | switch to alternate window in the current frame (switch back and forth)  |
+| ~SPC w =~              | balance split windows                                                    |
+| ~SPC w _~              | maximize window horizontally                                             |
+| ~SPC w \vert~          | maximize window vertically                                               |
+| ~SPC w b~              | force the focus back to the minibuffer                                   |
+| ~SPC w c c~            | toggle visual centering of the current buffer                            |
+| ~SPC w c C~            | toggle visual distraction free mode                                      |
+| ~SPC w c .~            | center buffer and enable centering transient state                       |
+| ~SPC w d~              | delete a window                                                          |
+| ~SPC u SPC w d~        | delete a window and its current buffer (does not delete the file)        |
+| ~SPC w D~              | delete another window using [[https://github.com/abo-abo/ace-window][ace-window]]                                   |
+| ~SPC u SPC w D~        | delete another window and its current buffer using [[https://github.com/abo-abo/ace-window][ace-window]]            |
+| ~SPC w t~              | toggle window dedication (dedicated window cannot be reused by a mode)   |
+| ~SPC w f~              | toggle follow mode                                                       |
+| ~SPC w F~              | create new frame                                                         |
+| ~SPC w h~              | move to window on the left                                               |
+| ~SPC w H~              | move window to the left                                                  |
+| ~SPC w j~              | move to window below                                                     |
+| ~SPC w J~              | move window to the bottom                                                |
+| ~SPC w k~              | move to window above                                                     |
+| ~SPC w K~              | move window to the top                                                   |
+| ~SPC w l~              | move to window on the right                                              |
+| ~SPC w L~              | move window to the right                                                 |
+| ~SPC w m~              | maximize/minimize a window (maximize is similar to delete-other-windows) |
+| ~SPC w M~              | swap windows using [[https://github.com/abo-abo/ace-window][ace-window]]                                            |
+| ~SPC w o~              | cycle and focus between frames                                           |
+| ~SPC w p m~            | open messages buffer in a popup window                                   |
+| ~SPC w p p~            | close the current sticky popup window                                    |
+| ~SPC w r~              | rotate windows forward                                                   |
+| ~SPC w R~              | rotate windows backward                                                  |
+| ~SPC w s~ or ~SPC w -~ | horizontal split                                                         |
+| ~SPC w S~              | horizontal split and focus new window                                    |
+| ~SPC w u~              | undo window layout (used to effectively undo a closed window)            |
+| ~SPC w v~ or ~SPC w /~ | vertical split                                                           |
+| ~SPC w V~              | vertical split and focus new window                                      |
+| ~SPC w w~              | cycle and focus between windows                                          |
+| ~SPC w W~              | select window using [[https://github.com/abo-abo/ace-window][ace-window]]                                           |
+| ~SPC w x~              | delete a window and its current buffer (does not delete the file)        |
+| ~SPC w [~              | shrink window horizontally (enter transient state)                       |
+| ~SPC w ]~              | enlarge window horizontally (enter transient state)                      |
+| ~SPC w {~              | shrink window vertically (enter transient state)                         |
+| ~SPC w }~              | enlarge window vertically (enter transient state)                        |
+
+Note that by default, ~SPC w m~ will not delete side windows such as those
+created by treemacs or neotree. If you would like side windows to get minimized
+too, you can set the variable
+=dotspacemacs-maximize-window-keep-side-windows= to =nil=.
 
 Split the current window into multiple ones, deleting all others using the
 following commands:
@@ -2450,10 +2472,10 @@ listed above. For example window resizing.
 | ~j~ ~<down>~    | go to window below                                            |
 | ~k~ ~<up>~      | go to window above                                            |
 | ~l~ ~<right>~   | go to window on the right                                     |
-| ~H~ ~<S-left>~  | move window to the left                                       |
-| ~J~ ~<S-down>~  | move window to the bottom                                     |
-| ~K~ ~<S-up>~    | move bottom to the top                                        |
-| ~L~ ~<S-right>~ | move window to the right                                      |
+| ~H~ ~S-<left>~  | move window to the left                                       |
+| ~J~ ~S-<down>~  | move window to the bottom                                     |
+| ~K~ ~S-<up>~    | move bottom to the top                                        |
+| ~L~ ~S-<right>~ | move window to the right                                      |
 | ~m~             | toggle maximization of current window                         |
 | ~o~             | focus other frame                                             |
 | ~a~             | call ace window mode                                          |
@@ -2466,6 +2488,7 @@ listed above. For example window resizing.
 | ~v~             | vertical split                                                |
 | ~V~             | vertical split and focus new window                           |
 | ~w~             | focus other window                                            |
+| ~x~             | delete window and kill buffer                                 |
 
 **** Golden ratio
 If you resize windows like crazy you may want to give a try to [[https://github.com/roman/golden-ratio.el][golden-ratio]].
@@ -2526,6 +2549,7 @@ open buffers and closing them.
 
 | Key binding            | Description                                                                                |
 |------------------------+--------------------------------------------------------------------------------------------|
+| ~?~                    | toggle displaying the full documentation in minibuffer                                     |
 | ~SPC b .~              | initiate transient state                                                                   |
 | ~[1..9]~               | move current buffer to nth window                                                          |
 | ~[C-1..C-9]~           | switch focus to nth window                                                                 |
@@ -2536,6 +2560,7 @@ open buffers and closing them.
 | ~n~ or ~<right>~       | go to next buffer (avoid buffers matching =spacemacs-useless-buffers-regexp=)              |
 | ~N~ or ~p~ or ~<left>~ | go to previous buffer (avoid buffers matching =spacemacs-useless-buffers-regexp=)          |
 | ~o~                    | switch focus to other window                                                               |
+| ~x~                    | kill buffer and window                                                                     |
 | ~z~                    | recenter buffer in window                                                                  |
 | ~q~                    | quit transient state                                                                       |
 
@@ -2555,7 +2580,8 @@ File manipulation commands (start with ~f~):
 | ~SPC f c~   | copy current file to a different location                                                              |
 | ~SPC f C d~ | convert file from unix to dos encoding                                                                 |
 | ~SPC f C u~ | convert file from dos to unix encoding                                                                 |
-| ~SPC f D~   | delete a file and the associated buffer (ask for confirmation)                                         |
+| ~SPC f d~   | delete a file and the associated buffer (ask for confirmation)                                         |
+| ~SPC f D~   | delete a file and the associated buffer without confirmation                                           |
 | ~SPC f E~   | open a file with elevated privileges (sudo edit)                                                       |
 | ~SPC f f~   | open file                                                                                              |
 | ~SPC f F~   | try to open the file under point                                                                       |
@@ -2601,7 +2627,7 @@ navigate between =Emacs= and Spacemacs specific files.
 | Key binding   | Description                                                                                             |
 |---------------+---------------------------------------------------------------------------------------------------------|
 | ~SPC f e d~   | open the spacemacs dotfile (=~/.spacemacs=)                                                             |
-| ~SPC f e D~   | open =ediff= buffer of =~/.spacemacs= and =.spacemacs.template=                                         |
+| ~SPC f e D~   | open =ediff= buffer of =~/.spacemacs= and =dotspacemacs-template.el=                                    |
 | ~SPC f e e~   | open the =~/.spacemacs.env= file where environment variables are set or goes to =dotspacemacs/user-env= |
 | ~SPC f e E~   | reload the environment variables by executing the function =dotspacemacs/user-env=                      |
 | ~SPC f e C-e~ | reinitialize the =~/.spacemacs.env= file by importing system and shell environment variables            |
@@ -2624,6 +2650,7 @@ In =vim= style and =hybrid= style with the variable
 | ~C-j~       | go to previous candidate          |
 | ~C-k~       | go to next candidate              |
 | ~C-l~       | enter current directory           |
+| ~C-o~       | go to next source                 |
 
 **** Popup buffers
 =popwin= is used to manage buffers such as ~*Help*~, ~*Completions*~,
@@ -2684,14 +2711,16 @@ Initiate the transient state with ~M-SPC~ or ~s-M-SPC~ while in an =ido= buffer.
 Bookmarks can be set anywhere in a file. Bookmarks are persistent. They are very
 useful to jump to/open a known project.
 
-Open the bookmark completion window by pressing= ~SPC f b~
+Open the bookmark completion window by pressing= ~SPC f b~. Inside this
+completion window, the following key bindings are available when using the helm
+layer:
 
-| Key binding | Description                                  |
-|-------------+----------------------------------------------|
-| ~C-d~       | delete the selected bookmark                 |
-| ~C-e~       | edit the selected bookmark                   |
-| ~C-f~       | toggle filename location                     |
-| ~C-o~       | open the selected bookmark in another window |
+| Key binding  | Description                                  |
+|--------------+----------------------------------------------|
+| ~C-d~        | delete the selected bookmark                 |
+| ~C-e~        | edit the selected bookmark                   |
+| ~C-f~        | toggle filename location                     |
+| ~S-<return>~ | open the selected bookmark in another window |
 
 To save a new bookmark, just type the name of the bookmark and press ~RET~.
 
@@ -3868,7 +3897,23 @@ server is to use the following bindings:
 If any errors happen during the loading the mode-line will turn red and the
 errors should appear inline in the startup buffer. Spacemacs should still be
 usable; if it is not then restart Emacs with =emacs --debug-init= and open a
-[[https://github.com/syl20bnr/spacemacs/issues][GitHub issue]] with the backtrace.
+[[https://github.com/syl20bnr/spacemacs/issues][GitHub issue]] with the backtrace. However, please note that in many cases, errors
+are caught by Spacemacs. Such errors will not trigger the debugger in Emacs 30
+or later, even when using =--debug-init=. In order to obtain a backtrace you
+need to add the following to =dotspacemacs/user-init=:
+
+#+BEGIN_SRC emacs-lisp
+  (setq debug-on-error t)
+#+END_SRC
+
+(This variable can also be toggled during a session using ~SPC t D~.)
+
+Additionally, in the rare case where the type of the error is one of those
+listed in =debug-ignored-errors=, you need to remove it from the list, for example:
+
+#+BEGIN_SRC emacs-lisp
+  (setq debug-ignored-errors (delq 'buffer-read-only debug-ignored-errors))
+#+END_SRC
 
 ** Upgrading/Downgrading Emacs version
 To ensure that packages are correctly compiled for the new Emacs version you

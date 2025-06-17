@@ -1,6 +1,6 @@
-;;; config.el --- Language Server Protocol Layer config file for Spacemacs
+;;; config.el --- Language Server Protocol Layer config file for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Fangrui Song <i@maskray.me>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -38,3 +38,8 @@ If `both', binds lightweight navigation functions under `SPC m g' and lsp-ui fun
 (defvar lsp-use-lsp-ui t "When non-nil, use `lsp-ui' package.")
 
 (defvar lsp-use-upstream-bindings nil "When non-nil, map keys to `lsp-command-map'.")
+
+(defvar lsp-sonarlint nil "When non-nil, use `lsp-sonarlint' package.")
+
+(defvar lsp-manage-backends-manually nil "When non-nil lsp-mode does not insert `company-capf' as the ultimate first item of `company-backends'.
+`lsp-manage-backends-manually' can either be `:all' or a list of major-modes that should be managed manually.")

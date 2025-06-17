@@ -1,6 +1,6 @@
-;;; packages.el --- evil-better-jumper Layer Packages File for Spacemacs.
+;;; packages.el --- evil-better-jumper Layer Packages File for Spacemacs.  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Thanh Vuong <thanh@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -30,7 +30,7 @@
     :init
     (global-set-key [remap evil-jump-forward]  #'better-jumper-jump-forward)
     (global-set-key [remap evil-jump-backward] #'better-jumper-jump-backward)
-    (global-set-key [remap xref-pop-marker-stack] #'better-jumper-jump-backward)
+    (global-set-key [remap xref-go-back] #'better-jumper-jump-backward)
     :config
     (better-jumper-mode 1)
     (spacemacs|hide-lighter better-jumper-mode)

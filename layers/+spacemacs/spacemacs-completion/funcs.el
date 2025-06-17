@@ -1,6 +1,6 @@
-;;; funcs.el --- Spacemacs Completion Layer functions File for Spacemacs
+;;; funcs.el --- Spacemacs Completion Layer functions File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -196,6 +196,18 @@ See https://github.com/syl20bnr/spacemacs/issues/3700"
   (call-interactively 'helm-select-action)
   (spacemacs//helm-navigation-ts-set-face))
 
+(defun spacemacs//helm-update-header-line-faces ()
+  "Update defaults for `helm' header line whenever a new theme is loaded."
+  ;; TODO factorize face definition with those defined in config.el
+  (setq helm-source-header-default-foreground
+        (face-attribute 'helm-source-header :foreground)
+        helm-source-header-default-background
+        (face-attribute 'helm-source-header :background)
+        helm-source-header-default-box
+        (face-attribute 'helm-source-header :box)
+        helm-source-header-default-height
+        (face-attribute 'helm-source-header :height)))
+
 
 ;; Ivy
 
@@ -211,6 +223,7 @@ See https://github.com/syl20bnr/spacemacs/issues/3700"
       (define-key map (kbd "C-j") 'ivy-next-line)
       (define-key map (kbd "C-k") 'ivy-previous-line))
     (define-key ivy-minibuffer-map (kbd "C-h") (kbd "DEL"))
+    (define-key counsel-find-file-map (kbd "C-h") 'counsel-up-directory)
     ;; Move C-h to C-S-h
     (define-key ivy-minibuffer-map (kbd "C-S-h") help-map)
     (define-key ivy-minibuffer-map (kbd "C-l") 'ivy-alt-done)

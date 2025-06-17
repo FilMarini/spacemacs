@@ -1,6 +1,6 @@
-;;; packages.el --- Chinese Layer packages File for Spacemacs
+;;; packages.el --- Chinese Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -50,14 +50,13 @@
 
 (defun chinese/init-pyim ()
   (use-package pyim
-    :if chinese-default-input-method
     :defer t
     :init
     (setq pyim-directory (expand-file-name "pyim/" spacemacs-cache-directory)
           pyim-dcache-directory (expand-file-name "dcache/" pyim-directory)
           pyim-assistant-scheme-enable t
           default-input-method "pyim")
-    (autoload 'pyim-dict-manager-mode "pyim-dicts-manager"
+    (autoload 'pyim-dict-manager-mode "pyim-dict-manager"
       "Major mode for managing pyim dicts")
     (evilified-state-evilify-map pyim-dict-manager-mode-map
       :mode pyim-dict-manager-mode
@@ -66,7 +65,6 @@
 (defun chinese/init-pyim-basedict ()
   "Initialize pyim-basedict"
   (use-package pyim-basedict
-    :if (eq chinese-default-input-method 'pinyin)
     :defer t
     :config
     (pyim-basedict-enable)))
@@ -74,7 +72,6 @@
 (defun chinese/init-pyim-wbdict ()
   "Initialize pyim-wbdict"
   (use-package pyim-wbdict
-    :if (member chinese-default-input-method '(wubi wubi86 wubi98))
     :defer t
     :config
     (setq pyim-default-scheme 'wubi)
@@ -84,7 +81,6 @@
 
 (defun chinese/init-youdao-dictionary ()
   (use-package youdao-dictionary
-    :if chinese-enable-youdao-dict
     :defer t
     :config
     ;; Enable Cache

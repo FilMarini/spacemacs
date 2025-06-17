@@ -1,6 +1,6 @@
-;;; packages.el --- Ruby Layer packages File for Spacemacs
+;;; packages.el --- Ruby Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -25,9 +25,8 @@
   '(
     add-node-modules-path
     bundler
-    chruby
+    (chruby :toggle (eq ruby-version-manager 'chruby))
     company
-    counsel-gtags
     dap-mode
     (enh-ruby-mode :toggle ruby-enable-enh-ruby-mode)
     evil-matchit
@@ -38,8 +37,8 @@
     popwin
     prettier-js
     rake
-    rbenv
-    robe
+    (rbenv :toggle (eq ruby-version-manager 'rbenv))
+    (robe :toggle (eq ruby-backend 'robe))
     rspec-mode
     rubocop
     rubocopfmt
@@ -48,8 +47,7 @@
     ruby-refactor
     ruby-test-mode
     ruby-tools
-    rvm
-    seeing-is-believing
+    (rvm :toggle (eq ruby-version-manager 'rvm))
     smartparens))
 
 (defun ruby/init-bundler ()
@@ -68,7 +66,6 @@
 
 (defun ruby/init-chruby ()
   (use-package chruby
-    :if (equal ruby-version-manager 'chruby)
     :commands chruby-use-corresponding
     :defer t
     :init (spacemacs/add-to-hooks 'chruby-use-corresponding
@@ -79,10 +76,6 @@
 
 (defun ruby/post-init-company ()
   (add-hook 'ruby-mode-local-vars-hook #'spacemacs//ruby-setup-company))
-
-(defun ruby/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'ruby-mode)
-  (spacemacs/counsel-gtags-define-keys-for-mode 'enh-ruby-mode))
 
 (defun ruby/pre-init-dap-mode ()
   (when (eq ruby-backend 'lsp)
@@ -184,12 +177,10 @@
 
 (defun ruby/init-rbenv ()
   (use-package rbenv
-    :if (equal ruby-version-manager 'rbenv)
     :defer t))
 
 (defun ruby/init-robe ()
   (use-package robe
-    :if (eq ruby-backend 'robe)
     :defer t
     :init
     (spacemacs/register-repl 'robe 'robe-start "robe")
@@ -217,6 +208,7 @@
         "sf" 'ruby-send-definition
         "sF" 'ruby-send-definition-and-go
         "si" 'robe-start
+        "sq" 'ruby-quit
         "sl" 'ruby-send-line
         "sL" 'ruby-send-line-and-go
         "sr" 'ruby-send-region
@@ -365,27 +357,11 @@
 
 (defun ruby/init-rvm ()
   (use-package rvm
-    :if (equal ruby-version-manager 'rvm)
     :defer t
     :init
     (setq rspec-use-rvm t)
     (spacemacs/add-to-hooks 'rvm-activate-corresponding-ruby
                             '(ruby-mode-hook enh-ruby-mode-hook))))
-
-(defun ruby/init-seeing-is-believing ()
-  (use-package seeing-is-believing
-    :defer t
-    :commands (seeing-is-believing seeing-is-believing-run seeing-is-believing-clear)
-    :if (executable-find "seeing_is_believing")
-    :init
-    (spacemacs|diminish seeing-is-believing " 👁" " @")
-    (dolist (hook '(ruby-mode-hook enh-ruby-mode-hook))
-      (add-hook hook 'seeing-is-believing))
-    (dolist (mode '(ruby-mode enh-ruby-mode))
-      (spacemacs/declare-prefix-for-mode mode "m@" "seeing-is-believing")
-      (spacemacs/set-leader-keys-for-major-mode mode
-        "@@" 'seeing-is-believing-run
-        "@c" 'seeing-is-believing-clear))))
 
 (defun ruby/pre-init-smartparens ()
   (spacemacs|use-package-add-hook smartparens

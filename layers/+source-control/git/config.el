@@ -1,6 +1,6 @@
-;;; config.el --- Git Layer configuration File for Spacemacs
+;;; config.el --- Git Layer configuration File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -22,6 +22,10 @@
 
 
 ;; Variables
+
+(defvar git-magit-buffers-useless nil
+  "When non-nil, magit buffers are marked as useless,
+see `spacemacs-useless-buffers-regexp'.")
 
 (defvar git-enable-magit-delta-plugin nil
   "If non nil, enable `magit-delta' plugin.")

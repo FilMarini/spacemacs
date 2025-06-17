@@ -1,6 +1,6 @@
-;;; funcs.el --- Semantic Layer functions File for Spacemacs
+;;; funcs.el --- Semantic Layer functions File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -29,7 +29,3 @@
   ;; srefactor supports j,k,/ and ? commands when Evil is
   ;; available
   (add-hook 'srefactor-ui-menu-mode-hook 'evil-emacs-state))
-
-(defun spacemacs/load-stickyfunc-enhance ()
-  "Hook to load the `stickyfunc-enhance' library."
-  (require 'stickyfunc-enhance))

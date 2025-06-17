@@ -1,6 +1,6 @@
 ;;; core-versions.el --- Spacemacs Core File  -*- lexical-binding: t -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -25,6 +25,17 @@
 ;;    Define Spacemacs version and minimum supported Emacs version.
 
 (defconst spacemacs-version          "0.999.0" "Spacemacs version.")
-(defconst spacemacs-emacs-min-version   "27.1" "Minimal version of Emacs.")
+(defconst spacemacs-emacs-min-version   "28.2" "Minimal version of Emacs.")
+
+(defmacro spacemacs|eval-until-emacs-min-version (version msg &rest body)
+  "Evaluate the BODY if `spacemacs-emacs-min-version' < VERSION, otherwise
+warn the MSG."
+  (declare (indent 1))
+  `(if (version< spacemacs-emacs-min-version ,version)
+       (progn ,@body)
+     (apply 'warn
+            (if ,msg '("%s" ,msg)
+              '("Minimum emacs version %s is newer than supported version %s"
+                ,version spacemacs-emacs-min-version)))))
 
 (provide 'core-versions)

@@ -1,6 +1,6 @@
 ;;; packages.el --- unicode-fonts layer packages file for Spacemacs. -*- lexical-binding: t -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Aaron Jensen <aaronjensen@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -26,10 +26,7 @@
 
 (defconst unicode-fonts-packages
   '(unicode-fonts
-    (ligature :location (recipe
-                         :fetcher github
-                         :repo "mickeynp/ligature.el")
-              :toggle unicode-fonts-enable-ligatures)))
+    (ligature :toggle unicode-fonts-enable-ligatures)))
 
 (defun unicode-fonts/init-unicode-fonts ()
   (use-package unicode-fonts

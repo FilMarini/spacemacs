@@ -1,6 +1,6 @@
-;;; funcs.el --- Spacemacs Bootstrap Layer functions File
+;;; funcs.el --- Spacemacs Bootstrap Layer functions File  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -73,7 +73,7 @@ For evil states that also need an entry to `spacemacs-evil-cursors' use
            :group 'spacemacs))
   ;; 'unspecified may not be used in defface, so set it via set-face-attribute.
   (set-face-attribute (spacemacs/state-color-face (intern state)) nil
-       :foreground (face-attribute 'mode-line :background)))
+                      :foreground (face-attribute 'mode-line :background)))
 
 (defun spacemacs/set-state-faces ()
   (let ((ml-bg (face-attribute 'mode-line :background)))
@@ -173,17 +173,23 @@ START-REGEXP and END-REGEXP are the boundaries of the text object."
   (defmacro evil-map (state key seq)
     "Map for a given STATE a KEY to a sequence SEQ of keys.
 
-Can handle recursive definition only if KEY is the first key of SEQ.
+Can handle recursive definition only if KEY is the first key of
+SEQ, and if KEY's binding in STATE is defined as a symbol in
+`evil-normal-state-map'.
 Example: (evil-map visual \"<\" \"<gv\")"
-    (let ((map (intern (format "evil-%S-state-map" state))))
+    (let ((map (intern (format "evil-%S-state-map" state)))
+          (key-cmd (lookup-key evil-normal-state-map key)))
       `(define-key ,map ,key
-         (lambda ()
-           (interactive)
-           ,(if (string-equal key (substring seq 0 1))
-                `(progn
-                   (call-interactively ',(lookup-key evil-normal-state-map key))
-                   (execute-kbd-macro ,(substring seq 1)))
-              (execute-kbd-macro ,seq)))))))
+                   (lambda ()
+                     (interactive)
+                     ,(if (string-equal key (substring seq 0 1))
+                          `(let ((orig-this-command this-command))
+                             (setq this-command ',key-cmd)
+                             (call-interactively ',key-cmd)
+                             (run-hooks 'post-command-hook)
+                             (setq this-command orig-this-command)
+                             (execute-kbd-macro ,(substring seq 1)))
+                        (execute-kbd-macro ,seq)))))))
 
 (defun spacemacs/diminish-hook (_)
   "Display diminished lighter in vanilla Emacs mode-line."
@@ -239,3 +245,10 @@ column."
    (or column
        (unless selective-display
          (1+ (current-column))))))
+
+
+
+(defun spacemacs/not-in-pdf-view-mode (orig-fun &rest args)
+  "Disable bound function when in `pdf-view-mode'."
+  (unless (eq major-mode 'pdf-view-mode)
+    (apply orig-fun args)))

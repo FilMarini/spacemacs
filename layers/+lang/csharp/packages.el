@@ -1,6 +1,6 @@
-;;; packages.el --- C# Layer packages File for Spacemacs
+;;; packages.el --- C# Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -27,7 +27,6 @@
         (csharp-mode :toggle (version< emacs-version "29.0.60"))
         evil-matchit
         ggtags
-        counsel-gtags
         omnisharp
         flycheck
         ))
@@ -60,6 +59,3 @@
 
 (defun csharp/post-init-ggtags ()
   (add-hook 'csharp-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
-
-(defun csharp/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'csharp-mode))

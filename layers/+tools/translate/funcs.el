@@ -1,6 +1,6 @@
-;;; funcs.el --- Semantic Layer functions File for Spacemacs
+;;; funcs.el --- Semantic Layer functions File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Ray Wang <rayw.public@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -26,12 +26,12 @@
   (defun translate/translate-current-reference-paragraph ()
     "Show all available translations of the reference paragraph at point in a pop-up frame."
     (interactive)
-    (gts-translate translate//paragraph-translator))
+    (gt-start translate//paragraph-translator))
 
   (defun translate/translate-word-at-point ()
     "Pop-up translations of the word at point."
     (interactive)
-    (gts-translate translate//word-translator))
+    (gt-start translate//word-translator))
 
   (defun translate//set-translate-mode-paragraph-functions ()
     (cond ((eq major-mode 'markdown-mode)

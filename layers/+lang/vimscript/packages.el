@@ -1,6 +1,6 @@
-;;; packages.el --- vimscript Layer packages File for Spacemacs
+;;; packages.el --- vimscript Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -27,7 +27,6 @@
     flycheck
     vimrc-mode
     ggtags
-    counsel-gtags
     dactyl-mode))
 
 (defun vimscript/post-init-company ()
@@ -62,6 +61,3 @@
 
 (defun vimscript/post-init-ggtags ()
   (add-hook 'vimrc-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
-
-(defun vimscript/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'vimrc-mode))

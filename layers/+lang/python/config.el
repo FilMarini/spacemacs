@@ -1,6 +1,6 @@
-;;; config.el --- Python Layer Configuration File for Spacemacs
+;;; config.el --- Python Layer Configuration File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -28,13 +28,12 @@
 
 (defvar python-backend (if (configuration-layer/layer-used-p 'lsp) 'lsp 'anaconda)
   "The backend to use for IDE features.
-Possible values are `anaconda'and `lsp'.
-If `nil' then `anaconda' is the default backend unless `lsp' layer is used.")
+Possible values are `anaconda' and `lsp'.
+If `nil' then `anaconda' is the default backend unless the `lsp' layer is used.")
 (put 'python-backend 'safe-local-variable #'symbolp)
 
 (defvar python-lsp-server 'pylsp
-  "Language server to use for lsp backend. Possible values are `pylsp', `pyright'
-and `mspyls'")
+  "Language server for lsp backend. Possible values are `pylsp', `pyright'")
 (put 'python-lsp-server 'safe-local-variable #'symbolp)
 
 (defvar python-lsp-git-root nil
@@ -46,15 +45,21 @@ and `mspyls'")
 (defvar python-poetry-activate nil
   "If non-nil, activate poetry before enabling backend")
 
-(defvar python-formatter (if (configuration-layer/layer-used-p 'lsp) 'lsp 'yapf)
-  "The formatter to use. Possible values are `yapf', `black' and `lsp'.
-If nil then `yapf' is the default formatter unless `lsp' layer is used.")
+(defvar python-formatter
+  (if (and (configuration-layer/layer-used-p 'lsp)
+           ;; pyright does not support formatting
+           (eq python-lsp-server 'pylsp))
+      'lsp
+    'yapf)
+  "The formatter to use. Possible values are `yapf', `black', `ruff' and `lsp'.
+The default formatter is `yapf' unless both the `lsp' layer is used,
+and `python-lsp-server' is `pylsp' (pyright does not support formatting).")
 
 (defvar python-format-on-save nil
   "If non-nil, automatically format code with formatter selected
   via `python-formatter' on save.")
 
-(defvar python-test-runner 'nose
+(defvar python-test-runner 'pytest
   "Test runner to use. Possible values are `nose' or `pytest'.")
 (put 'python-test-runner 'safe-local-variable #'symbolp)
 
@@ -82,6 +87,10 @@ Possible values are `on-visit', `on-project-switch' or `nil'.")
 
 (defvar python-sort-imports-on-save nil
   "If non-nil, automatically sort imports on save.")
+(put 'python-sort-imports-on-save 'safe-local-variable 'booleanp)
+
+(defvar python-enable-importmagic nil
+  "If non-nil, enable the importmagic feature.")
 
 (defvar spacemacs--python-pyenv-modes nil
   "List of major modes where to add pyenv support.")
@@ -95,8 +104,6 @@ Possible values are `on-visit', `on-project-switch' or `nil'.")
 (defvar spacemacs--python-poetry-modes nil
   "List of major modes where to add poetry support.")
 
-(defvar spacemacs--python-shell-interpreter-origin nil
-  "Origin python-shell-interpreter value.")
 ;; inferior-python-mode needs these variables to be defined.  The python
 ;; package declares them but does not initialize them.
 (defvar python-shell--interpreter nil)

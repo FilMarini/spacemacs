@@ -1,6 +1,6 @@
 ;;; funcs.el --- unicode-fonts layer funcs file for Spacemacs. -*- lexical-binding: t -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Lucius Hu
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -31,10 +31,15 @@ This functions setups `unicode-fonts' right away when starting a GUI Emacs.
 But if Emacs is running in a daemon, it postpone the setup until a GUI frame
 is opened."
   (if (and frame (display-graphic-p frame))
-      (with-selected-frame frame
-        (require 'unicode-fonts)
-        (unicode-fonts-setup)
-        (remove-hook 'after-make-frame-functions #'unicode-fonts//setup-fonts))
+      (progn
+        (remove-hook 'after-make-frame-functions #'unicode-fonts//setup-fonts)
+        ;; Do not error in `after-make-frame-functions'.  Otherwise, emacsclient
+        ;; gets confused and creates two frames, one graphical and then one on
+        ;; the terminal.
+        (condition-case e
+            (with-selected-frame frame
+              (unicode-fonts-setup))
+          (error (warn "Error setting up unicode-fonts: %s" (error-message-string e)))))
     (add-hook 'after-make-frame-functions #'unicode-fonts//setup-fonts)))
 
 ;;; funcs.el ends here

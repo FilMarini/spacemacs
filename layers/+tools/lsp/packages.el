@@ -1,6 +1,6 @@
-;;; packages.el --- Language Server Protocol Layer packages file for Spacemacs
+;;; packages.el --- Language Server Protocol Layer packages file for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Fangrui Song <i@maskray.me>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -30,7 +30,15 @@
     (lsp-ivy :requires ivy)
     (lsp-treemacs :requires treemacs)
     (lsp-origami :requires lsp-mode)
+    (lsp-sonarlint :toggle lsp-sonarlint)
     popwin))
+
+(defun lsp/init-lsp-sonarlint ()
+  (use-package lsp-sonarlint
+    :init
+    (setq
+     lsp-sonarlint-auto-download t)
+    :defer t))
 
 (defun lsp/init-lsp-mode ()
   (use-package lsp-mode
@@ -41,12 +49,17 @@
           lsp-eslint-library-choices-file (concat lsp-server-install-dir ".lsp-eslint-choices")
           lsp-yaml-schema-store-local-db (concat lsp-server-install-dir "lsp-yaml-schemas.json")
           lsp-vetur-global-snippets-dir (concat spacemacs-start-directory "snippets/vetur")
+          lsp-ui-sideline-diagnostic-max-lines 20
           lsp-imenu-index-function #'lsp-imenu-create-categorized-index)
     ;; If you find something else should be ignored, you could also set them here
     :config
     (if lsp-use-upstream-bindings
         (spacemacs/lsp-bind-upstream-keys)
       (spacemacs/lsp-bind-keys))
+    (setq lsp-completion-provider (if (or (equal :all lsp-manage-backends-manually)
+                                          (member major-mode lsp-manage-backends-manually))
+                                      :none
+                                    :capf))
     ;; This sets the lsp indentation for all modes derived from web-mode.
     (add-to-list 'lsp--formatting-indent-alist '(web-mode . web-mode-markup-indent-offset))
     (add-hook 'lsp-after-open-hook (lambda ()

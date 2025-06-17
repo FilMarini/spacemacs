@@ -1,6 +1,6 @@
-;;; packages.el --- Elixir Layer packages File for Spacemacs
+;;; packages.el --- Elixir Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -23,9 +23,8 @@
 
 (defconst elixir-packages
   '(
-    alchemist
+    (alchemist :toggle (eq elixir-backend 'alchemist))
     company
-    counsel-gtags
     dap-mode
     elixir-mode
     evil-matchit
@@ -38,7 +37,6 @@
 
 (defun elixir/init-alchemist ()
   (use-package alchemist
-    :if (eq elixir-backend 'alchemist)
     :defer t
     :init
     (spacemacs/register-repl 'alchemist 'alchemist-iex-run "alchemist")
@@ -157,9 +155,6 @@
   ;; backend specific
   (add-hook 'elixir-mode-local-vars-hook #'spacemacs//elixir-setup-company))
 
-(defun elixir/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'elixir-mode))
-
 (defun elixir/pre-init-dap-mode ()
   (when (eq elixir-backend 'lsp) (add-to-list 'spacemacs--dap-supported-modes 'elixir-mode))
   (add-hook 'elixir-mode-local-vars-hook #'spacemacs//elixir-setup-dap))
@@ -170,8 +165,8 @@
 (defun elixir/init-elixir-mode ()
   (use-package elixir-mode
     :defer t
-    :hook (elixir-mode . spacemacs//elixir-default)
-          (elixir-mode-local-vars . spacemacs//elixir-setup-backend)
+    :hook ((elixir-mode . spacemacs//elixir-default)
+           (elixir-mode-local-vars . spacemacs//elixir-setup-backend))
     :config (spacemacs/set-leader-keys-for-major-mode 'elixir-mode
               "=" 'elixir-format)))
 

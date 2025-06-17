@@ -1,6 +1,6 @@
-;;; funcs.el --- Spacemacs Editing Visual Layer functions File
+;;; funcs.el --- Spacemacs Editing Visual Layer functions File  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -25,3 +25,10 @@
   (interactive)
   (spacemacs/toggle-centered-buffer-on)
   (spacemacs/centered-buffer-transient-state/body))
+
+(defun spacemacs//maybe-enable-term-cursor ()
+  "Enable `global-term-cursor-mode' when a first terminal frame is created."
+  (unless (or (display-graphic-p)
+              (bound-and-true-p global-term-cursor-mode))
+    (global-term-cursor-mode)
+    (remove-hook 'server-after-make-frame-hook 'spacemacs//maybe-enable-term-cursor)))

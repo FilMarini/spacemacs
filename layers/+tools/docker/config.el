@@ -1,6 +1,6 @@
-;;; config.el --- docker Layer Configuration File for Spacemacs
+;;; config.el --- docker Layer Configuration File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Seong Yong-ju <sei40kr@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -25,5 +25,5 @@
 
 ;; Variables
 
-(defvar docker-dockerfile-backend 'nil
+(defvar docker-dockerfile-backend nil
   "The backend to use for IDE features. Possible values are `lsp' or `nil'.")

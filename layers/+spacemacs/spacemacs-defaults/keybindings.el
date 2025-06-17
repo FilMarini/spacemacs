@@ -1,6 +1,6 @@
-;;; keybindings.el --- Spacemacs Defaults Layer key-bindings File
+;;; keybindings.el --- Spacemacs Defaults Layer key-bindings File  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -26,81 +26,81 @@
 ;; ---------------------------------------------------------------------------
 
 ;; We define prefix commands only for the sake of which-key
-(setq spacemacs/key-binding-prefixes `(,dotspacemacs-emacs-command-key "M-x"
-                                       "!"   "shell cmd"
-                                       "*"   "search project w/input"
-                                       "/"   "search project"
-                                       "?"   "show keybindings"
-                                       "a"   "applications"
-                                       "ac"  "chat"
-                                       "ae"  "email"
-                                       "af"  "fun"
-                                       "ar"  "readers"
-                                       "am"  "music"
-                                       "at"  "tools"
-                                       "ats" "shells"
-                                       "atT" "translate"
-                                       "aw"  "web-services"
-                                       "c"   "compile/comments"
-                                       "C"   "capture/colors"
-                                       "e"   "errors"
-                                       "g"   "git/versions-control"
-                                       "h"   "help"
-                                       "hd"  "help-describe"
-                                       "hP"  "profiler"
-                                       "hT"  "tutorials"
-                                       "i"   "insertion"
-                                       "j"   "jump/join/split"
-                                       "jj"  "avy timer"
-                                       "jl"  "avy line"
-                                       "js"  "split sexp"
-                                       "jw"  "avy word"
-                                       "k"   "lisp"
-                                       "kd"  "delete"
-                                       "kD"  "delete-backward"
-                                       "k`"  "hybrid"
-                                       "m"   "major mode commands"
-                                       "n"   "narrow/numbers"
-                                       "N"   "navigation"
-                                       "o"   "user bindings"
-                                       "p"   "projects"
-                                       "q"   "quit"
-                                       "r"   "registers/rings/resume"
-                                       "rd"  "purpose-toggle-window"
-                                       "s"   "search/symbol"
-                                       "sa"  "ag"
-                                       "sg"  "grep"
-                                       "sk"  "ack"
-                                       "sp"  "search project"
-                                       "sP"  "search project w/input"
-                                       "sr"  "ripgrep"
-                                       "st"  "pt"
-                                       "sw"  "web"
-                                       "t"   "toggles"
-                                       "tC"  "colors"
-                                       "tE"  "editing-styles"
-                                       "tEe" "emacs (holy-mode)"
-                                       "tEh" "hybrid (hybrid-mode)"
-                                       "th"  "highlight"
-                                       "tm"  "modeline"
-                                       "tt"  "timeclock"
-                                       "T"   "UI toggles/themes"
-                                       "C-t" "other toggles"
-                                       "u"   "universal arg"
-                                       "v"   "expand region"
-                                       "w"   "windows"
-                                       "wc"  "centered"
-                                       "wp"  "popup"
-                                       "x"   "text"
-                                       "xa"  "align"
-                                       "xd"  "delete"
-                                       "xg"  "google-translate"
-                                       "xj"  "justification"
-                                       "xl"  "lines"
-                                       "xR"  "Randomize"
-                                       "xt"  "transpose"
-                                       "xw"  "words"
-                                       "z"   "zoom"))
+(defconst spacemacs/key-binding-prefixes
+  (list dotspacemacs-emacs-command-key "M-x"
+        "!"   "shell cmd"
+        "*"   "search project w/input"
+        "/"   "search project"
+        "?"   "show keybindings"
+        "a"   "applications"
+        "ac"  "chat"
+        "ae"  "email"
+        "af"  "fun"
+        "ar"  "readers"
+        "am"  "music"
+        "at"  "tools"
+        "ats" "shells"
+        "atT" "translate"
+        "aw"  "web-services"
+        "c"   "compile/comments"
+        "C"   "capture/colors"
+        "e"   "errors"
+        "g"   "git/versions-control"
+        "h"   "help"
+        "hd"  "help-describe"
+        "hP"  "profiler"
+        "hT"  "tutorials"
+        "i"   "insertion"
+        "j"   "jump/join/split"
+        "jj"  "avy timer"
+        "jl"  "avy line"
+        "js"  "split sexp"
+        "jw"  "avy word"
+        "k"   "lisp"
+        "kd"  "delete"
+        "kD"  "delete-backward"
+        "k`"  "hybrid"
+        "m"   "major mode commands"
+        "n"   "narrow/numbers"
+        "N"   "navigation"
+        "o"   "user bindings"
+        "p"   "projects"
+        "q"   "quit"
+        "r"   "registers/rings/resume"
+        "rd"  "purpose-toggle-window"
+        "s"   "search/symbol"
+        "sa"  "ag"
+        "sg"  "grep"
+        "sk"  "ack"
+        "sp"  "search project"
+        "sP"  "search project w/input"
+        "sr"  "ripgrep"
+        "st"  "pt"
+        "sw"  "web"
+        "t"   "toggles"
+        "tC"  "colors"
+        "tE"  "editing-styles"
+        "tEe" "emacs (holy-mode)"
+        "tEh" "hybrid (hybrid-mode)"
+        "th"  "highlight"
+        "tm"  "modeline"
+        "tt"  "timeclock"
+        "T"   "UI toggles/themes"
+        "C-t" "other toggles"
+        "u"   "universal arg"
+        "v"   "expand region"
+        "w"   "windows"
+        "wc"  "centered"
+        "wp"  "popup"
+        "x"   "text"
+        "xa"  "align"
+        "xd"  "delete"
+        "xg"  "google-translate"
+        "xj"  "justification"
+        "xl"  "lines"
+        "xt"  "transpose"
+        "xw"  "words"
+        "z"   "zoom"))
 (apply #'spacemacs/declare-prefix spacemacs/key-binding-prefixes)
 
 ;; instantly display current keystrokes in mini buffer
@@ -109,7 +109,7 @@
 (define-key global-map (kbd "RET") 'newline-and-indent)
 
 ;; improve delete-other-windows
-(define-key global-map (kbd "C-x 1") 'spacemacs/toggle-maximize-buffer)
+(define-key global-map (kbd "C-x 1") 'spacemacs/toggle-maximize-window)
 ;; adds two spacing modes while preserving just-one-space behaviour
 (define-key global-map (kbd "M-SPC") 'cycle-spacing)
 
@@ -131,12 +131,6 @@
 (define-key minibuffer-local-map (kbd "C-n") 'next-line-or-history-element)
 (define-key minibuffer-local-map (kbd "C-p") 'previous-line-or-history-element)
 
-;; linum margin bindings-------------------------------------------------------
-(global-set-key (kbd "<left-margin> <down-mouse-1>") 'spacemacs/md-select-linum)
-(global-set-key (kbd "<left-margin> <mouse-1>") 'spacemacs/mu-select-linum)
-(global-set-key (kbd "<left-margin> <double-mouse-1>") 'spacemacs/select-current-block)
-(global-set-key (kbd "<left-margin> <drag-mouse-1>") 'spacemacs/mu-select-linum)
-
 ;; ---------------------------------------------------------------------------
 ;; spacemacs leader key bindings
 ;; ---------------------------------------------------------------------------
@@ -145,8 +139,8 @@
 (spacemacs/set-leader-keys "u" 'universal-argument)
 (when (memq dotspacemacs-editing-style '(vim hybrid))
   (define-key universal-argument-map
-    (kbd (concat dotspacemacs-leader-key " u"))
-    'universal-argument-more))
+              (kbd (concat dotspacemacs-leader-key " u"))
+              'universal-argument-more))
 ;; shell command  -------------------------------------------------------------
 (spacemacs/set-leader-keys "!" 'shell-command)
 ;; kmacros --------------------------------------------------------------------
@@ -200,8 +194,7 @@
 (spacemacs/set-leader-keys
   "a*"  'calc-dispatch
   "ap"  'list-processes
-  "aP"  'proced
-  "au"  'undo-tree-visualize)
+  "aP"  'proced)
 ;; easy pg ----------------------------------------------------------------------
 (spacemacs|spacebind
  "Encrypt / decrypt files with Easy PG"
@@ -250,7 +243,7 @@
    ("9" buffer-to-window-9 "Move buffer to window 9")
    ("C-d" spacemacs/kill-other-buffers "Kill other buffers...")
    ("C-S-d" spacemacs/kill-matching-buffers-rudely "Kill buffers...")
-   ("d" spacemacs/kill-this-buffer "Kill buffer")
+   ("d" kill-current-buffer "Kill buffer")
    ("e" spacemacs/safe-erase-buffer "Erase...")
    ("h" spacemacs/home "Spacemacs home buffer")
    ("H" spacemacs/switch-to-help-buffer "Help buffer")
@@ -258,7 +251,7 @@
    ("m" spacemacs/switch-to-messages-buffer "Messages buffer")
    ("P" spacemacs/copy-clipboard-to-whole-buffer "Paste and replace buffer")
    ("p" previous-buffer "Previous buffer")
-   ("R" spacemacs/safe-revert-buffer "Revert buffer...")
+   ("R" revert-buffer "Revert buffer...")
    ("s" spacemacs/switch-to-scratch-buffer "Scratch buffer")
    ("u" spacemacs/reopen-killed-buffer "Reopen last killed buffer")
    ("x" kill-buffer-and-window "Kill buffer and close window")
@@ -363,7 +356,8 @@
  (("f" "Files"
    ("A" spacemacs/find-file-and-replace-buffer "Set another file for buffer...")
    ("c" spacemacs/save-as "Save file or active region as a new file...")
-   ("D" spacemacs/delete-current-buffer-file "Delete...")
+   ("D" spacemacs/delete-current-buffer-file-yes "Delete without confirm...")
+   ("d" spacemacs/delete-current-buffer-file "Delete...")
    ("i" spacemacs/insert-file "Insert file content...")
    ("l" find-file-literally "Open file literally...")
    ("E" spacemacs/sudo-edit "Open using sudo...")
@@ -383,6 +377,7 @@
     ("D" spacemacs/ediff-dotfile-and-template "Diff. with dotfile template")
     ("e" spacemacs/edit-env "Open \".spacemacs.env\"")
     ("E" dotspacemacs/call-user-env "Refresh env. variables")
+    ("l" find-library "Find Emacs library...")
     ("R" dotspacemacs/sync-configuration-layers "Reload configuration")
     ("v" spacemacs/display-and-copy-version "Copy Spacemacs version")
     ("U" configuration-layer/update-packages "Update packages..."))
@@ -415,12 +410,15 @@
 ;; help -----------------------------------------------------------------------
 (defalias 'emacs-tutorial 'help-with-tutorial)
 (spacemacs/set-leader-keys
+  "hda" 'apropos-command
   "hdb" 'describe-bindings
   "hdc" 'describe-char
   "hdf" 'describe-function
+  "hdF" 'describe-face
   "hdk" 'describe-key
   "hdK" 'describe-keymap
   "hdl" 'spacemacs/describe-last-keys
+  "hdm" 'spacemacs/describe-mode
   "hdp" 'describe-package
   "hdP" 'configuration-layer/describe-package
   "hds" 'spacemacs/describe-system-info
@@ -650,27 +648,27 @@ respond to this toggle."
   "w3"  'spacemacs/window-split-triple-columns
   "w4"  'spacemacs/window-split-grid
   "wb"  'spacemacs/switch-to-minibuffer-window
-  "wd"  'spacemacs/delete-window
+  "wd"  'delete-window
   "wt"  'spacemacs/toggle-current-window-dedication
   "wf"  'follow-mode
   "wF"  'make-frame
   "wH"  'evil-window-move-far-left
-  "w <S-left>"  'evil-window-move-far-left
+  "w S-<left>"  'evil-window-move-far-left
   "wh"  'evil-window-left
   "w <left>"  'evil-window-left
   "wJ"  'evil-window-move-very-bottom
-  "w <S-down>"  'evil-window-move-very-bottom
+  "w S-<down>"  'evil-window-move-very-bottom
   "wj"  'evil-window-down
   "w <down>"  'evil-window-down
   "wK"  'evil-window-move-very-top
-  "w <S-up>"  'evil-window-move-very-top
+  "w S-<up>"  'evil-window-move-very-top
   "wk"  'evil-window-up
   "w <up>"  'evil-window-up
   "wL"  'evil-window-move-far-right
-  "w <S-right>"  'evil-window-move-far-right
+  "w S-<right>"  'evil-window-move-far-right
   "wl"  'evil-window-right
   "w <right>"  'evil-window-right
-  "wm"  'spacemacs/toggle-maximize-buffer
+  "wm"  'spacemacs/toggle-maximize-window
   ;; "wcc"  'spacemacs/toggle-centered-buffer
   ;; "wcC"  'spacemacs/toggle-distraction-free
   ;; "wc."  'spacemacs/centered-buffer-transient-state
@@ -680,8 +678,7 @@ respond to this toggle."
   "ws"  'split-window-below
   "wS"  'split-window-below-and-focus
   "w-"  'split-window-below
-  "wU"  'winner-redo
-  "wu"  'winner-undo
+  "wu"  'spacemacs/winner-transient-state/winner-undo
   "wv"  'split-window-right
   "wV"  'split-window-right-and-focus
   "ww"  'other-window
@@ -749,9 +746,8 @@ respond to this toggle."
 (define-key indent-rigidly-map "L" 'indent-rigidly-right-to-tab-stop)
 
 ;; shell ----------------------------------------------------------------------
-(with-eval-after-load 'shell
-  (evil-define-key 'insert comint-mode-map [up] 'comint-previous-input)
-  (evil-define-key 'insert comint-mode-map [down] 'comint-next-input))
+(evil-define-key 'insert comint-mode-map [up] 'comint-previous-input)
+(evil-define-key 'insert comint-mode-map [down] 'comint-next-input)
 
 ;; ---------------------------------------------------------------------------
 ;; Transient-states
@@ -759,14 +755,37 @@ respond to this toggle."
 
 ;; Buffer transient state
 
+(defvar spacemacs--buffer-ts-full-hint-toggle t
+  "Display buffer transient state documentation.")
+
+(defun spacemacs//buffer-ts-toggle-hint ()
+  "Toggle the full hint docstring for the buffer transient state."
+  (interactive)
+  (setq spacemacs--buffer-ts-full-hint-toggle
+        (not spacemacs--buffer-ts-full-hint-toggle)))
+
+(defun spacemacs//buffer-ts-hint ()
+  "Return a condensed/full hint for the buffer transient state"
+  (concat
+   " "
+   (if spacemacs--buffer-ts-full-hint-toggle
+       spacemacs--buffer-ts-full-hint
+     (concat "[" (propertize "?" 'face 'hydra-face-red) "] help"))))
+
+(spacemacs|transient-state-format-hint buffer
+  spacemacs--buffer-ts-full-hint
+  (format "\n[_?_] toggle help
+ [_C-1_.._C-9_] goto nth window            [_n_/_<right>_]^^  next buffer       [_d_]   kill buffer
+ [_1_.._9_]     move buffer to nth window  [_N_/_p_/_<left>_] previous buffer   [_C-d_] bury buffer
+ [_M-1_.._M-9_] swap buffer w/ nth window  [_b_]^^^^          buffer list       [_x_]   kill buffer and window
+ [_o_]^^        other window               [_z_]^^^^          recenter          [_q_]   quit"))
+
 (spacemacs|define-transient-state buffer
   :title "Buffer Transient State"
-  :doc "
- [_C-1_.._C-9_] goto nth window            [_n_/_<right>_]^^  next buffer       [_b_]   buffer list
- [_1_.._9_]     move buffer to nth window  [_N_/_p_/_<left>_] previous buffer   [_C-d_] bury buffer
- [_M-1_.._M-9_] swap buffer w/ nth window  [_d_]^^^^          kill buffer       [_o_]   other window
- ^^^^                                      [_z_]^^^^          recenter          [_q_]   quit"
+  :hint-is-doc t
+  :dynamic-hint (spacemacs//buffer-ts-hint)
   :bindings
+  ("?" spacemacs//buffer-ts-toggle-hint)
   ("n" next-buffer)
   ("<right>" next-buffer)
   ("p" previous-buffer)
@@ -776,8 +795,11 @@ respond to this toggle."
   ("b" (cond ((configuration-layer/layer-used-p 'helm)
               (helm-buffers-list))
              ((configuration-layer/layer-used-p 'ivy)
-              (ivy-switch-buffer))))
-  ("d" spacemacs/kill-this-buffer)
+              (ivy-switch-buffer))
+             ((configuration-layer/layer-used-p 'compleseus)
+              (spacemacs/compleseus-switch-to-buffer))))
+  ("d" kill-current-buffer)
+  ("x" kill-buffer-and-window)
   ("C-d" bury-buffer)
   ("z" recenter-top-bottom)
   ("q" nil :exit t)
@@ -863,10 +885,10 @@ Select: _a_ _h_ _j_ _k_ _l_ _w_ _0_.._9_ Move: _H_ _J_ _K_ _L_ _r_ _R_ Split: _s
  ──────^^^^─────────────  ────^^^^────────────  ─────^^^^^^─────────────  ──────^^───────────  ─────^^──────────────────
  [_j_/_k_]  down/up       [_J_/_K_] down/up     [_s_]^^^^ horizontal      [_[_] shrink horiz   [_d_] close current
  [_h_/_l_]  left/right    [_H_/_L_] left/right  [_S_]^^^^ horiz & follow  [_]_] enlarge horiz  [_D_] close other
- [_0_.._9_] window 0..9   [_r_]^^   rotate fwd  [_v_]^^^^ vertical        [_{_] shrink verti   [_u_] restore prev layout
- [_a_]^^    ace-window    [_R_]^^   rotate bwd  [_V_]^^^^ verti & follow  [_}_] enlarge verti  [_U_] restore next layout
- [_o_]^^    other frame   ^^^^                  [_m_/_|_/___] maximize    %s^^^^^^^^^^^^^^^^^  [_q_] quit
- [_w_]^^    other window"
+ [_0_.._9_] window 0..9   [_r_]^^   rotate fwd  [_v_]^^^^ vertical        [_{_] shrink verti   [_x_] close and kill buffer
+ [_a_]^^    ace-window    [_R_]^^   rotate bwd  [_V_]^^^^ verti & follow  [_}_] enlarge verti  [_u_] restore prev layout
+ [_o_]^^    other frame   ^^^^                  [_m_/_|_/___] maximize    %s^^^^^^^^^^^^^^^^^  [_U_] restore next layout
+ [_w_]^^    other window  ^^^^                  ^^^^^^                    ^^                   [_q_] quit"
           (if (configuration-layer/package-used-p 'golden-ratio)
               ;; the following strings need to be the same length as:
               ;; %s^^^^^^^^^^^^^^^^^ (above) to keep the following key aligned
@@ -903,13 +925,13 @@ Select: _a_ _h_ _j_ _k_ _l_ _w_ _0_.._9_ Move: _H_ _J_ _K_ _L_ _r_ _R_ Split: _s
   ("w" other-window)
   ;; Move
   ("J" evil-window-move-very-bottom)
-  ("<S-down>" evil-window-move-very-bottom)
+  ("S-<down>" evil-window-move-very-bottom)
   ("K" evil-window-move-very-top)
-  ("<S-up>" evil-window-move-very-top)
+  ("S-<up>" evil-window-move-very-top)
   ("H" evil-window-move-far-left)
-  ("<S-left>" evil-window-move-far-left)
+  ("S-<left>" evil-window-move-far-left)
   ("L" evil-window-move-far-right)
-  ("<S-right>" evil-window-move-far-right)
+  ("S-<right>" evil-window-move-far-right)
   ("r" spacemacs/rotate-windows-forward)
   ("R" spacemacs/rotate-windows-backward)
   ;; Split
@@ -919,7 +941,7 @@ Select: _a_ _h_ _j_ _k_ _l_ _w_ _0_.._9_ Move: _H_ _J_ _K_ _L_ _r_ _R_ Split: _s
   ("v" split-window-right)
   ("V" split-window-right-and-focus)
   ("/" split-window-right-and-focus)
-  ("m" spacemacs/toggle-maximize-buffer)
+  ("m" spacemacs/toggle-maximize-window)
   ("|" spacemacs/maximize-vertically)
   ("_" spacemacs/maximize-horizontally)
   ;; Resize
@@ -930,6 +952,7 @@ Select: _a_ _h_ _j_ _k_ _l_ _w_ _0_.._9_ Move: _H_ _J_ _K_ _L_ _r_ _R_ Split: _s
   ;; Other
   ("d" delete-window)
   ("D" delete-other-windows)
+  ("x" kill-buffer-and-window)
   ("u" winner-undo)
   ("U" winner-redo)
   ("q" nil :exit t))

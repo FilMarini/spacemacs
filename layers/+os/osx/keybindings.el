@@ -1,6 +1,6 @@
-;;; keybindings.el --- OSX Layer keybindings File for Spacemacs
+;;; keybindings.el --- OSX Layer keybindings File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -45,12 +45,6 @@
   ;; The allowed non-nil values for the config variables.
   (setq allowed-values '(super meta hyper control alt none left))
 
-  ;; Backwards compatibility
-  (cl-case osx-use-option-as-meta
-    ((nil) (setf osx-option-as 'none))
-    (deprecated nil)
-    (t (setf osx-option-as 'meta)))
-
   ;; Set internal variables according to the given config variables
   (cl-loop for (key-var . internal-var) in modifier-keys do
            (let ((key-value (symbol-value key-var)))
@@ -93,7 +87,7 @@ default."
   (global-set-key (kbd-mac-command "W") 'delete-frame)
   (global-set-key (kbd-mac-command "n") 'make-frame)
   (global-set-key (kbd-mac-command "`") 'other-frame)
-  (global-set-key (kbd-mac-command "z") 'undo-tree-undo)
+  (global-set-key (kbd-mac-command "z") 'evil-undo)
   (global-set-key (kbd-mac-command "s") 'save-buffer)
 
   ;; window manipulation with command key
@@ -107,11 +101,11 @@ default."
   (global-set-key (kbd-mac-command "8") 'spacemacs/winum-select-window-8)
   (global-set-key (kbd-mac-command "9") 'spacemacs/winum-select-window-9)
 
-  (global-set-key (kbd-mac-command "Z") 'undo-tree-redo)
+  (global-set-key (kbd-mac-command "Z") 'evil-redo)
   (global-set-key (kbd-mac-command "C-f") 'spacemacs/toggle-frame-fullscreen)
   (global-set-key (kbd "M-s-h") 'ns-do-hide-others)
 
   ;; Emacs sometimes registers C-s-f as this weird keycode
-  ;; (global-set-key (kbd "<C-s-268632070>") 'spacemacs/toggle-frame-fullscreen)
+  ;; (global-set-key (kbd "C-s-<268632070>") 'spacemacs/toggle-frame-fullscreen)
   ;; (global-set-key [142607065] 'ns-do-hide-others)
   )

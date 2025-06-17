@@ -1,6 +1,6 @@
-;;; funcs.el --- Emacs Lisp functions File
+;;; funcs.el --- Emacs Lisp functions File  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -138,3 +138,56 @@ Requires smartparens because all movement is done using `sp-forward-symbol'."
   "Define a text object and a surround pair for elisp comments.
 Intended for use in mode hooks."
   (spacemacs|define-text-object ";" "elisp-comment" ";; " ""))
+
+
+;; Elisp autoformat buffer functions
+
+(defun spacemacs//make-elisp-buffers-format-on-save-maybe ()
+  "Add a function to format buffers on save when required."
+  (when emacs-lisp-format-on-save
+    (add-hook 'emacs-lisp-mode-hook #'spacemacs//make-elisp-buffer-format-on-save)))
+
+(defun spacemacs//make-elisp-buffer-format-on-save ()
+  "Make sure that this buffer is formatted on save"
+  (add-hook 'before-save-hook #'spacemacs//format-elisp-buffer nil t))
+
+(defun spacemacs//format-elisp-buffer ()
+  "Format the given buffer if required."
+  (when emacs-lisp-format-on-save
+    (save-excursion
+      (indent-region (point-min) (point-max))
+      (whitespace-cleanup))))
+
+
+
+;; ERT commands
+
+(defun spacemacs//find-ert-test-buffer (ert-test)
+  "Return the buffer where ERT-TEST is defined."
+  (save-excursion
+    (car (find-definition-noselect (ert-test-name ert-test) 'ert-deftest))))
+
+(defun spacemacs/ert-run-tests-buffer ()
+  "Run all the tests in the current buffer."
+  (interactive)
+  (save-buffer)
+  (load-file (buffer-file-name))
+  (let ((cbuf (current-buffer)))
+    (ert '(satisfies (lambda (test)
+                       (eq cbuf (spacemacs//find-ert-test-buffer test)))))))
+
+
+;; setup flycheck, but not for `lisp-interaction-mode'
+;;
+;; `lisp-interaction-mode' is commonly used as the major-mode for the *scratch*
+;; buffer created upon startup, but the flycheck-package and flycheck-elsa
+;; linters are meaningless in such a buffer.  In fact, they are meaningless for
+;; non-file-backed buffers, so just check that.
+
+(defun emacs-lisp//flycheck-package-setup ()
+  (when buffer-file-name
+    (flycheck-package-setup)))
+
+(defun emacs-lisp//flycheck-elsa-setup ()
+  (when buffer-file-name
+    (flycheck-elsa-setup)))

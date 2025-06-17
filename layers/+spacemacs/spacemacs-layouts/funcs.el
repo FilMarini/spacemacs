@@ -1,6 +1,6 @@
 ;;; funcs.el --- Spacemacs Layouts Layer functions File -*- lexical-binding: t; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -44,8 +44,8 @@
 (defun spacemacs//layout-wait-for-modeline (&rest _)
   "Assure the mode-line is loaded before restoring the layouts."
   (advice-remove 'persp-load-state-from-file 'spacemacs//layout-wait-for-modeline)
-  (when (and (configuration-layer/package-used-p 'spaceline)
-             (memq (spacemacs/get-mode-line-theme-name) '(spacemacs all-the-icons custom)))
+  (when (and (configuration-layer/layer-used-p 'spacemacs-modeline)
+             (spacemacs//enable-spaceline-p))
     (require 'spaceline-config)))
 
 (defun spacemacs//current-layout-name ()
@@ -390,7 +390,7 @@ If perspective NAME does not already exist, create it and add any
 buffers that belong to the current buffer's project."
   (if (persp-with-name-exists-p name)
       (message "There is already a perspective named %s" name)
-    (if-let ((project (projectile-project-p)))
+    (if-let* ((project (projectile-project-p)))
         (spacemacs||switch-layout name
           :init
           (persp-add-buffer (projectile-project-buffers project)
@@ -848,7 +848,7 @@ Otherwise create a new workspace at the next free slot."
 
 (defun spacemacs//get-persp-workspace (&optional persp frame)
   "Get the correct workspace parameters for perspective.
-PERSP is the perspective, and defaults to the current perspective.
+PERSP is the perspective, and defaults to the default layout.
 FRAME is the frame where the parameters are expected to be used, and
 defaults to the current frame."
   (let ((param-names (if (display-graphic-p frame)
@@ -934,11 +934,10 @@ FRAME defaults to the current frame."
                                   frame))
 
 (defun spacemacs//fixup-window-configs (orig-fn newname &optional unique)
-  "Update the buffer's name in the eyebrowse window-configs of any perspectives
-containing the buffer."
+  "Update the buffer's name in the eyebrowse window-configs of all perspectives."
   (let* ((old (buffer-name))
          (new (funcall orig-fn newname unique)))
-    (dolist (persp (persp--buffer-in-persps (current-buffer)))
+    (dolist (persp (persp-persps))
       (dolist (window-config
                (append (persp-parameter 'gui-eyebrowse-window-configs persp)
                        (persp-parameter 'term-eyebrowse-window-configs persp)))
@@ -987,14 +986,14 @@ Accepts a list of VARIABLE, DEFAULT-VALUE pairs.
                                     (-map 'car
                                           spacemacs--layout-local-variables))))
     ;; save the current layout
-    (spacemacs-ht-set! spacemacs--layout-local-map
-             (spacemacs//current-layout-name)
+    (puthash (spacemacs//current-layout-name)
              (--map (cons it (symbol-value it))
-                    layout-local-vars))
+                    layout-local-vars)
+             spacemacs--layout-local-map)
     ;; load the default values into the new layout
     (--each layout-local-vars
       (set it (alist-get it spacemacs--layout-local-variables)))
     ;; override with the previously bound values for the new layout
-    (--when-let (spacemacs-ht-get spacemacs--layout-local-map persp-name)
+    (--when-let (gethash persp-name spacemacs--layout-local-map)
       (-each it
         (-lambda ((var . val)) (set var val))))))

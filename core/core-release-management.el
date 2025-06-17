@@ -1,6 +1,6 @@
 ;;; core-spacemacs.el --- Spacemacs Core File -*- lexical-binding: t -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -378,24 +378,25 @@ If old and new revisions are different `spacemacs-revision--changed-hook'
  will be triggered."
   (when (file-exists-p spacemacs-revision--file)
     (load spacemacs-revision--file nil t))
-  (require 'async)
-  (async-start
-   `(lambda ()
-      (let ((proc-buffer "spacemacs//revision-check:git-get-current-rev")
-            (default-directory (file-truename ,spacemacs-start-directory))
-            (new_rev))
-        (when (eq 0 (process-file "git" nil proc-buffer nil "rev-parse" "HEAD"))
-          (with-current-buffer proc-buffer
-            (goto-char 1)
-            (setq new_rev (current-word))
-            (kill-buffer proc-buffer)))
-        (with-temp-file ,spacemacs-revision--file
-          (insert (format "(setq spacemacs-revision--last %S)" new_rev))
-          (make-directory (file-name-directory ,spacemacs-revision--file) t))
-        new_rev))
-   (lambda (new_rev)
-     (unless (string= spacemacs-revision--last new_rev)
-       (setq spacemacs-revision--last new_rev)
-       (run-hooks 'spacemacs-revision--changed-hook)))))
+  (when spacemacs-revision--changed-hook
+    (require 'async)
+    (async-start
+     `(lambda ()
+        (let ((proc-buffer "spacemacs//revision-check:git-get-current-rev")
+              (default-directory (file-truename ,spacemacs-start-directory))
+              (new_rev))
+          (when (eq 0 (process-file "git" nil proc-buffer nil "rev-parse" "HEAD"))
+            (with-current-buffer proc-buffer
+              (goto-char 1)
+              (setq new_rev (current-word))
+              (kill-buffer proc-buffer)))
+          (with-temp-file ,spacemacs-revision--file
+            (insert (format "(setq spacemacs-revision--last %S)" new_rev))
+            (make-directory (file-name-directory ,spacemacs-revision--file) t))
+          new_rev))
+     (lambda (new_rev)
+       (unless (string= spacemacs-revision--last new_rev)
+         (setq spacemacs-revision--last new_rev)
+         (run-hooks 'spacemacs-revision--changed-hook))))))
 
 (provide 'core-release-management)

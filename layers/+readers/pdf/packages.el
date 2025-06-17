@@ -1,7 +1,7 @@
-;;; packages.el --- PDF Layer packages File for Spacemacs
+;;; packages.el --- PDF Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
 ;; Copyright (c) 2012-2021 Sylvain Benner
-;; Copyright (c) 2020-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2020-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: André Peric Tavares <andre.peric.tavares@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -28,12 +28,14 @@
 (defun pdf/init-pdf-tools ()
   (use-package pdf-tools
     :defer t
-    :mode (("\\.pdf\\'" . pdf-view-mode))
+    :custom
+    ;; `pdf-view-use-scaling' can lead to severe performance problems,
+    ;; especially after zooming
+    (pdf-view-use-scaling nil)
     :init
     (spacemacs//pdf-tools-setup-transient-state)
+    (pdf-loader-install)
     :config
-    (pdf-tools-install)
-
     (spacemacs/declare-prefix-for-mode 'pdf-view-mode "ma" "annotations")
     (spacemacs/declare-prefix-for-mode 'pdf-view-mode "mf" "fit")
     (spacemacs/declare-prefix-for-mode 'pdf-view-mode "ms" "slice/search")
@@ -60,7 +62,8 @@
       "ss" 'pdf-occur
       "p" 'pdf-misc-print-document
       "O" 'pdf-outline
-      "n" 'pdf-view-midnight-minor-mode)
+      "n" 'pdf-view-midnight-minor-mode
+      "t" 'pdf-view-themed-minor-mode)
 
     (evil-define-key 'visual pdf-view-mode-map
       "y" 'pdf-view-kill-ring-save
@@ -112,9 +115,7 @@
       "k"                'previous-line
       "gk"               'outline-backward-same-level
       "gj"               'outline-forward-same-level
-      (kbd "<backtab>")  (if (version< emacs-version "28.0")
-                             'outline-show-all
-                           'outline-cycle-buffer)
+      (kbd "<backtab>")  'outline-cycle-buffer
       "gh"               'pdf-outline-up-heading
       "gg"               'beginning-of-buffer
       "G"                'pdf-outline-end-of-buffer
@@ -125,7 +126,6 @@
       [mouse-1]          'pdf-outline-mouse-display-link
       "o"                'pdf-outline-select-pdf-window
       "``"               'pdf-outline-move-to-current-page
-      "''"               'pdf-outline-move-to-current-page
       "Q"                'pdf-outline-quit-and-kill
       "q"                'quit-window
       "F"                'pdf-outline-follow-mode)
@@ -149,7 +149,18 @@
       "?"              'evil-search-backward)
     (spacemacs/declare-prefix-for-mode 'pdf-occur-buffer-mode "mt" "toggles")
     (spacemacs/set-leader-keys-for-major-mode 'pdf-occur-buffer-mode
-      "tf" 'next-error-follow-minor-mode)))
+      "tf" 'next-error-follow-minor-mode)
+
+    (define-advice pdf-view-maybe-redisplay-resized-windows
+        (:around (orig-fun) spacemacs//unless-lv-window)
+      "Redisplaying pdf pages can be slow. Similar to how it is already
+disabled for minibuffer prompts, do not redisplay when entering a
+transient state and while it is active. Note that after exiting a
+transient state redisplay will be done if necessary.
+This makes a difference when `pdf-view-display-size' is `fit-height',
+or when resizing windows using the window transient state."
+      (unless (and (boundp 'lv-wnd) (window-live-p lv-wnd))
+        (funcall orig-fun)))))
 
 (defun pdf/init-pdf-view-restore ()
   (use-package pdf-view-restore

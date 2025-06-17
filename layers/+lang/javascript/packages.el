@@ -1,6 +1,6 @@
-;;; packages.el --- Javascript Layer packages File for Spacemacs
+;;; packages.el --- Javascript Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -25,7 +25,6 @@
   '(
     add-node-modules-path
     company
-    counsel-gtags
     dap-mode
     evil-matchit
     flycheck
@@ -51,9 +50,6 @@
 
 (defun javascript/post-init-company ()
   (add-hook 'js2-mode-local-vars-hook #'spacemacs//javascript-setup-company))
-
-(defun javascript/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'js2-mode))
 
 (defun javascript/pre-init-dap-mode ()
   (when (eq javascript-backend 'lsp)

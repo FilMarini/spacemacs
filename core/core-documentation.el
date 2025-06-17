@@ -1,6 +1,6 @@
 ;;; core-spacemacs.el --- Spacemacs Core File
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -174,7 +174,7 @@ the current buffer already has headlines with -<N> postfixes.
 (defun spacemacs//org-heading-annotate-custom-id ()
   "Annotate headings with the indexes that GitHub uses for linking.
 `org-html-publish-to-html' will use them instead of the default #orgheadline{N}.
-This way the GitHub links and the https://develop.spacemacs.org/ links will be
+This way the GitHub links and the https://spacemacs.org/ links will be
 compatible."
   (let ((heading-regexp "^[\\*]+\s\\(.*\\).*$"))
     (goto-char (point-min))

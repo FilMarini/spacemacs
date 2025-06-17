@@ -1,6 +1,6 @@
 ;;; funcs.el --- Ivy Layer functions File for Spacemacs -*- lexical-binding: t; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -147,7 +147,7 @@ When INITIAL-INPUT is non-nil, use it in the minibuffer during completion."
 (defun spacemacs//counsel-edit ()
   "Edit the current search results in a buffer using wgrep."
   (interactive)
-  (run-with-idle-timer 0 nil 'spacemacs/ivy-wgrep-change-to-wgrep-mode)
+  (run-with-idle-timer 0 nil 'spacemacs/grep-change-to-wgrep-mode)
   (ivy-occur))
 
 (defun spacemacs//gne-init-counsel ()
@@ -343,24 +343,6 @@ that directory."
   (ignore-errors
     (call-interactively 'counsel-up-directory)))
 
-(when (configuration-layer/package-used-p 'counsel)
-  (with-eval-after-load 'counsel
-    (defun spacemacs/describe-mode ()
-      "Dummy wrapper to prevent an key binding error from helm.
-
-By default the emacs leader is M-m, turns out that Helm does this:
-   (cl-dolist (k (where-is-internal 'describe-mode global-map))
-        (define-key map k 'helm-help))
-after doing this:
-   (define-key map (kbd \"M-m\") 'helm-toggle-all-marks)
-So when Helm is loaded we get the error:
-   Key sequence M-m h d m starts with non-prefix key M-m
-
-To prevent this error we just wrap `describe-mode' to defeat the
- Helm hack."
-      (interactive)
-      (call-interactively 'describe-mode))))
-
 (defun spacemacs//counsel-with-git-grep (func x)
   "This function should be kept in sync with `counsel-git-grep-action'.
 
@@ -450,11 +432,6 @@ commands."
                       (let ((repl (cdr (assoc candidate spacemacs-repl-list))))
                         (require (car repl))
                         (call-interactively (cdr repl))))))
-
-(defun spacemacs/ivy-wgrep-change-to-wgrep-mode ()
-  (interactive)
-  (ivy-wgrep-change-to-wgrep-mode)
-  (evil-normal-state))
 
 ;;; Evil
 

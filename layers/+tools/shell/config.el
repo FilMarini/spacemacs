@@ -1,6 +1,6 @@
-;;; config.el --- shell configuration File for Spacemacs
+;;; config.el --- shell configuration File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -33,8 +33,10 @@
 (defvar shell-default-shell (if (spacemacs/system-is-mswindows)
                                 'eshell
                               'ansi-term)
-  "Default shell to use in Spacemacs. Possible values are `ansi-term' (default
-for Linux/macOS), `eshell' (default for windows), `shell', `term', `vterm',
+  "Default shell to use in Spacemacs.
+
+Possible values are `ansi-term' (default for Linux/macOS),
+`eshell' (default for windows), `shell', `term', `eat', `vterm',
 `multi-term' and `multi-vterm'.")
 
 (spacemacs|defc shell-default-position 'bottom
@@ -53,20 +55,34 @@ for Linux/macOS), `eshell' (default for windows), `shell', `term', `vterm',
   "Default shell to use in `term', `ansi-term' and `vterm' shells.")
 
 (defvar shell-enable-smart-eshell nil
-  "If non-nil then `em-smart' is enabled. `em-smart' allows to quickly review
-  commands, modify old commands or enter a new one.")
+  "If non-nil then `em-smart' is enabled.
+
+`em-smart' allows to quickly review commands, modify old commands
+or enter a new one.")
 
 (defvar shell-protect-eshell-prompt t
-  "If non-nil then eshell's prompt is protected. This means that
-  movement to the prompt is inhibited like for `comint-mode'
-  prompts and the prompt is made read-only")
+  "If non-nil then eshell's prompt is protected.
+
+This means that movement to the prompt is inhibited like for
+`comint-mode' prompts and the prompt is made read-only")
 
 (defvar shell-default-full-span t
   "If non-nil, the `shell' buffer spans full width of a frame.")
 
-(defvar close-window-with-terminal nil
+(define-obsolete-variable-alias
+  'close-window-with-terminal
+  'shell-close-window-with-terminal
+  "2025-02-17")
+
+(defvar shell-close-window-with-terminal nil
   "If non-nil, the window is closed when the terminal is stopped.
-  This is only applied to `term' and `ansi-term' modes.")
+This is only applied to `term' and `ansi-term' modes.")
+
+(defvar shell-enable-vterm-support t
+  "If non-nil, enable the `vterm' and `multi-vterm' packages.'
+
+These packages require dynamic module support in your Emacs, as
+well as cmake and libtool.  See the layer README for details.")
 
 (defvar spacemacs-vterm-history-file-location nil
   "Bash history full file name.")

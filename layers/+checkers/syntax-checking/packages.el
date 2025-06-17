@@ -1,6 +1,6 @@
-;;; packages.el --- Syntax Checking Layer packages File for Spacemacs
+;;; packages.el --- Syntax Checking Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -28,7 +28,7 @@
 (defconst syntax-checking-packages
   '(
     flycheck
-    flycheck-pos-tip
+    (flycheck-pos-tip :toggle syntax-checking-enable-tooltips)
     popwin))
 
 (defun syntax-checking/init-flycheck ()
@@ -41,6 +41,7 @@
                    (global-flycheck-mode 1)))
       lazy-load-flycheck)
     (setq flycheck-standard-error-navigation syntax-checking-use-standard-error-navigation
+          flycheck-display-errors-delay (or syntax-checking-tooltips-delay 0.9)
           flycheck-global-modes nil)
     ;; key bindings
     (spacemacs/set-leader-keys
@@ -78,7 +79,6 @@
 
 (defun syntax-checking/init-flycheck-pos-tip ()
   (use-package flycheck-pos-tip
-    :if syntax-checking-enable-tooltips
     :after (flycheck)
     :init
     (flycheck-pos-tip-mode)

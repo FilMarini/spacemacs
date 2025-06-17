@@ -1,6 +1,6 @@
 ;;; core-command-line.el --- Spacemacs Core File -*- lexical-binding: t -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -25,15 +25,17 @@
   "If non-nil force the current emacs instance to resume layouts
   at start time despite the value of `dotspacemacs-auto-resume-layouts'.")
 
-(defvar spacemacs-insecure nil
-  "If non-nil force Spacemacs to operate without secured protocols.")
-
 (defvar spacemacs-sync-packages t
   "If non-nil packages are synchronized when the configuration layer system is
 loaded.")
 
-(defvar spacemacs-force-dump nil
-  "If non-nil then force a redump of Emacs.")
+(defvar spacemacs-load-dotspacemacs t
+  "If nil, suppress loading the user's Spacemacs configuration.
+
+If set to `template', load `dotspacemacs-template.el' rather than the
+user's Spacemacs configuration.
+
+Otherwise, load the user's Spacemacs config as normal.")
 
 (defun spacemacs//parse-command-line (args)
   "Handle Spacemacs specific command line arguments.
@@ -63,8 +65,6 @@ arguments is that we want to process these arguments as soon as possible."
              (setq spacemacs-debug-timer-threshold next-arg-digit
                    i (1+ 1)))
            (setq spacemacs-debugp t))
-          ("--insecure"
-           (setq spacemacs-insecure t))
           ("--no-layer"
            (setq configuration-layer-exclude-all-layers t))
           ("--distribution"
@@ -74,8 +74,10 @@ arguments is that we want to process these arguments as soon as possible."
            (setq spacemacs-force-resume-layouts t))
           ("--no-package-sync"
            (setq spacemacs-sync-packages nil))
-          ("--force-dump"
-           (setq spacemacs-force-dump t))
+          ("--no-dotspacemacs"
+           (setq spacemacs-load-dotspacemacs nil))
+          ("--default-dotspacemacs"
+           (setq spacemacs-load-dotspacemacs 'template))
           (_ (push arg new-args))))
       (setq i (1+ i)))
     (nreverse new-args)))

@@ -1,6 +1,6 @@
-;;; config.el --- Pianobar Layer config File for Spacemacs
+;;; config.el --- Pianobar Layer config File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Leo Littlebook  <texas.cyberthal@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -21,7 +21,7 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-(defvar pianobar-config 'nil
+(defvar pianobar-config nil
   "Set to t if your pianobar config contains your username and
   password.")
 
@@ -29,7 +29,7 @@
   "If pianobar is not in your path, set this variable to
   pianobar's path.")
 
-(defvar pianobar-station 'nil
+(defvar pianobar-station nil
   "Automatically connect to this station on login. Value must be
   a string containing the number used to select the station you
   want through Pianobar. The number is many digits long.")

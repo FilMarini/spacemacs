@@ -1,6 +1,6 @@
-;;; init.el --- Spacemacs Initialization File -*- no-byte-compile: t -*-
+;;; init.el --- Spacemacs Initialization File -*- no-byte-compile: t; lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -33,17 +33,11 @@
       nil (not init-file-debug))
 (load (concat spacemacs-core-directory "core-versions")
       nil (not init-file-debug))
-(load (concat spacemacs-core-directory "core-dumper")
-      nil (not init-file-debug))
 
 ;; Remove compiled core files if they become stale or Emacs version has changed.
 (load (concat spacemacs-core-directory "core-compilation")
       nil (not init-file-debug))
 (load spacemacs--last-emacs-version-file t (not init-file-debug))
-(when (or (not (string= spacemacs--last-emacs-version emacs-version))
-          (> 0 (spacemacs//dir-byte-compile-state
-                (concat spacemacs-core-directory "libs/"))))
-  (spacemacs//remove-byte-compiled-files-in-dir spacemacs-core-directory))
 ;; Update saved Emacs version.
 (unless (string= spacemacs--last-emacs-version emacs-version)
   (spacemacs//update-last-emacs-version))
@@ -52,22 +46,23 @@
     (error (concat "Your version of Emacs (%s) is too old. "
                    "Spacemacs requires Emacs version %s or above.")
            emacs-version spacemacs-emacs-min-version)
-  ;; Disabling file-name-handlers for a speed boost during init might seem like
-  ;; a good idea but it causes issues like
-  ;; https://github.com/syl20bnr/spacemacs/issues/11585 "Symbol's value as
-  ;; variable is void: \213" when emacs is not built having:
-  ;; `--without-compress-install`
-  (let ((please-do-not-disable-file-name-handler-alist nil))
+  ;; `file-name-handler-alist' affects the startup speed, but setting it to nil
+  ;; will cause issues like #11585: "Symbol's value as variable is void: \213",
+  ;; which failed to load the *.el.gz files.  So we use a simple value for
+  ;; speed.
+
+  ;; Users may update Spacemacs *.el files directly without byte-compile
+  ;; them (e.g., git pull in Spacemacs folder), so we prefer newer files.
+  (let ((load-prefer-newer t)
+        (file-name-handler-alist '(("\\.gz\\'" . jka-compr-handler))))
     (require 'core-spacemacs)
-    (spacemacs/dump-restore-load-path)
     (configuration-layer/load-lock-file)
     (spacemacs/init)
     (configuration-layer/stable-elpa-init)
     (configuration-layer/load)
     (spacemacs-buffer/display-startup-note)
     (spacemacs/setup-startup-hook)
-    (spacemacs/dump-eval-delayed-functions)
-    (when (and dotspacemacs-enable-server (not (spacemacs-is-dumping-p)))
+    (when dotspacemacs-enable-server
       (require 'server)
       (when dotspacemacs-server-socket-dir
         (setq server-socket-dir dotspacemacs-server-socket-dir))

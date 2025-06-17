@@ -1,6 +1,6 @@
-;;; funcs.el --- EXWM Layer packages File for Spacemacs
+;;; funcs.el --- EXWM Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -93,9 +93,9 @@ This is a list of strings used as shell commands.")
 NAME is the name for process.
 COMMAND is the shell command to run.
 DIRECTORY is the working directory in which the process is run.  It defaults to
-  `user-home-directory' if not provided.
+  \"~/\" if not provided.
 The started process is also added to `exwm--autostart-process-list'."
-  (add-to-list (let ((default-directory (or directory user-home-directory)))
+  (add-to-list (let ((default-directory (or directory "~/")))
                    (start-process-shell-command name nil command))
                exwm--autostart-process-list))
 
@@ -109,15 +109,15 @@ The started process is also added to `exwm--autostart-process-list'."
               (basename (gethash "Name" xdg))
               (cmd (gethash "Exec" xdg))
                             ;; (dbus-p (gethash "DBusActivatable" xdg)) ; TODO: support
-              (directory (or (gethash "Path" xdg) user-home-directory))
+              (directory (or (gethash "Path" xdg) "~/"))
               (_include? (and (null (gethash "Hidden" xdg))
-                              (if-let ((only-show (gethash "OnlyShowIn" xdg)))
+                              (if-let* ((only-show (gethash "OnlyShowIn" xdg)))
                                   (member "EXWM" (split-string only-show ";" t))
                                 t)
-                              (if-let ((not-show (gethash "NotShowIn" xdg)))
+                              (if-let* ((not-show (gethash "NotShowIn" xdg)))
                                   (not (member "EXWM" (split-string not-show ";" t)))
                                 t)
-                              (if-let ((try-exec (gethash "TryExec" xdg)))
+                              (if-let* ((try-exec (gethash "TryExec" xdg)))
                                   (executable-find try-exec)
                                 t))))
     (exwm//autostart-process basename cmd directory)))

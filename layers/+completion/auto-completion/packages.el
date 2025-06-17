@@ -1,6 +1,6 @@
-;;; packages.el --- Auto-completion Layer packages File for Spacemacs
+;;; packages.el --- Auto-completion Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -22,24 +22,24 @@
 
 
 (defconst auto-completion-packages
-      '(
-        (auto-yasnippet :toggle (not (eq auto-completion-front-end 'company)))
-        (auto-complete :toggle (not (eq auto-completion-front-end 'company)))
-        (ac-ispell :toggle (not (eq auto-completion-front-end 'company)))
-        (company :toggle (eq auto-completion-front-end 'company))
-        (company-posframe :toggle auto-completion-use-company-posframe)
-        (company-box :toggle auto-completion-use-company-box)
-        (company-quickhelp :toggle auto-completion-enable-help-tooltip)
-        (company-statistics :toggle auto-completion-enable-sort-by-usage)
-        counsel
-        (fuzzy :toggle (not (eq auto-completion-front-end 'company)))
-        (helm-company :requires helm :toggle (eq auto-completion-front-end 'company))
-        (helm-c-yasnippet :requires helm)
-        hippie-exp
-        (ivy-yasnippet :requires ivy)
-        smartparens
-        yasnippet
-        yasnippet-snippets))
+  '(
+    (auto-yasnippet)
+    (auto-complete :toggle (not (eq auto-completion-front-end 'company)))
+    (ac-ispell :toggle (not (eq auto-completion-front-end 'company)))
+    (company :toggle (eq auto-completion-front-end 'company))
+    (company-posframe :toggle auto-completion-use-company-posframe)
+    (company-box :toggle auto-completion-use-company-box)
+    (company-quickhelp :toggle auto-completion-enable-help-tooltip)
+    (company-statistics :toggle auto-completion-enable-sort-by-usage)
+    counsel
+    (fuzzy :toggle (not (eq auto-completion-front-end 'company)))
+    (helm-company :requires helm :toggle (eq auto-completion-front-end 'company))
+    (helm-c-yasnippet :requires helm)
+    hippie-exp
+    (ivy-yasnippet :requires ivy)
+    smartparens
+    yasnippet
+    yasnippet-snippets))
 
 
 ;; TODO replace by company-ispell which comes with company
@@ -77,7 +77,7 @@
     (add-to-list 'completion-styles 'initials t)
     (define-key ac-completing-map (kbd "C-j") 'ac-next)
     (define-key ac-completing-map (kbd "C-k") 'ac-previous)
-    (define-key ac-completing-map (kbd "<S-tab>") 'ac-previous)
+    (define-key ac-completing-map (kbd "S-<tab>") 'ac-previous)
     (spacemacs|diminish auto-complete-mode " ⓐ" " a")))
 
 (defun auto-completion/init-auto-yasnippet ()
@@ -91,6 +91,7 @@
     (spacemacs/set-leader-keys
       "iSc" 'aya-create
       "iSe" 'spacemacs/auto-yasnippet-expand
+      "iSh" 'spacemacs/auto-yasnippet-expand-from-history
       "iSw" 'aya-persist-snippet)))
 
 (defun auto-completion/init-company ()
@@ -101,11 +102,9 @@
           company-minimum-prefix-length auto-completion-minimum-prefix-length
           company-require-match nil
           company-dabbrev-ignore-case nil
+          company-dabbrev-other-buffers t
           company-dabbrev-downcase nil)
 
-    (add-hook 'company-completion-started-hook 'company-turn-off-fci)
-    (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
-    (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci)
     :config
     (spacemacs|diminish company-mode " ⓐ" " a")
 
@@ -149,11 +148,11 @@
     :commands company-quickhelp-manual-begin
     :init
     (spacemacs|do-after-display-system-init
-     (with-eval-after-load 'company
-       (setq company-frontends (delq 'company-echo-metadata-frontend company-frontends))
-       (define-key company-active-map (kbd "M-h") #'company-quickhelp-manual-begin)
-       (unless (eq auto-completion-enable-help-tooltip 'manual)
-         (company-quickhelp-mode))))))
+      (with-eval-after-load 'company
+        (setq company-frontends (delq 'company-echo-metadata-frontend company-frontends))
+        (define-key company-active-map (kbd "M-h") #'company-quickhelp-manual-begin)
+        (unless (eq auto-completion-enable-help-tooltip 'manual)
+          (company-quickhelp-mode))))))
 
 (defun auto-completion/init-company-box ()
   (use-package company-box
@@ -168,38 +167,38 @@
     (spacemacs|hide-lighter company-box-mode)
     (setq company-box-backends-colors nil)
     (setq company-box-icons-all-the-icons
-     `((Unknown . ,(all-the-icons-octicon "file-text" :height 0.8 :v-adjust -0.05))
-       (Text . ,(all-the-icons-faicon "file-text-o" :height 0.8 :v-adjust -0.0575))
-       (Method . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.0575))
-       (Function . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.0575))
-       (Constructor . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.0575))
-       (Field . ,(all-the-icons-faicon "tag" :height 0.8 :v-adjust -0.0575))
-       (Variable . ,(all-the-icons-faicon "tag" :height 0.8 :v-adjust -0.0575))
-       (Class . ,(all-the-icons-faicon "cog" :height 0.8 :v-adjust -0.0575))
-       (Interface . ,(all-the-icons-faicon "cogs" :height 0.8 :v-adjust -0.0575))
-       (Module . ,(all-the-icons-alltheicon "less" :height 0.8))
-       (Property . ,(all-the-icons-faicon "wrench" :height 0.8 :v-adjust -0.0575))
-       (Unit . ,(all-the-icons-faicon "tag" :height 0.8 :v-adjust -0.0575))
-       (Value . ,(all-the-icons-faicon "tag" :height 0.8 :v-adjust -0.0575))
-       (Enum . ,(all-the-icons-faicon "file-text-o" :height 0.8 :v-adjust -0.0575))
-       (Keyword . ,(all-the-icons-material "format_align_center" :height 0.8 :v-adjust -0.225))
-       (Snippet . ,(all-the-icons-material "content_paste" :height 0.8 :v-adjust -0.225))
-       (Color . ,(all-the-icons-material "palette" :height 0.8 :v-adjust -0.225))
-       (File . ,(all-the-icons-faicon "file" :height 0.8 :v-adjust -0.0575))
-       (Reference . ,(all-the-icons-faicon "tag" :height 0.8 :v-adjust -0.0575))
-       (Folder . ,(all-the-icons-faicon "folder" :height 0.8 :v-adjust -0.0575))
-       (EnumMember . ,(all-the-icons-faicon "tag" :height 0.8 :v-adjust -0.0575))
-       (Constant . ,(all-the-icons-faicon "tag" :height 0.8 :v-adjust -0.0575))
-       (Struct . ,(all-the-icons-faicon "cog" :height 0.8 :v-adjust -0.0575))
-       (Event . ,(all-the-icons-faicon "bolt" :height 0.8 :v-adjust -0.0575))
-       (Operator . ,(all-the-icons-faicon "tag" :height 0.8 :v-adjust -0.0575))
-       (TypeParameter . ,(all-the-icons-faicon "cog" :height 0.8 :v-adjust -0.0575))
-       (Template . ,(all-the-icons-octicon "file-code" :height 0.8 :v-adjust -0.05))))
+          `((Unknown . ,(all-the-icons-octicon "file-text" :height 0.8 :v-adjust -0.05))
+            (Text . ,(all-the-icons-faicon "file-text-o" :height 0.8 :v-adjust -0.0575))
+            (Method . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.0575))
+            (Function . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.0575))
+            (Constructor . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.0575))
+            (Field . ,(all-the-icons-faicon "tag" :height 0.8 :v-adjust -0.0575))
+            (Variable . ,(all-the-icons-faicon "tag" :height 0.8 :v-adjust -0.0575))
+            (Class . ,(all-the-icons-faicon "cog" :height 0.8 :v-adjust -0.0575))
+            (Interface . ,(all-the-icons-faicon "cogs" :height 0.8 :v-adjust -0.0575))
+            (Module . ,(all-the-icons-alltheicon "less" :height 0.8))
+            (Property . ,(all-the-icons-faicon "wrench" :height 0.8 :v-adjust -0.0575))
+            (Unit . ,(all-the-icons-faicon "tag" :height 0.8 :v-adjust -0.0575))
+            (Value . ,(all-the-icons-faicon "tag" :height 0.8 :v-adjust -0.0575))
+            (Enum . ,(all-the-icons-faicon "file-text-o" :height 0.8 :v-adjust -0.0575))
+            (Keyword . ,(all-the-icons-material "format_align_center" :height 0.8 :v-adjust -0.225))
+            (Snippet . ,(all-the-icons-material "content_paste" :height 0.8 :v-adjust -0.225))
+            (Color . ,(all-the-icons-material "palette" :height 0.8 :v-adjust -0.225))
+            (File . ,(all-the-icons-faicon "file" :height 0.8 :v-adjust -0.0575))
+            (Reference . ,(all-the-icons-faicon "tag" :height 0.8 :v-adjust -0.0575))
+            (Folder . ,(all-the-icons-faicon "folder" :height 0.8 :v-adjust -0.0575))
+            (EnumMember . ,(all-the-icons-faicon "tag" :height 0.8 :v-adjust -0.0575))
+            (Constant . ,(all-the-icons-faicon "tag" :height 0.8 :v-adjust -0.0575))
+            (Struct . ,(all-the-icons-faicon "cog" :height 0.8 :v-adjust -0.0575))
+            (Event . ,(all-the-icons-faicon "bolt" :height 0.8 :v-adjust -0.0575))
+            (Operator . ,(all-the-icons-faicon "tag" :height 0.8 :v-adjust -0.0575))
+            (TypeParameter . ,(all-the-icons-faicon "cog" :height 0.8 :v-adjust -0.0575))
+            (Template . ,(all-the-icons-octicon "file-code" :height 0.8 :v-adjust -0.05))))
     (add-hook 'company-box-selection-hook
               (lambda (selection frame) (company-box-doc--hide frame)))
     (cl-case auto-completion-enable-help-tooltip
       (manual (define-key company-active-map
-                (kbd "M-h") #'company-box-doc-manually))
+                          (kbd "M-h") #'company-box-doc-manually))
       (t (setq company-box-doc-enable t)))))
 
 (defun auto-completion/init-company-posframe ()
@@ -250,10 +249,7 @@
           ;; unique.
           try-complete-lisp-symbol-partially
           ;; Try to complete word as an Emacs Lisp symbol.
-          try-complete-lisp-symbol))
-  (when (configuration-layer/package-used-p 'yasnippet)
-    ;; Try to expand yasnippet snippets based on prefix
-    (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand)))
+          try-complete-lisp-symbol)))
 
 (defun auto-completion/init-ivy-yasnippet ()
   (use-package ivy-yasnippet
@@ -323,11 +319,13 @@
      'spacemacs/force-yasnippet-off '(term-mode-hook
                                       shell-mode-hook
                                       eshell-mode-hook))
-    (spacemacs|require-when-dumping 'yasnippet)
     (spacemacs/add-to-hooks 'spacemacs/load-yasnippet '(prog-mode-hook
                                                         markdown-mode-hook
                                                         org-mode-hook))
 
-    :config (spacemacs|diminish yas-minor-mode " ⓨ" " y")))
+    :config
+    (spacemacs|diminish yas-minor-mode " ⓨ" " y")
+    ;; Try to expand yasnippet snippets based on prefix
+    (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand)))
 
 (defun auto-completion/init-yasnippet-snippets ())

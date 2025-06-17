@@ -1,6 +1,6 @@
-;;; funcs.el --- geolocation functions File for Spacemacs
+;;; funcs.el --- geolocation functions File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Eivind Fonn <evfonn@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -51,5 +51,5 @@
   (unless (bound-and-true-p calendar-latitude)
     (user-error "calendar-latitude is not set"))
   (when (> (length dotspacemacs-themes) 1)
-    (change-theme (nth 0 dotspacemacs-themes)
-                  (nth 1 dotspacemacs-themes))))
+    (change-theme (spacemacs//get-theme-name (nth 0 dotspacemacs-themes))
+                  (spacemacs//get-theme-name (nth 1 dotspacemacs-themes)))))

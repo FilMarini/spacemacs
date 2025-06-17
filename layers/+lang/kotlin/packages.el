@@ -1,6 +1,6 @@
-;;; packages.el --- kotlin layer packages file for Spacemacs.
+;;; packages.el --- kotlin layer packages file for Spacemacs.  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Shanavas M <shanavas@disroot.org>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -27,7 +27,6 @@
     flycheck
     (flycheck-kotlin :requires flycheck)
     ggtags
-    counsel-gtags
     kotlin-mode))
 
 (defun kotlin/post-init-company ()
@@ -50,6 +49,3 @@
 
 (defun kotlin/post-init-ggtags ()
   (add-hook 'kotlin-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
-
-(defun kotlin/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'kotlin-mode))

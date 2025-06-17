@@ -1,6 +1,6 @@
-;;; packages.el --- spotify Layer packages File for Spacemacs
+;;; packages.el --- spotify Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Brian Hicks <brian@brianthicks.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -23,8 +23,8 @@
 
 (defconst spotify-packages
   '(spotify
-    (helm-spotify-plus :toggle (configuration-layer/package-usedp 'helm))
-    (counsel-spotify :toggle (configuration-layer/package-usedp 'ivy))))
+    (helm-spotify-plus :requires helm)
+    (counsel-spotify :requires counsel)))
 
 (defun spotify/init-spotify ()
   (use-package spotify

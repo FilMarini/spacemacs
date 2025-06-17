@@ -1,6 +1,6 @@
-;;; funcs.el --- tree-sitter layer funcs file for Spacemacs.
+;;; funcs.el --- tree-sitter layer funcs file for Spacemacs.  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Elliott Shugerman <eeshugerman@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -22,5 +22,6 @@
 
 (defun spacemacs//tree-sitter-hl-maybe ()
   "Turn on `tree-sitter-hl-mode' if allowed."
-  (unless (memq major-mode spacemacs-tree-sitter-hl-black-list)
+  (unless (or (memq major-mode spacemacs-tree-sitter-hl-black-list)
+              (bound-and-true-p tree-sitter-hl-mode))
     (tree-sitter-hl-mode +1)))

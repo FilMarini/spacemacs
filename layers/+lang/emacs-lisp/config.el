@@ -1,6 +1,6 @@
-;;; config.el --- Emacs Lisp Layer configuration File for Spacemacs
+;;; config.el --- Emacs Lisp Layer configuration File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -21,11 +21,6 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-;; Dumper
-
-(defun emacs-lisp/pre-dump ()
-  (spacemacs/dump-modes '(emacs-lisp-mode)))
-
 ;; Variables
 
 (spacemacs|define-jump-handlers emacs-lisp-mode)
@@ -34,3 +29,6 @@
 
 (defvar emacs-lisp-hide-namespace-prefix nil
   "If non-nil, hide namespace prefixes using nameless-mode.")
+
+(defvar emacs-lisp-format-on-save t
+  "If non-nil, format elisp buffers before saving.")

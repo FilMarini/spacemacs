@@ -1,6 +1,6 @@
-;;; funcs.el --- Colors Layer functions File
+;;; funcs.el --- Colors Layer functions File  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -35,13 +35,13 @@
               (delq 'font-lock-keyword-face
                     rainbow-identifiers-faces-to-override)))
 
-(defun colors//tweak-theme-colors (theme)
+(defun colors//tweak-theme-colors ()
   "Tweak color themes by adjusting rainbow-identifiers."
-  (interactive)
   ;; tweak the saturation and lightness of identifier colors
-  (unless (assq theme (get 'rainbow-identifiers-cie-l*a*b*-saturation
-                           'theme-value))
-    (let ((sat&light (assq theme colors-theme-identifiers-sat&light)))
+  (unless (assq spacemacs--cur-theme
+                (get 'rainbow-identifiers-cie-l*a*b*-saturation
+                     'theme-value))
+    (let ((sat&light (assq spacemacs--cur-theme colors-theme-identifiers-sat&light)))
       (if sat&light
           (setq rainbow-identifiers-cie-l*a*b*-saturation (cadr sat&light)
                 rainbow-identifiers-cie-l*a*b*-lightness (caddr sat&light))
@@ -162,4 +162,4 @@ Example usage:
   "Refresh and re-apply the look of your current theme.
 Always run this after adding new per-theme settings!"
   (interactive)
-  (colors//tweak-theme-colors spacemacs--cur-theme))
+  (colors//tweak-theme-colors))

@@ -1,6 +1,6 @@
-;;; packages.el --- Rust Layer packages File for Spacemacs
+;;; packages.el --- Rust Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Chris Hoeppner <me@mkaito.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -23,17 +23,12 @@
 
 (defconst rust-packages
   '(
-    counsel-gtags
     dap-mode
     ggtags
     ron-mode
     rustic
-    smartparens
-    toml-mode))
+    smartparens))
 
-
-(defun rust/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'rustic-mode))
 
 (defun rust/pre-init-dap-mode ()
   (when (eq rust-backend 'lsp)
@@ -74,7 +69,7 @@
       "cU" 'rustic-cargo-upgrade
       "cv" 'rustic-cargo-check
       "cx" 'rustic-cargo-run
-      "ta" 'rustic-cargo-test
+      "ta" 'rustic-cargo-test-run
       "tt" 'rustic-cargo-current-test)
 
     (with-eval-after-load 'flycheck
@@ -101,10 +96,6 @@
   (with-eval-after-load 'smartparens
     ;; Don't pair lifetime specifiers
     (sp-local-pair 'rustic-mode "'" nil :actions nil)))
-
-(defun rust/init-toml-mode ()
-  (use-package toml-mode
-    :mode "/\\(Cargo.lock\\|\\.cargo/config\\)\\'"))
 
 (defun rust/init-ron-mode ()
   (use-package ron-mode

@@ -1,6 +1,6 @@
-;;; packages.el --- Spell Checking Layer packages File for Spacemacs
+;;; packages.el --- Spell Checking Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -22,7 +22,7 @@
 
 (defconst spell-checking-packages
   '(
-    auto-dictionary
+    (auto-dictionary :toggle spell-checking-enable-auto-dictionary)
     flyspell
     flyspell-correct
     (flyspell-correct-ivy :toggle (configuration-layer/layer-used-p 'ivy))
@@ -34,7 +34,6 @@
 (defun spell-checking/init-auto-dictionary ()
   (use-package auto-dictionary
     :defer t
-    :if spell-checking-enable-auto-dictionary
     :init
     (add-hook 'flyspell-mode-hook 'auto-dictionary-mode)
     ;; Select the buffer local dictionary if it was set, otherwise

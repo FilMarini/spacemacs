@@ -1,6 +1,6 @@
-;;; packages.el --- Spacemacs Mode-line Visual Layer packages File
+;;; packages.el --- Spacemacs Mode-line Visual Layer packages File  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -23,26 +23,19 @@
 
 (setq spacemacs-modeline-packages
       '(
-        anzu
         (doom-modeline :toggle (eq (spacemacs/get-mode-line-theme-name) 'doom))
         fancy-battery
-        spaceline
+        (spaceline :toggle (spacemacs//enable-spaceline-p))
         (spaceline-all-the-icons :toggle (eq (spacemacs/get-mode-line-theme-name) 'all-the-icons))
         symon
-        (vim-powerline :location (recipe :fetcher local))))
-
-(defun spacemacs-modeline/post-init-anzu ()
-  (when (eq 'all-the-icons (spacemacs/get-mode-line-theme-name))
-    (spaceline-all-the-icons--setup-anzu)))
+        (powerline :toggle (eq (spacemacs/get-mode-line-theme-name) 'vim-powerline))
+        (vim-powerline :location (recipe :fetcher local)
+                       :toggle (eq (spacemacs/get-mode-line-theme-name) 'vim-powerline))))
 
 (defun spacemacs-modeline/init-doom-modeline ()
-  ;; doom modeline depends on `display-graphic-p' so we delay its initialization
-  ;; as when dumping we don't know yet wether we are using a graphical emacs or
-  ;; not.
-  (spacemacs|unless-dumping-and-eval-after-loaded-dump doom-modeline
-    (use-package doom-modeline
-      :defer t
-      :init (doom-modeline-mode))))
+  (use-package doom-modeline
+    :defer t
+    :init (doom-modeline-mode)))
 
 (defun spacemacs-modeline/init-fancy-battery ()
   (use-package fancy-battery
@@ -56,14 +49,9 @@
 
 (defun spacemacs-modeline/init-spaceline ()
   (use-package spaceline-config
-    :if (memq (spacemacs/get-mode-line-theme-name)
-              '(spacemacs all-the-icons custom))
     :init
-    (spacemacs|require-when-dumping 'spaceline)
-    (spacemacs|when-dumping-strict
-      (spacemacs/spaceline-config-startup))
-    (spacemacs|unless-dumping
-      (add-hook 'emacs-startup-hook 'spacemacs/spaceline-config-startup-hook))
+    (add-hook 'spacemacs-post-user-config-hook
+              'spacemacs/spaceline-config-startup-hook)
     (add-hook 'spacemacs-post-theme-change-hook
               'spacemacs/customize-powerline-faces)
     (add-hook 'spacemacs-post-theme-change-hook 'powerline-reset)
@@ -95,7 +83,6 @@
                  :evil-leader ,(cadr spec)))))
     (setq powerline-default-separator
           (cond
-           ((spacemacs-is-dumping-p) 'utf-8)
            ((memq (spacemacs/get-mode-line-theme-name)
                   '(spacemacs custom))
             (spacemacs/mode-line-separator))
@@ -115,26 +102,26 @@
     (add-hook 'spaceline-pre-hook 'spacemacs//prepare-diminish)
     ;; New spacemacs version segment
     (defpowerline spacemacs-powerline-new-version
-      (propertize
-       spacemacs-version-check-lighter
-       'mouse-face 'mode-line-highlight
-       'help-echo (format "New version %s | Click with mouse-1 to update"
-                          spacemacs-new-version)
-       'local-map (let ((map (make-sparse-keymap)))
-                    (define-key map
-                      [mode-line down-mouse-1]
-                      (lambda (event)
-                        (interactive "@e")
-                        (if (yes-or-no-p
-                             (format
-                              (concat "Do you want to update to the newest "
-                                      "version %s ?")
-                              spacemacs-new-version))
-                            (progn
-                              (spacemacs/switch-to-version
-                               spacemacs-new-version))
-                          (message "Update aborted."))))
-                    map)))
+                  (propertize
+                   spacemacs-version-check-lighter
+                   'mouse-face 'mode-line-highlight
+                   'help-echo (format "New version %s | Click with mouse-1 to update"
+                                      spacemacs-new-version)
+                   'local-map (let ((map (make-sparse-keymap)))
+                                (define-key map
+                                            [mode-line down-mouse-1]
+                                            (lambda (event)
+                                              (interactive "@e")
+                                              (if (yes-or-no-p
+                                                   (format
+                                                    (concat "Do you want to update to the newest "
+                                                            "version %s ?")
+                                                    spacemacs-new-version))
+                                                  (progn
+                                                    (spacemacs/switch-to-version
+                                                     spacemacs-new-version))
+                                                (message "Update aborted."))))
+                                map)))
     (spaceline-define-segment
         new-version
       (when spacemacs-new-version
@@ -150,8 +137,8 @@
     (when (configuration-layer/package-used-p 'info+)
       (spaceline-info-mode t))
     ;; Enable spaceline for buffers created before the configuration of
-    ;; spaceline
-    (spacemacs//restore-buffers-powerline)))
+    ;; spaceline, and reset after reloading configuration.
+    (add-hook 'spacemacs-post-user-config-hook #'spacemacs//restore-buffers-powerline)))
 
 (defun spacemacs-modeline/pre-init-spaceline-all-the-icons ()
   (when (eq 'all-the-icons (spacemacs/get-mode-line-theme-name))
@@ -163,7 +150,9 @@
         ;; let's disable it for now
         ;; https://github.com/domtronn/spaceline-all-the-icons.el/issues/51#issuecomment-316686790
         (setq spaceline-responsive nil)
-        (spaceline-all-the-icons--setup-git-ahead)))))
+        (spaceline-all-the-icons--setup-git-ahead)
+        (when (configuration-layer/package-used-p 'evil-anzu)
+          (spaceline-all-the-icons--setup-anzu))))))
 
 (defun spacemacs-modeline/init-spaceline-all-the-icons ()
   (use-package spaceline-all-the-icons
@@ -190,27 +179,28 @@
       :documentation "Tiny graphical system monitor."
       :evil-leader "tms")))
 
+(defun spacemacs-modeline/init-powerline ())
+
 (defun spacemacs-modeline/init-vim-powerline ()
-  (when (eq 'vim-powerline (spacemacs/get-mode-line-theme-name))
-    (require 'powerline)
-    (if (display-graphic-p)
-        (setq powerline-default-separator 'arrow)
-      (setq powerline-default-separator 'utf-8))
-    (defun powerline-raw (str &optional face pad)
-      "Render STR as mode-line data using FACE and optionally
+  (require 'powerline)
+  (if (display-graphic-p)
+      (setq powerline-default-separator 'arrow)
+    (setq powerline-default-separator 'utf-8))
+  (defun powerline-raw (str &optional face pad)
+    "Render STR as mode-line data using FACE and optionally
 PAD import on left (l) or right (r) or left-right (lr)."
-      (when str
-        (let* ((rendered-str (format-mode-line str))
-               (padded-str (concat
-                            (when (and (> (length rendered-str) 0)
-                                       (or (eq pad 'l) (eq pad 'lr))) " ")
-                            (if (listp str) rendered-str str)
-                            (when (and (> (length rendered-str) 0)
-                                       (or (eq pad 'r) (eq pad 'lr))) " "))))
-          (if face
-              (pl/add-text-property padded-str 'face face)
-            padded-str))))
-    (require 'vim-powerline-theme)
-    (powerline-vimish-theme)
-    (add-hook 'emacs-startup-hook
-              'spacemacs//set-vimish-powerline-for-startup-buffers)))
+    (when str
+      (let* ((rendered-str (format-mode-line str))
+             (padded-str (concat
+                          (when (and (> (length rendered-str) 0)
+                                     (or (eq pad 'l) (eq pad 'lr))) " ")
+                          (if (listp str) rendered-str str)
+                          (when (and (> (length rendered-str) 0)
+                                     (or (eq pad 'r) (eq pad 'lr))) " "))))
+        (if face
+            (pl/add-text-property padded-str 'face face)
+          padded-str))))
+  (require 'vim-powerline-theme)
+  (powerline-vimish-theme)
+  (add-hook 'emacs-startup-hook
+            'spacemacs//set-vimish-powerline-for-startup-buffers))

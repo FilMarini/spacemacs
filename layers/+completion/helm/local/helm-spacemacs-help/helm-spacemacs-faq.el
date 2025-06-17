@@ -1,4 +1,4 @@
-;;; helm-spacemacs-help.el --- Spacemacs layer exploration with `helm'.
+;;; helm-spacemacs-help.el --- Spacemacs layer exploration with `helm'.  -*- lexical-binding: nil; -*-
 
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; Keywords: helm, spacemacs
@@ -62,7 +62,7 @@
 (defun helm-spacemacs-help//get-faq-headings-list (sources)
   "Given the helm-org sources from FAQ.org.
 Return a list of all it's headings."
-    (aref (aref (cdadar sources) 2) 0))
+    (aref (aref (cdadar sources) 2) 5))
 
 (defun helm-spacemacs-help//faq-candidates ()
   "Join the section headings to each of their questions.

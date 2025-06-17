@@ -1,4 +1,4 @@
-;;; compleseus-spacemacs-help.el --- Spacemacs layer exploration with `completing-read'.
+;;; compleseus-spacemacs-help.el --- Spacemacs layer exploration with `completing-read'.  -*- lexical-binding: nil; -*-
 
 ;; Author: Thanh Vuong <thanhvg@gmail.com>
 ;; Keywords: consult, compleseus, spacemacs
@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 ;; This package adds a convenient way to discover Spacemacs configuration
-;; layers thanks to ivy.
+;; layers.
 
 ;;; Code:
 
@@ -61,6 +61,8 @@
               (cond
                ((string-equal r "BEGINNERS_TUTORIAL.org")
                 `("Beginners tutorial" . ,r))
+               ((string-equal r "CI_PLUMBING.org")
+                `("CI setup on GitHub" . ,r))
                ((string-equal r "CONTRIBUTING.org")
                 `("How to contribute to Spacemacs" . ,r))
                ((string-equal r "CONVENTIONS.org")
@@ -76,7 +78,7 @@
                ((string-equal r "VIMUSERS.org")
                 `("Vim users migration guide" . ,r))
                (t
-                `(r . ,r))))
+                `(,r . ,r))))
             result)))
 
 (defun compleseus-spacemacs-help//documentation-action-open-file (candidate)
@@ -93,7 +95,7 @@
            (condition-case-unless-debug nil
                (with-current-buffer (find-file-noselect file)
                  (gh-md-render-buffer)
-                 (spacemacs/kill-this-buffer))
+                 (kill-current-buffer))
              ;; if anything fails, fall back to simply open file
              (find-file file)))
           ((equal (file-name-extension file) "org")
@@ -126,16 +128,21 @@
   (configuration-layer/get-layer-path (intern candidate)))
 
 (defun compleseus-spacemacs-help//layer-action-open-file (file candidate &optional edit)
-  "Open FILE of the passed CANDIDATE.  If EDIT is false, open in view mode."
-  (let ((path (configuration-layer/get-layer-path (intern candidate))))
-    (if (equal (file-name-extension file) "org")
-        (if edit
-            (find-file (concat path file))
-          (spacemacs/view-org-file (concat path file) "^" 'all))
-      (let ((filepath (concat path file)))
-        (if (file-exists-p filepath)
-            (find-file filepath)
-          (message "%s does not have %s" candidate file))))))
+  "Open FILE of the passed CANDIDATE.
+If the file does not exist and EDIT is true, create it; otherwise fall back
+to opening dired at the layer directory.
+If EDIT is false, open org files in view mode."
+  (let* ((path (configuration-layer/get-layer-path (intern candidate)))
+         (filepath (concat path file)))
+    (cond ((and (equal (file-name-extension file) "org")
+                (not edit)
+                (file-exists-p filepath))
+           (spacemacs/view-org-file filepath "^" 'all))
+          ((or edit (file-exists-p filepath))
+           (find-file filepath))
+          (t
+           (message "%s does not have %s" candidate file)
+           (compleseus-spacemacs-help//layer-action-open-dired candidate)))))
 
 (defun compleseus-spacemacs-help//layer-action-open-readme (candidate)
   "Open the `README.org' file of the passed CANDIDATE for reading."
@@ -145,14 +152,14 @@
   "Adds layer to dotspacemacs file and reloads configuration"
   (if (configuration-layer/layer-used-p (intern candidate))
       (message "Layer already added.")
-    (let ((dotspacemacs   (find-file-noselect (dotspacemacs/location))))
+    (let ((dotspacemacs (find-file-noselect (dotspacemacs/location))))
       (with-current-buffer dotspacemacs
         (beginning-of-buffer)
         (let ((insert-point (re-search-forward
                              "dotspacemacs-configuration-layers *\n?.*\\((\\)")))
           (insert (format "\n%s\n" candidate))
           (indent-region insert-point (+ insert-point (length candidate)))
-          (save-current-buffer)))
+          (save-buffer)))
       (dotspacemacs/sync-configuration-layers))))
 
 (defun compleseus-spacemacs-help//layer-action-open-dired (candidate)
@@ -204,21 +211,21 @@
         (owners (cl-remove-duplicates
                  (mapcar (lambda (pkg)
                            (let ((obj (configuration-layer/get-package pkg)))
-                             (car (oref obj :owners))))
+                             (car (oref obj owners))))
                          (configuration-layer/get-packages-list)))))
     (dolist (pkg-name (configuration-layer/get-packages-list))
       (let ((pkg (configuration-layer/get-package pkg-name)))
         (push (list (format (concat "%-" left-column-width "S %s %s")
-                            (car (oref pkg :owners ))
-                            (propertize (symbol-name (oref pkg :name))
+                            (car (oref pkg owners ))
+                            (propertize (symbol-name (oref pkg name))
                                         'face 'font-lock-type-face)
                             (propertize
-                             (if (package-installed-p (oref pkg :name))
+                             (if (package-installed-p (oref pkg name))
                                  "[installed]" "")
                              'face 'font-lock-comment-face))
                     (symbol-name
-                     (car (oref pkg :owners )))
-                    (symbol-name (oref pkg :name)))
+                     (car (oref pkg owners )))
+                    (symbol-name (oref pkg name)))
               result)))
     (dolist (layer (delq nil
                          (cl-remove-if
@@ -279,14 +286,14 @@
   "Adds layer to dotspacemacs file and reloads configuration"
   (if (configuration-layer/layer-used-p (intern (cadr args)))
       (message "Layer already added.")
-    (let ((dotspacemacs   (find-file-noselect (dotspacemacs/location))))
+    (let ((dotspacemacs (find-file-noselect (dotspacemacs/location))))
       (with-current-buffer dotspacemacs
         (beginning-of-buffer)
         (let ((insert-point (re-search-forward
                              "dotspacemacs-configuration-layers *\n?.*\\((\\)")))
           (insert (format "\n%s\n" (cadr args)))
           (indent-region insert-point (+ insert-point (length (cadr args))))
-          (save-current-buffer)))
+          (save-buffer)))
       (dotspacemacs/sync-configuration-layers))))
 
 ;;;###autoload
@@ -359,7 +366,7 @@
 
 (defun compleseus-spacemacs-help//go-to-dotfile-variable (candidate)
   "Go to candidate in the dotfile."
-  (find-file dotspacemacs-filepath)
+  (find-file (dotspacemacs/location))
   (goto-char (point-min))
   ;; try to exclude comments
   (re-search-forward (format "^[a-z\s\\(\\-]*%s" candidate))

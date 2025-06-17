@@ -1,6 +1,6 @@
-;;; packages.el --- mu4e Layer packages File for Spacemacs
+;;; packages.el --- mu4e Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -22,9 +22,8 @@
 
 
 (defconst mu4e-packages
-  '(
-    (mu4e :location site)
-    mu4e-alert
+  '((mu4e :location site)
+    (mu4e-alert :toggle (or mu4e-enable-notifications mu4e-enable-mode-line))
     (helm-mu :requires helm)
     org
     persp-mode
@@ -42,27 +41,36 @@
       (spacemacs/add-to-hooks 'spacemacs-layouts/add-mu4e-buffer-to-persp
                               '(mu4e-main-mode-hook
                                 mu4e-headers-mode-hook
-                                mu4e-view-mode-hook
+                                mu4e-after-view-message-hook
                                 mu4e-compose-mode-hook))
       (call-interactively 'mu4e)
-      (call-interactively 'mu4e-update-index)
-
       (define-advice mu4e~stop (:after nil kill-mu4e-layout-after-mu4e~stop)
         (when mu4e-spacemacs-kill-layout-on-exit
           (persp-kill mu4e-spacemacs-layout-name))))))
 
 (defun mu4e/init-mu4e ()
+  ;; Some distributions do not construct the initial Emacs load paths properly
+  ;; so that packages are included in `package-directory-list' and thereby
+  ;; activated at startup.  To avoid breakage, now that Spacemacs defers loading
+  ;; mu4e, load `mu4e-autoloads' explicitly.
+  ;;
+  ;; See https://github.com/syl20bnr/spacemacs/issues/16931
+  (condition-case _
+      (require 'mu4e-autoloads)
+    (error
+     (spacemacs-buffer/error "Could not activate `mu4e'.  It is a site package and must be installed with your Emacs distribution")))
   (use-package mu4e
-    :commands (mu4e mu4e-compose-new)
+    :defer t
     :init
     (spacemacs/set-leader-keys "aem" 'mu4e)
-    (global-set-key (kbd "C-x m") 'mu4e-compose-new)
-    (setq mu4e-completing-read-function 'completing-read
-          mu4e-use-fancy-chars 't
-          mu4e-view-show-images 't
-          message-kill-buffer-on-exit 't
+    (setq mail-user-agent 'mu4e-user-agent
+          read-mail-command 'mu4e
+          mu4e-completing-read-function 'completing-read
+          mu4e-use-fancy-chars t
+          mu4e-view-show-images t
+          message-kill-buffer-on-exit t
           mu4e-org-support nil)
-    (let ((dir "~/Downloads"))
+    (let ((dir "~/Downloads/"))
       (when (file-directory-p dir)
         (setq mu4e-attachment-dir dir)))
 
@@ -80,9 +88,7 @@
       :bindings
       (kbd "C-j") 'mu4e-headers-next
       (kbd "C-k") 'mu4e-headers-prev
-      (kbd "J") (lambda ()
-                  (interactive)
-                  (mu4e-headers-mark-thread nil '(read))))
+      (kbd "J")   'mu4e/headers-mark-thread)
 
     (evilified-state-evilify-map
       mu4e-view-mode-map
@@ -90,10 +96,8 @@
       :bindings
       (kbd "C-j") 'mu4e-view-headers-next
       (kbd "C-k") 'mu4e-view-headers-prev
-      (kbd "J") (lambda ()
-                  (interactive)
-                  (mu4e-view-mark-thread '(read)))
-      (kbd "gu") 'mu4e-view-go-to-url)
+      (kbd "J")   'mu4e/view-mark-thread-read
+      (kbd "gu")  'mu4e-view-go-to-url)
 
     (spacemacs/set-leader-keys-for-major-mode 'mu4e-compose-mode
       dotspacemacs-major-mode-leader-key 'message-send-and-exit
@@ -103,19 +107,11 @@
       "s" 'message-dont-send         ; saves as draft
       "f" 'mml-attach-file)
 
-    (when mu4e-enable-async-operations
-      (require 'smtpmail-async)
-      (setq send-mail-function         'async-smtpmail-send-it
-            message-send-mail-function 'async-smtpmail-send-it))
-
     (when (fboundp 'imagemagick-register-types)
       (imagemagick-register-types))
 
     (when mu4e-autorun-background-at-startup
       (mu4e t))
-
-    (add-to-list 'mu4e-view-actions
-                 '("View in browser" . mu4e-action-view-in-browser) t)
 
     (add-hook 'mu4e-compose-mode-hook
               (lambda () (use-hard-newlines t 'guess)))
@@ -156,36 +152,35 @@
               "C" 'helm-mu-contacts))))
 
 (defun mu4e/pre-init-org ()
-  (if mu4e-org-link-support
-      (with-eval-after-load 'org
+  (when mu4e-org-link-support
+    (with-eval-after-load 'org
+      (with-demoted-errors "(Spacemacs) Error loading a mu4e feature: %S"
         ;; This is a dirty hack due to mu(4e) 1.8.2 renaming mu4e-meta to
         ;; mu4e-config.  See also
         ;; https://github.com/djcb/mu/commit/cf0f72e4a48ac7029d7f6758b182d4bb559f8f49
         ;; and https://github.com/syl20bnr/spacemacs/issues/15618.  This code
         ;; used to simply read: (require 'mu4e-meta).  We now attempt to load
         ;; mu4e-config.  If this fails, load mu4e-meta.
-        (unless (ignore-errors (require 'mu4e-config))
+        (unless (require 'mu4e-config nil t)
           (require 'mu4e-meta))
         (if (version<= mu4e-mu-version "1.3.5")
             (require 'org-mu4e)
           (require 'mu4e-org))
         ;; We require mu4e due to an existing bug https://github.com/djcb/mu/issues/1829
         ;; Note that this bug prevents lazy-loading.
-        (if (version<= mu4e-mu-version "1.4.15")
-            (require 'mu4e))))
-  (if mu4e-org-compose-support
-      (progn
-        (spacemacs/set-leader-keys-for-major-mode 'mu4e-compose-mode
-          "o" 'org-mu4e-compose-org-mode)
-        (autoload 'org-mu4e-compose-org-mode "org-mu4e")
-        )))
+        (when (version<= mu4e-mu-version "1.4.15")
+          (require 'mu4e)))))
+  (when mu4e-org-compose-support
+    (spacemacs/set-leader-keys-for-major-mode 'mu4e-compose-mode
+      "o" 'org-mu4e-compose-org-mode)
+    (autoload 'org-mu4e-compose-org-mode "org-mu4e")))
 
 (defun mu4e/post-init-window-purpose ()
   (let ((modes))
     (dolist (mode mu4e-list-modes)
-      (add-to-list 'modes (cons mode 'mail)))
+      (push (cons mode 'mail) modes))
     (dolist (mode mu4e-view-modes)
-      (add-to-list 'modes (cons mode 'mail-view)))
+      (push (cons mode 'mail-view) modes))
     (purpose-set-extension-configuration
      :mu4e-layer
      (purpose-conf :mode-purposes modes))))

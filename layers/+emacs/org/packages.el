@@ -1,6 +1,6 @@
-;;; packages.el --- Org Layer packages File for Spacemacs
+;;; packages.el --- Org Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -33,20 +33,15 @@
     htmlize
     ;; ob, org, org-agenda and org-contacts are installed by `org-contrib'
     (ob :location built-in)
-    (org :location elpa :min-version "9.6.1")
+    (org :location elpa :min-version "9.7.8")
     (org-agenda :location built-in)
-    (org-wild-notifier
-                :toggle org-enable-notifications)
+    (org-wild-notifier :toggle org-enable-notifications)
     (org-contacts :toggle org-enable-org-contacts-support)
     org-contrib
     (org-vcard :toggle org-enable-org-contacts-support)
     (org-brain :toggle org-enable-org-brain-support)
     (org-expiry :location built-in)
-    ; temporarily point org-journal to dalanicolai fork until dalanicolai's
-    ; PR's https://github.com/bastibe/org-journal/pulls get merged
-    (org-journal
-     :location (recipe :fetcher github :repo "dalanicolai/org-journal")
-     :toggle org-enable-org-journal-support)
+    (org-journal :toggle org-enable-org-journal-support)
     org-download
     (org-jira :toggle org-enable-jira-support)
     org-mime
@@ -55,12 +50,11 @@
     org-present
     org-cliplink
     org-rich-yank
+    (org-project-capture :requires projectile)
     (org-projectile :requires projectile)
     (ox-epub :toggle org-enable-epub-support)
     (ox-twbs :toggle org-enable-bootstrap-support)
-    ;; use a for of ox-gfm to fix index generation
-    (ox-gfm :location (recipe :fetcher github :repo "syl20bnr/ox-gfm")
-            :toggle org-enable-github-support)
+    (ox-gfm :toggle org-enable-github-support)
     (org-re-reveal :toggle org-enable-reveal-js-support)
     persp-mode
     (ox-hugo :toggle org-enable-hugo-support)
@@ -130,10 +124,9 @@
 
 (defun org/init-org ()
   (use-package org
-    :defer (spacemacs/defer)
+    :defer t
     :commands (orgtbl-mode)
     :init
-    (spacemacs|require-when-dumping 'org)
     (setq org-clock-persist-file (concat spacemacs-cache-directory
                                          "org-clock-save.el")
           org-id-locations-file (concat spacemacs-cache-directory
@@ -151,6 +144,13 @@
           ;; this is consistent with the value of
           ;; `helm-org-headings-max-depth'.
           org-imenu-depth 8)
+
+    ;; `org-read-date' pops up the Calendar buffer but it is not usually useful
+    ;; to switch to it.
+    (with-eval-after-load 'calendar
+      (cl-pushnew (regexp-quote calendar-buffer)
+                  spacemacs-useless-buffers-regexp
+                  :test #'equal))
 
     (when org-todo-dependencies-strategy
       (setq org-enforce-todo-dependencies t)
@@ -177,9 +177,7 @@
           "c" 'org-capture-finalize
           "k" 'org-capture-kill
           "r" 'org-capture-refile)
-        ;; Evil bindins seem not to be applied until at least one
-        ;; Evil state is executed
-        (evil-normal-state))
+        (evil-normalize-keymaps))
       ;; Must be done everytime we run org-capture otherwise it will
       ;; be ignored until insert mode is entered.
       (add-hook 'org-capture-mode-hook 'spacemacs//org-capture-start))
@@ -401,7 +399,10 @@ Will work on both org-mode and any mode that accepts plain html."
       "aof" "feeds"
       "aoC" (org-clocks-prefix))
     ;; org-agenda
-    (when (configuration-layer/layer-used-p 'ivy)
+    (unless (when-let* ((pkg (configuration-layer/get-package 'helm-org-rifle)))
+              ;; TODO: `configuration-layer/package-used-p' doesn't check
+              ;; :toggle status.  When it is fixed, we can use it again.
+              (cfgl-package-used-p pkg))
       (spacemacs/set-leader-keys "ao/" 'org-occur-in-agenda-files))
     (spacemacs/set-leader-keys
       "ao#" 'org-agenda-list-stuck-projects
@@ -445,35 +446,19 @@ Will work on both org-mode and any mode that accepts plain html."
     ;; C-c ' is shadowed by `spacemacs/default-pop-shell', effectively making
     ;; the Emacs user unable to exit src block editing.
     (define-key org-src-mode-map
-      (kbd (concat dotspacemacs-major-mode-emacs-leader-key " '"))
-      'org-edit-src-exit)
+                (kbd (concat dotspacemacs-major-mode-emacs-leader-key " '"))
+                'org-edit-src-exit)
 
     ;; Evilify the calendar tool on C-c .
     (unless (eq 'emacs dotspacemacs-editing-style)
-      (define-key org-read-date-minibuffer-local-map (kbd "M-h")
-        (lambda () (interactive)
-          (org-eval-in-calendar '(calendar-backward-day 1))))
-      (define-key org-read-date-minibuffer-local-map (kbd "M-l")
-        (lambda () (interactive)
-          (org-eval-in-calendar '(calendar-forward-day 1))))
-      (define-key org-read-date-minibuffer-local-map (kbd "M-k")
-        (lambda () (interactive)
-          (org-eval-in-calendar '(calendar-backward-week 1))))
-      (define-key org-read-date-minibuffer-local-map (kbd "M-j")
-        (lambda () (interactive)
-          (org-eval-in-calendar '(calendar-forward-week 1))))
-      (define-key org-read-date-minibuffer-local-map (kbd "M-H")
-        (lambda () (interactive)
-          (org-eval-in-calendar '(calendar-backward-month 1))))
-      (define-key org-read-date-minibuffer-local-map (kbd "M-L")
-        (lambda () (interactive)
-          (org-eval-in-calendar '(calendar-forward-month 1))))
-      (define-key org-read-date-minibuffer-local-map (kbd "M-K")
-        (lambda () (interactive)
-          (org-eval-in-calendar '(calendar-backward-year 1))))
-      (define-key org-read-date-minibuffer-local-map (kbd "M-J")
-        (lambda () (interactive)
-          (org-eval-in-calendar '(calendar-forward-year 1)))))
+      (define-key org-read-date-minibuffer-local-map (kbd "M-h") #'org-calendar-backward-day)
+      (define-key org-read-date-minibuffer-local-map (kbd "M-l") #'org-calendar-forward-day)
+      (define-key org-read-date-minibuffer-local-map (kbd "M-k") #'org-calendar-backward-week)
+      (define-key org-read-date-minibuffer-local-map (kbd "M-j") #'org-calendar-forward-week)
+      (define-key org-read-date-minibuffer-local-map (kbd "M-H") #'org-calendar-backward-month)
+      (define-key org-read-date-minibuffer-local-map (kbd "M-L") #'org-calendar-forward-month)
+      (define-key org-read-date-minibuffer-local-map (kbd "M-K") #'org-calendar-backward-year)
+      (define-key org-read-date-minibuffer-local-map (kbd "M-J") #'org-calendar-forward-year))
 
     (spacemacs|define-transient-state org-babel
       :title "Org Babel Transient state"
@@ -521,7 +506,8 @@ Will work on both org-mode and any mode that accepts plain html."
       "ip" 'org-agenda-set-property
       "iP" 'org-agenda-priority
       "it" 'org-agenda-set-tags
-      "sr" 'org-agenda-refile)
+      "sr" 'org-agenda-refile
+      "TT" 'org-agenda-todo)
     (spacemacs|define-transient-state org-agenda
       :title "Org-agenda transient state"
       :on-enter (setq which-key-inhibit t)
@@ -749,13 +735,13 @@ Headline^^            Visit entry^^               Filter^^                    Da
 
 (defun org/init-org-modern ()
   (use-package org-modern
-      :defer t
-      :init
-      (add-hook 'org-mode-hook 'org-modern-mode)
-      (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
+    :defer t
+    :init
+    (add-hook 'org-mode-hook 'org-modern-mode)
+    (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
-      (spacemacs/set-leader-keys-for-major-mode 'org-mode
-        "Tm" 'org-modern-mode)))
+    (spacemacs/set-leader-keys-for-major-mode 'org-mode
+      "Tm" 'org-modern-mode)))
 
 (defun org/init-org-pomodoro ()
   (use-package org-pomodoro
@@ -815,23 +801,30 @@ Headline^^            Visit entry^^               Filter^^                    Da
       ;; ir = "insert rich"
       "ir" 'org-rich-yank)))
 
-(defun org/init-org-projectile ()
-  (use-package org-projectile
-    :commands (org-projectile-location-for-project)
+(defun org/init-org-project-capture ()
+  (use-package org-project-capture
+    :commands (org-project-capture-location-for-project)
     :init
     (spacemacs/set-leader-keys
-      "aop" 'org-projectile/capture
-      "po" 'org-projectile/goto-todos)
-    (with-eval-after-load 'org-capture
-      (require 'org-projectile))
+      "aop" 'spacemacs/org-project-capture-capture
+      "po" 'spacemacs/org-project-capture-goto-todos)
     :config
-    (if (file-name-absolute-p org-projectile-file)
+    (if (and (stringp org-project-capture-projects-file) (file-name-absolute-p org-project-capture-projects-file))
         (progn
-          (setq org-projectile-projects-file org-projectile-file)
-          (push (org-projectile-project-todo-entry :empty-lines 1)
-                org-capture-templates))
-      (org-projectile-per-project)
-      (setq org-projectile-per-project-filepath org-projectile-file))))
+          (setq org-project-capture-projects-file org-project-capture-projects-file)
+          (push (org-project-capture-project-todo-entry :empty-lines 1)
+                org-capture-templates)
+          (org-project-capture-single-file))
+      (progn
+        (setq org-project-capture-per-project-filepath org-project-capture-projects-file)
+        (org-project-capture-per-project)))))
+
+(defun org/init-org-projectile ()
+  (use-package org-projectile
+    :after org-project-capture ; backend for projectile after org-project-capture
+    :config
+    (setq org-project-capture-default-backend
+          (make-instance 'org-project-capture-projectile-backend))))
 
 (defun org/pre-init-ox-epub ()
   (spacemacs|use-package-add-hook org :post-config (require 'ox-epub)))
@@ -942,6 +935,11 @@ Headline^^            Visit entry^^               Filter^^                    Da
     ;; org-roam. See https://github.com/syl20bnr/spacemacs/issues/15724
     ;; :hook (after-init . org-roam-setup)
     :init
+
+    ;; Fix org roam issue https://github.com/org-roam/org-roam/pull/2334 until
+    ;; upstream is merged.
+    (advice-add 'org-roam-fontify-like-in-org-mode :around #'spacemacs/with-save-excursion)
+
     (spacemacs/declare-prefix
       "aor"  "org-roam"
       "aord" "org-roam-dailies"
@@ -1044,12 +1042,20 @@ Headline^^            Visit entry^^               Filter^^                    Da
           org-appear-autoemphasis t
           org-appear-autosubmarkers t)
     :config
-    (when (and (eq org-appear-trigger 'manual)
-               (memq dotspacemacs-editing-style '(vim hybrid)))
-      (add-hook 'org-mode-hook
-                (lambda ()
-                  (add-hook 'evil-insert-state-entry-hook #'org-appear-manual-start nil t)
-                  (add-hook 'evil-insert-state-exit-hook #'org-appear-manual-stop nil t))))))
+    (when (eq org-appear-trigger 'manual)
+      (when (eq dotspacemacs-editing-style 'vim)
+        (add-hook 'org-appear-mode-hook
+                  (lambda ()
+                    (add-hook 'evil-insert-state-entry-hook #'org-appear-manual-start nil t)
+                    (add-hook 'evil-insert-state-exit-hook #'org-appear-manual-stop nil t)
+                    )))
+
+      (when (eq dotspacemacs-editing-style 'hybrid)
+        (add-hook 'org-appear-mode-hook
+                  (lambda ()
+                    (add-hook 'evil-hybrid-state-entry-hook #'org-appear-manual-start nil t)
+                    (add-hook 'evil-hybrid-state-exit-hook #'org-appear-manual-stop nil t)
+                    ))))))
 
 (defun org/init-org-transclusion ()
   (use-package org-transclusion
@@ -1072,7 +1078,7 @@ Headline^^            Visit entry^^               Filter^^                    Da
 
 (defun org/post-init-helm ()
   (if (not (boundp 'helm-imenu-extra-modes))
-    (setq helm-imenu-extra-modes '(org-mode)))
+      (setq helm-imenu-extra-modes '(org-mode)))
   (add-to-list 'helm-imenu-extra-modes 'org-mode))
 
 (defun org/init-org-roam-ui ()

@@ -1,6 +1,6 @@
-;;; packages.el --- Haskell Layer packages File for Spacemacs
+;;; packages.el --- Haskell Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -39,9 +39,8 @@
         ggtags
         haskell-mode
         haskell-snippets
-        counsel-gtags
         (helm-hoogle :requires helm)
-        hindent
+        (hindent :toggle haskell-enable-hindent)
         hlint-refactor))
 
 (defun haskell/init-lsp-haskell ()
@@ -72,7 +71,7 @@
     :config
     (dolist (mode haskell-modes)
       (spacemacs/set-leader-keys-for-major-mode mode
-        "gb" 'xref-pop-marker-stack
+        "gb" 'xref-go-back
         "ht" 'dante-type-at
         "hT" 'spacemacs-haskell//dante-insert-type
         "hi" 'dante-info
@@ -93,8 +92,8 @@
 
 (defun haskell/post-init-flycheck ()
   (add-hook 'dante-mode-hook
-              (lambda () (flycheck-add-next-checker 'haskell-dante '(warning . haskell-hlint)))
-  (spacemacs/enable-flycheck 'haskell-mode)))
+            (lambda () (flycheck-add-next-checker 'haskell-dante '(warning . haskell-hlint)))
+            (spacemacs/enable-flycheck 'haskell-mode)))
 
 
 (defun haskell/init-flycheck-haskell ()
@@ -309,14 +308,10 @@
 
   (with-eval-after-load 'yasnippet (haskell-snippets-initialize)))
 
-(defun haskell/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'haskell-mode))
-
 ;; doesn't support haskell-literate-mode :(
 (defun haskell/init-hindent ()
   (use-package hindent
     :defer t
-    :if haskell-enable-hindent
     :init
     (add-hook 'haskell-mode-hook #'hindent-mode)
     :config

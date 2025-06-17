@@ -1,6 +1,6 @@
-;;; funcs.el --- ipython-notebook Layer Configuration File for Spacemacs
+;;; funcs.el --- ipython-notebook Layer Configuration File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Senghoo Kim <me@senghoo.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -21,7 +21,7 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-(defvar ein-backend 'nil
+(defvar ein-backend nil
   "The backend to use for IDE features.
 Possible values are `jupyter' and `nil'.
 If `jupyter' then the API provided by jupyter will be used.

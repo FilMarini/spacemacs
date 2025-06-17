@@ -1,6 +1,6 @@
-;;; packages.el --- d Layer packages File for Spacemacs
+;;; packages.el --- d Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -30,9 +30,8 @@
         d-mode
         flycheck
         (flycheck-dmd-dub :requires flycheck)
-        ggtags
-        counsel-gtags
-        ))
+        ggtags))
+
 
 (defun d/post-init-company ()
   ;; Need to convince company that this C-derived mode is a code mode.
@@ -59,11 +58,7 @@
 (defun d/init-flycheck-dmd-dub ()
   (use-package flycheck-dmd-dub :defer t
     :init
-    (add-hook 'd-mode-hook 'flycheck-dmd-dub-set-include-path)
     (add-hook 'd-mode-hook 'flycheck-dmd-dub-set-variables)))
 
 (defun d/post-init-ggtags ()
   (add-hook 'd-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
-
-(defun d/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'd-mode))

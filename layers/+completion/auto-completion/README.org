@@ -179,7 +179,7 @@ In the file =packages.el= of the python layer:
   ;; here it is `company-anaconda'
   (setq python-packages
     '(...
-      (company-anaconda :toggle (configuration-layer/package-used-p 'company))
+      (company-anaconda :requires company)
       ...))
 
   (defun python/init-company-anaconda ()
@@ -251,6 +251,7 @@ Emacs style:
 | ~TAB~       | expand selection or select next candidate                            |
 | ~S-TAB~     | select previous candidate                                            |
 | ~RET~       | complete word, if word is already completed insert a carriage return |
+| ~C-g~       | stop completion without selecting a candidate                        |
 
 ** Yasnippet
 
@@ -265,4 +266,5 @@ Emacs style:
 |-------------+---------------------------------------------------------------------------|
 | ~SPC i S c~ | create a snippet from an active region                                    |
 | ~SPC i S e~ | Expand the snippet just created with ~SPC i y~                            |
+| ~SPC i S h~ | Expand a snippet from history which was previously created with ~SPC i y~ |
 | ~SPC i S w~ | Write the snippet inside =private/snippets= directory for future sessions |

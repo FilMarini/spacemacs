@@ -1,6 +1,6 @@
-;;; funcs.el --- Syntax Checking Layer functions File for Spacemacs
+;;; funcs.el --- Syntax Checking Layer functions File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -33,7 +33,7 @@
   "Toggle flycheck's error list window.
 If the error list is visible, hide it.  Otherwise, show it."
   (interactive)
-  (if-let ((window (flycheck-get-error-list-window)))
+  (if-let* ((window (flycheck-get-error-list-window)))
       (save-selected-window (quit-window nil window))
     (flycheck-list-errors)))
 

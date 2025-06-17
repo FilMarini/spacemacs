@@ -1,6 +1,6 @@
-;;; packages.el --- F# Layer packages File for Spacemacs
+;;; packages.el --- F# Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -24,7 +24,6 @@
 (defconst fsharp-packages
   '(
     company
-    counsel-gtags
     (eglot-fsharp :toggle (eq fsharp-backend 'eglot))
     flycheck
     fsharp-mode
@@ -73,6 +72,3 @@
 
 (defun fsharp/post-init-ggtags ()
   (add-hook 'fsharp-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
-
-(defun fsharp/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'fsharp-mode))

@@ -1,6 +1,6 @@
-;;; packages.el --- Spacemacs Navigation Layer packages File
+;;; packages.el --- Spacemacs Navigation Layer packages File  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -31,6 +31,7 @@
         (view :location built-in)
         golden-ratio
         (grep :location built-in)
+        (info :location built-in)
         (info+ :location (recipe :fetcher github
                                  :repo "emacsmirror/info-plus"))
         open-junk-file
@@ -38,12 +39,14 @@
         restart-emacs
         (smooth-scrolling :location built-in)
         symbol-overlay
-        winum))
+        winum
+        disable-mouse))
 
 (defun spacemacs-navigation/init-ace-link ()
   (use-package ace-link
     :commands spacemacs/ace-buffer-links
     :init
+    (evil-add-command-properties 'ace-link :jump t)
     (define-key spacemacs-buffer-mode-map "o" 'spacemacs/ace-buffer-links)
     (with-eval-after-load 'info
       (define-key Info-mode-map "o" 'ace-link-info))
@@ -101,6 +104,11 @@
       ("z" recenter-top-bottom)
       ("q" nil :exit t))
 
+    (mapc #'evil-declare-motion
+          '(spacemacs/goto-last-searched-ahs-symbol
+            spacemacs/quick-ahs-forward
+            spacemacs/quick-ahs-backward))
+
     ;; since we are creating our own maps,
     ;; prevent the default keymap from getting created
     (setq auto-highlight-symbol-mode-map (make-sparse-keymap))
@@ -119,6 +127,8 @@
     (spacemacs/set-leader-keys
       "sh" 'spacemacs/symbol-highlight
       "sH" 'spacemacs/goto-last-searched-ahs-symbol)
+
+    (evil-declare-ignore-repeat 'spacemacs/symbol-highlight)
 
     ;; Advice ahs jump functions to remember the last highlighted symbol
     (dolist (sym '(ahs-forward
@@ -315,11 +325,13 @@
     :config
     (define-key grep-mode-map "h" nil)))
 
+(defun spacemacs-navigation/init-info ()
+  (spacemacs/set-leader-keys "hj" 'info-display-manual))
+
 (defun spacemacs-navigation/init-info+ ()
   (use-package info+
     :defer t
     :init
-    (spacemacs/set-leader-keys "hj" 'info-display-manual)
     (setq Info-fontify-angle-bracketed-flag nil)
     (with-eval-after-load "info" (require 'info+))))
 
@@ -355,7 +367,7 @@
 
 (defun spacemacs-navigation/init-restart-emacs ()
   (use-package restart-emacs
-    :defer (spacemacs/defer)
+    :defer t
     :init
     (with-eval-after-load 'files
       ;; unbind `restart-emacs' and declare it from package for ticket #15505
@@ -451,3 +463,12 @@
     (define-key winum-keymap (kbd "M-8") 'winum-select-window-8)
     (define-key winum-keymap (kbd "M-9") 'winum-select-window-9)
     (winum-mode)))
+
+(defun spacemacs-navigation/init-disable-mouse ()
+  (use-package disable-mouse
+    :defer t
+    :init
+    (spacemacs|add-toggle disable-mouse-input-globally
+      :mode disable-mouse-global-mode :evil-leader "tM")
+    :config
+    (spacemacs|diminish disable-mouse-global-mode " Ⓜ" " M")))

@@ -1,6 +1,6 @@
-;;; packages.el --- Windows Scripts Layer packages File for Spacemacs
+;;; packages.el --- Windows Scripts Layer packages File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
-;; Copyright (c) 2012-2024 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -25,7 +25,6 @@
   '(
     (bat-mode :location built-in)
     bmx-mode
-    (counsel-gtags :if (configuration-layer/package-used-p 'counsel))
     ggtags
     powershell))
 
@@ -81,9 +80,6 @@
 
 (defun windows-scripts/post-init-ggtags ()
   (add-hook 'bat-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
-
-(defun windows-scripts/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'bat-mode))
 
 (defun windows-scripts/init-powershell ()
   (use-package powershell
