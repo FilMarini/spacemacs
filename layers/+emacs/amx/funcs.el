@@ -1,8 +1,8 @@
-;;; layers.el --- Gleam layer layers file for Spacemacs.  -*- lexical-binding: nil; -*-
+;;; funcs.el --- Amx Layer functions File for Spacemacs  -*- lexical-binding: nil; -*-
 ;;
 ;; Copyright (c) 2012-2025 Sylvain Benner & Contributors
 ;;
-;; Author: Qynn Schwaab <qynn@riseup.net>
+;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
 ;;
 ;; This file is not part of GNU Emacs.
@@ -21,6 +21,14 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-(configuration-layer/declare-layer-dependencies
- (append '(tree-sitter)
-         (if (and (boundp 'gleam-enable-lsp) gleam-enable-lsp) '(lsp) '())))
+(defun spacemacs/amx ()
+  "Execute amx with a better prompt."
+  (interactive)
+  (let ((amx-prompt-string "Emacs commands: "))
+    (amx)))
+
+(defun spacemacs/amx-major-mode-commands ()
+  "Reexecute amx with major mode commands only."
+  (interactive)
+  (let ((amx-prompt-string (format "%s commands: " major-mode)))
+    (amx-major-mode-commands)))

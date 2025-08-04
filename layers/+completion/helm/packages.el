@@ -22,7 +22,8 @@
 
 
 (defconst helm-packages
-  '(ace-jump-helm-line
+  '((avy-jump-helm-line
+     :location (recipe :fetcher github :repo "sunlin7/avy-jump-helm-line"))
     auto-highlight-symbol
     bookmark
     helm
@@ -37,8 +38,14 @@
     helm-org
     (helm-posframe :toggle helm-use-posframe)
     helm-projectile
-    helm-swoop
-    helm-themes
+    ;; FIXME Remove obsolete packages helm-swoop, helm-themes,
+    ;; helm-ag, helm-git-grep, etc. (see https://github.com/melpa/melpa/pull/9520)
+    (helm-swoop :location (recipe
+                           :fetcher github
+                           :repo "emacsattic/helm-swoop"))
+    (helm-themes :location (recipe
+                           :fetcher github
+                           :repo "emacsattic/helm-themes"))
     (helm-spacemacs-help :location local)
     helm-xref
     imenu
@@ -48,12 +55,12 @@
 
 
 ;; Initialization of packages
-(defun helm/init-ace-jump-helm-line ()
-  (use-package ace-jump-helm-line
+(defun helm/init-avy-jump-helm-line ()
+  (use-package avy-jump-helm-line
     :defer t
     :init
     (with-eval-after-load 'helm
-      (define-key helm-map (kbd "C-q") 'ace-jump-helm-line))))
+      (define-key helm-map (kbd "C-q") 'avy-jump-helm-line))))
 
 (defun helm/pre-init-auto-highlight-symbol ()
   (spacemacs|use-package-add-hook auto-highlight-symbol
@@ -92,7 +99,7 @@
     (unless (configuration-layer/package-used-p 'ibuffer)
       (evil-ex-define-cmd "buffers" 'helm-buffers-list))
     ;; use helm by default for M-x, C-x C-f, and C-x b
-    (unless (configuration-layer/layer-usedp 'smex)
+    (unless (configuration-layer/layer-usedp 'amx)
       (global-set-key (kbd "M-x") 'spacemacs/helm-M-x-fuzzy-matching))
     (global-set-key (kbd "C-x C-f") 'spacemacs/helm-find-files)
     (global-set-key (kbd "C-x b") 'helm-buffers-list)
@@ -178,7 +185,7 @@
                 (spacemacs||set-helm-key "hPw" profiler-report-write-profile)
                 ;; define the key binding at the very end in order to allow the user
                 ;; to overwrite any key binding
-                (unless (configuration-layer/layer-usedp 'smex)
+                (unless (configuration-layer/layer-usedp 'amx)
                   (spacemacs/set-leader-keys
                     dotspacemacs-emacs-command-key 'spacemacs/helm-M-x-fuzzy-matching))))
     ;; avoid duplicates in `helm-M-x' history.
@@ -466,8 +473,7 @@
     :init
     (setq helm-swoop-split-with-multiple-windows t
           helm-swoop-split-direction 'split-window-vertically
-          helm-swoop-split-window-function 'spacemacs/helm-swoop-split-window-function
-          helm-swoop-pre-input-function (lambda () ""))
+          helm-swoop-split-window-function 'spacemacs/helm-swoop-split-window-function)
 
     (defun spacemacs/helm-swoop-split-window-function (&rest args)
       "Override to make helm settings (like `helm-split-window-default-side') work"
@@ -475,18 +481,6 @@
             (helm-full-frame nil)
             (pop-up-windows t))
         (apply 'helm-default-display-buffer args)))
-
-    (defun spacemacs/helm-swoop-region-or-symbol ()
-      "Call `helm-swoop' with default input."
-      (interactive)
-      (let ((helm-swoop-pre-input-function
-             (lambda ()
-               (if (region-active-p)
-                   (buffer-substring-no-properties (region-beginning)
-                                                   (region-end))
-                 (let ((thing (thing-at-point 'symbol t)))
-                   (if thing thing ""))))))
-        (call-interactively 'helm-swoop)))
 
     (defun spacemacs/helm-swoop-clear-cache ()
       "Call `helm-swoop--clear-cache' to clear the cache"
@@ -497,7 +491,7 @@
     (spacemacs/set-leader-keys
       "sC"    'spacemacs/helm-swoop-clear-cache
       "ss"    'helm-swoop
-      "sS"    'spacemacs/helm-swoop-region-or-symbol
+      "sS"    'helm-multi-swoop
       "s C-s" 'helm-multi-swoop-all)
 
     (evil-add-command-properties 'helm-swoop :jump t)))
