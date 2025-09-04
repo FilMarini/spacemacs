@@ -330,6 +330,8 @@ In org-agenda-mode
   - Changed ~SPC m s r~ to ~SPC m e r~ for =lisp-eval-region=
 - Hy support has been extracted from the =python= layer into the new =hy= layer.
 - Made =nose= fail compilation when tests fail (thanks to wizmer)
+***** Restructuredtext
+- Migrate from auto-complete to company for auto completion.
 ***** Ruby
 - Key bindings:
   - Changed ~SPC m h d~ to ~SPC m h h~ for =robe-doc= (thanks to Paweł Siudak)
@@ -2989,7 +2991,7 @@ files (thanks to Daniel Nicolai)
   - Added package =org-roam= (thanks to Mariusz Klochowicz)
   - Added package =org-contacts= (thanks to Daniel Nicolai)
   - Added package =org-appear= (thanks to winsphinX)
-  - Added package =org-wild-notifier= (thanks to Daniel Nicolai)
+  - Added package =org-alert= (thanks to cmonkey)
   - Added package =org-roam-ui= (thanks to winsphinX)
 - Key bindings:
   - ~SPC m s y~ for =org-copy-subtree= (thanks to Keith Pinson)
